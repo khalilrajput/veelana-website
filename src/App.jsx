@@ -4,7 +4,6 @@ import ScrollToTop from './components/ScrollToTop';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import FloatingWhatsApp from './components/FloatingWhatsApp';
-import FloatingHairCanvas from './components/FloatingHairCanvas';
 import AdminPanelModal from './components/AdminPanelModal';
 
 // Dedicated Page Views
@@ -35,10 +34,8 @@ export default function App() {
   return (
     <Router>
       <ScrollToTop />
-      <div className="min-h-screen bg-[#FAF8F5] text-[#2A361E] font-sans selection:bg-[#4F5D38] selection:text-[#FAF8F5] relative flex flex-col justify-between">
-        {/* Real Hair Physics SVG Overlay */}
-        <FloatingHairCanvas />
-
+      <div className="min-h-screen bg-[#FAF8F5] text-[#2A361E] font-sans selection:bg-[#4F5D38] selection:text-[#FAF8F5] relative flex flex-col justify-between overflow-x-hidden">
+        
         {/* 1. Header & Navigation */}
         <Navbar />
 

@@ -767,6 +767,25 @@ button {
   50% { box-shadow: 0 0 0 16px rgba(37, 211, 102, 0); }
 }
 
+.hero-hair-art-bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 160px;
+  height: 100%;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 1;
+  opacity: 0.75;
+}
+
+@media (max-width: 768px) {
+  .hero-hair-art-bg {
+    width: 80px !important;
+    opacity: 0.45 !important;
+  }
+}
+
 /* Enhanced Mobile-First Responsive Media Queries (Optimized for 90% Mobile Visitors) */
 @media (max-width: 1200px) {
   .nav-links { gap: 0.85rem; }
@@ -774,13 +793,6 @@ button {
 }
 
 @media (max-width: 1024px) {
-  .floating-hair-side-canvas {
-    width: 45px !important;
-    right: 0 !important;
-    opacity: 0.65 !important;
-    pointer-events: none !important;
-    background: transparent !important;
-  }
   .hero-grid, .science-grid, .products-grid {
     grid-template-columns: 1fr;
     gap: 2.5rem;
