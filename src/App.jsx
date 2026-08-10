@@ -13,8 +13,6 @@ import SciencePage from './pages/SciencePage';
 import WhyVeelanaPage from './pages/WhyVeelanaPage';
 import ProductsPage from './pages/ProductsPage';
 import IngredientsPage from './pages/IngredientsPage';
-import BlogPage from './pages/BlogPage';
-import BlogPostDetailPage from './pages/BlogPostDetailPage';
 import HowToUsePage from './pages/HowToUsePage';
 import ReviewsPage from './pages/ReviewsPage';
 import ContactPage from './pages/ContactPage';
@@ -52,8 +50,6 @@ export default function App() {
             <Route path="/why-veelana" element={<WhyVeelanaPage />} />
             <Route path="/products" element={<ProductsPage />} />
             <Route path="/ingredients" element={<IngredientsPage />} />
-            <Route path="/blog" element={<BlogPage />} />
-            <Route path="/blog/:id" element={<BlogPostDetailPage />} />
             <Route path="/how-to-use" element={<HowToUsePage />} />
             <Route path="/reviews" element={<ReviewsPage />} />
             <Route path="/contact" element={<ContactPage />} />

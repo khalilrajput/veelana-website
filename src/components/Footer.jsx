@@ -8,7 +8,7 @@ export default function Footer({ onOpenAdmin }) {
   };
 
   return (
-    <footer className="footer bg-[#121E14] text-[#FAF8F5] pt-14 pb-8 border-t border-[#D4AF37]/20">
+    <footer className="footer bg-[#121E14] text-[#FAF8F5] pt-12 pb-8 border-t border-[#D4AF37]/20">
       <div className="container mx-auto px-4 max-w-6xl">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10 pb-10 border-b border-[#FAF8F5]/15">
           
@@ -41,16 +41,14 @@ export default function Footer({ onOpenAdmin }) {
             </div>
           </div>
 
-          {/* Quick Links (Multi-Page Routes) */}
+          {/* Quick Links */}
           <div>
             <h4 className="text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-4">PAGES & NAVIGATION</h4>
             <ul className="flex flex-col gap-2.5 text-xs text-[#FAF8F5]/80 font-medium">
               <li><Link to="/" className="hover:text-white transition">Home Page</Link></li>
               <li><Link to="/products" className="hover:text-white transition">Products Catalog (100ml & 250ml)</Link></li>
-              <li><Link to="/science" className="hover:text-white transition">The Science of Roots</Link></li>
               <li><Link to="/why-veelana" className="hover:text-white transition">Why Veelana (5 Commitments)</Link></li>
               <li><Link to="/ingredients" className="hover:text-white transition">25+ Cold-Pressed Herbs</Link></li>
-              <li><Link to="/blog" className="hover:text-white transition">Hair Care SEO Blog</Link></li>
               <li><Link to="/how-to-use" className="hover:text-white transition">How to Use (4 Steps)</Link></li>
               <li><Link to="/reviews" className="hover:text-white transition">Customer Reviews</Link></li>
               <li><Link to="/contact" className="hover:text-white transition">Contact & Origin</Link></li>

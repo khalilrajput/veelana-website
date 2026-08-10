@@ -8,10 +8,8 @@ export default function Navbar() {
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'Products', path: '/products' },
-    { name: 'Science', path: '/science' },
     { name: 'Why Veelana', path: '/why-veelana' },
     { name: '25+ Herbs', path: '/ingredients' },
-    { name: 'Blog', path: '/blog' },
     { name: 'How to Use', path: '/how-to-use' },
     { name: 'Reviews', path: '/reviews' },
     { name: 'Contact', path: '/contact' },
@@ -33,7 +31,7 @@ export default function Navbar() {
       </div>
 
       {/* Main Glass Nav */}
-      <nav className="glass-nav border-b border-[#7A8B63]/20 bg-[#FAF8F5]/90 backdrop-blur-md">
+      <nav className="glass-nav border-b border-[#7A8B63]/20 bg-[#FAF8F5]/95 backdrop-blur-md">
         <div className="container mx-auto px-4 h-16 flex items-center justify-between">
           {/* Brand Logo */}
           <Link to="/" className="nav-brand flex items-center gap-2.5">
@@ -50,7 +48,7 @@ export default function Navbar() {
           </Link>
 
           {/* Desktop Navigation Links */}
-          <ul className="hidden lg:flex items-center gap-5 text-xs font-bold uppercase tracking-wider">
+          <ul className="hidden lg:flex items-center gap-6 text-xs font-bold uppercase tracking-wider">
             {navLinks.map((link) => (
               <li key={link.name}>
                 <NavLink
@@ -94,8 +92,8 @@ export default function Navbar() {
 
       {/* LUXURY MOBILE NAVIGATION DRAWER */}
       {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-x-0 top-[88px] bg-[#FAF8F5] border-b-2 border-[#1B2E1E] shadow-2xl z-50 p-5 space-y-3 animate-in slide-in-from-top duration-300 max-h-[82vh] overflow-y-auto">
-          <div className="grid grid-cols-1 gap-1">
+        <div className="lg:hidden fixed inset-x-0 top-[88px] bg-[#FAF8F5] border-b-2 border-[#1B2E1E] shadow-2xl z-50 p-5 space-y-2 animate-in slide-in-from-top duration-300 max-h-[82vh] overflow-y-auto">
+          <div className="grid grid-cols-1 gap-1.5">
             {navLinks.map((link) => (
               <NavLink
                 key={link.name}

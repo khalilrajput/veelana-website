@@ -6,7 +6,6 @@ import ProductShowcase from '../components/ProductShowcase';
 import IngredientsGrid from '../components/IngredientsGrid';
 import HowToUse from '../components/HowToUse';
 import Testimonials from '../components/Testimonials';
-import BlogSection from '../components/BlogSection';
 
 export default function HomePage() {
   return (
@@ -16,7 +15,6 @@ export default function HomePage() {
       <ValueGrid />
       <ProductShowcase />
       <IngredientsGrid />
-      <BlogSection />
       <HowToUse />
       <Testimonials />
     </div>
