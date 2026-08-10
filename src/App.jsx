@@ -1,17 +1,23 @@
 import React, { useState, useEffect } from 'react';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import ScrollToTop from './components/ScrollToTop';
 import Navbar from './components/Navbar';
-import Hero from './components/Hero';
-import ScienceAnimation from './components/ScienceAnimation';
-import ValueGrid from './components/ValueGrid';
-import ProductShowcase from './components/ProductShowcase';
-import IngredientsGrid from './components/IngredientsGrid';
-import BlogSection from './components/BlogSection';
-import HowToUse from './components/HowToUse';
-import Testimonials from './components/Testimonials';
 import Footer from './components/Footer';
 import FloatingWhatsApp from './components/FloatingWhatsApp';
 import FloatingHairCanvas from './components/FloatingHairCanvas';
 import AdminPanelModal from './components/AdminPanelModal';
+
+// Dedicated Page Views
+import HomePage from './pages/HomePage';
+import SciencePage from './pages/SciencePage';
+import WhyVeelanaPage from './pages/WhyVeelanaPage';
+import ProductsPage from './pages/ProductsPage';
+import IngredientsPage from './pages/IngredientsPage';
+import BlogPage from './pages/BlogPage';
+import BlogPostDetailPage from './pages/BlogPostDetailPage';
+import HowToUsePage from './pages/HowToUsePage';
+import ReviewsPage from './pages/ReviewsPage';
+import ContactPage from './pages/ContactPage';
 
 export default function App() {
   const [isAdminOpen, setIsAdminOpen] = useState(false);
@@ -29,47 +35,42 @@ export default function App() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] text-[#2A361E] font-sans selection:bg-[#4F5D38] selection:text-[#FAF8F5] relative">
-      {/* Corner Attached Flowing Real Hair Physics Canvas */}
-      <FloatingHairCanvas />
+    <Router>
+      <ScrollToTop />
+      <div className="min-h-screen bg-[#FAF8F5] text-[#2A361E] font-sans selection:bg-[#4F5D38] selection:text-[#FAF8F5] relative flex flex-col justify-between">
+        {/* Real Hair Physics SVG Overlay */}
+        <FloatingHairCanvas />
 
-      {/* 1. Header & Navigation */}
-      <Navbar />
+        {/* 1. Header & Navigation */}
+        <Navbar />
 
-      <main>
-        {/* 2. Hero Section with Falling Ingredients Canvas Overlay */}
-        <Hero />
+        {/* 2. Multi-Page Client-Side Routes */}
+        <main className="flex-1">
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route path="/science" element={<SciencePage />} />
+            <Route path="/why-veelana" element={<WhyVeelanaPage />} />
+            <Route path="/products" element={<ProductsPage />} />
+            <Route path="/ingredients" element={<IngredientsPage />} />
+            <Route path="/blog" element={<BlogPage />} />
+            <Route path="/blog/:id" element={<BlogPostDetailPage />} />
+            <Route path="/how-to-use" element={<HowToUsePage />} />
+            <Route path="/reviews" element={<ReviewsPage />} />
+            <Route path="/contact" element={<ContactPage />} />
+            {/* Fallback route */}
+            <Route path="*" element={<HomePage />} />
+          </Routes>
+        </main>
 
-        {/* 3. Live Animated Feature Section (The Science of Roots) */}
-        <ScienceAnimation />
+        {/* 3. Global Footer */}
+        <Footer onOpenAdmin={() => setIsAdminOpen(true)} />
 
-        {/* 4. "Why Veelana" Value Proposition Grid */}
-        <ValueGrid />
+        {/* 4. Global Floating WhatsApp CTA */}
+        <FloatingWhatsApp />
 
-        {/* 5. Dynamic Product Showcase (Managed via CMS Admin) */}
-        <ProductShowcase />
-
-        {/* 6. 25+ Herbs Ingredients Cards */}
-        <IngredientsGrid />
-
-        {/* 7. Hair Care Knowledge & SEO Blog Section */}
-        <BlogSection />
-
-        {/* 8. How to Use (4-Step Routine) */}
-        <HowToUse />
-
-        {/* 9. Reviews & Testimonials Carousel */}
-        <Testimonials />
-      </main>
-
-      {/* 10. Contact, Location & Order Footer */}
-      <Footer onOpenAdmin={() => setIsAdminOpen(true)} />
-
-      {/* 11. Global Floating WhatsApp CTA */}
-      <FloatingWhatsApp />
-
-      {/* 12. Dynamic Product CMS Admin Panel Modal */}
-      <AdminPanelModal isOpen={isAdminOpen} onClose={() => setIsAdminOpen(false)} />
-    </div>
+        {/* 5. Store Admin CMS Modal */}
+        <AdminPanelModal isOpen={isAdminOpen} onClose={() => setIsAdminOpen(false)} />
+      </div>
+    </Router>
   );
 }

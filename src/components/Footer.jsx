@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { MapPin, Mail, Phone, Globe, MessageCircle, ArrowUp } from 'lucide-react';
 
 export default function Footer({ onOpenAdmin }) {
@@ -7,53 +8,32 @@ export default function Footer({ onOpenAdmin }) {
   };
 
   return (
-    <footer id="contact" className="footer">
-      <div className="container">
-        <div className="footer-grid">
+    <footer className="footer bg-[#121E14] text-[#FAF8F5] pt-14 pb-8 border-t border-[#D4AF37]/20">
+      <div className="container mx-auto px-4 max-w-6xl">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 pb-10 border-b border-[#FAF8F5]/15">
           
-          {/* Brand Info with Olive Vector Logo Mask */}
+          {/* Brand Info */}
           <div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.85rem', marginBottom: '1.25rem' }}>
-              <div style={{
-                width: '46px',
-                height: '46px',
-                backgroundColor: '#FAF8F5',
-                WebkitMaskImage: 'url(/assets/white_vector_logo.png)',
-                maskImage: 'url(/assets/white_vector_logo.png)',
-                WebkitMaskSize: 'contain',
-                maskSize: 'contain',
-                WebkitMaskRepeat: 'no-repeat',
-                maskRepeat: 'no-repeat',
-                WebkitMaskPosition: 'center',
-                maskPosition: 'center',
-                flexShrink: 0
-              }} />
-              <span style={{ fontFamily: 'var(--font-heading)', fontSize: '1.75rem', fontWeight: 'bold', letterSpacing: '2px', color: '#FAF8F5' }}>
-                VEELANA
-              </span>
+            <div className="flex items-center gap-3 mb-4">
+              <img
+                src="/assets/official_png_logo.png"
+                alt="Veelana Logo"
+                className="h-10 w-auto filter brightness-0 invert shrink-0"
+              />
+              <div>
+                <h4 className="font-serif text-2xl font-bold text-[#FAF8F5]">VEELANA</h4>
+                <p className="text-[10px] text-[#D4AF37] tracking-widest uppercase font-bold">Herbal Hair Care</p>
+              </div>
             </div>
-            
-            <p style={{ fontSize: '0.88rem', color: 'rgba(250, 248, 245, 0.8)', fontWeight: '300', lineHeight: 1.6, maxWidth: '340px' }}>
-              Veelana is a luxury botanical hair care brand dedicated to restoring scalp vitality using ancient cold-pressed herbal formulations. Free from Parabens, Sulphates, and Mineral Oils.
+            <p className="text-xs md:text-sm text-[#FAF8F5]/80 leading-relaxed max-w-sm mb-4">
+              Handcrafted in Khanewal City using 25+ cold-pressed herbs. Pure, cruelty-free, paraben-free, and mineral-oil free root elixir.
             </p>
-
-            <div style={{ marginTop: '1.25rem', display: 'flex', gap: '0.75rem' }}>
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                style={{ width: '38px', height: '38px', borderRadius: '50%', background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(250, 248, 245, 0.25)', color: '#FAF8F5', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                aria-label="Facebook Page"
-              >
-                <svg style={{ width: '16px', height: '16px', fill: 'currentColor' }} viewBox="0 0 24 24">
-                  <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
-                </svg>
-              </a>
+            <div className="flex items-center gap-3">
               <a
                 href="https://wa.me/923061041609"
                 target="_blank"
                 rel="noopener noreferrer"
-                style={{ width: '38px', height: '38px', borderRadius: '50%', background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(250, 248, 245, 0.25)', color: '#25D366', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                className="w-9 h-9 rounded-full bg-white/10 border border-white/25 text-[#25D366] flex items-center justify-center hover:bg-white/20 transition"
                 aria-label="WhatsApp Direct"
               >
                 <MessageCircle className="w-4 h-4" />
@@ -61,80 +41,62 @@ export default function Footer({ onOpenAdmin }) {
             </div>
           </div>
 
-          {/* Quick Links */}
+          {/* Quick Links (Multi-Page Routes) */}
           <div>
-            <h4 className="footer-title">
-              Navigation
-            </h4>
-            <ul className="footer-links">
-              <li><a href="#home">Home Page</a></li>
-              <li><a href="#science">The Science of Roots</a></li>
-              <li><a href="#why-veelana">Why Veelana</a></li>
-              <li><a href="#products">Products (100ml & 250ml)</a></li>
-              <li><a href="#ingredients">25+ Cold-Pressed Herbs</a></li>
-              <li><a href="#blog">Hair Care Blog</a></li>
-              <li><a href="#how-to-use">How to Use (4 Steps)</a></li>
+            <h4 className="text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-4">PAGES & NAVIGATION</h4>
+            <ul className="flex flex-col gap-2.5 text-xs text-[#FAF8F5]/80 font-medium">
+              <li><Link to="/" className="hover:text-white transition">Home Page</Link></li>
+              <li><Link to="/products" className="hover:text-white transition">Products Catalog (100ml & 250ml)</Link></li>
+              <li><Link to="/science" className="hover:text-white transition">The Science of Roots</Link></li>
+              <li><Link to="/why-veelana" className="hover:text-white transition">Why Veelana (5 Commitments)</Link></li>
+              <li><Link to="/ingredients" className="hover:text-white transition">25+ Cold-Pressed Herbs</Link></li>
+              <li><Link to="/blog" className="hover:text-white transition">Hair Care SEO Blog</Link></li>
+              <li><Link to="/how-to-use" className="hover:text-white transition">How to Use (4 Steps)</Link></li>
+              <li><Link to="/reviews" className="hover:text-white transition">Customer Reviews</Link></li>
+              <li><Link to="/contact" className="hover:text-white transition">Contact & Origin</Link></li>
             </ul>
           </div>
 
-          {/* Business & Location Details */}
+          {/* Contact Details */}
           <div>
-            <h4 className="footer-title">
-              Origin & Direct Contact
-            </h4>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', fontSize: '0.88rem', color: 'rgba(250, 248, 245, 0.85)' }}>
-              <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem' }}>
-                <MapPin className="w-4 h-4 shrink-0" style={{ marginTop: '0.2rem', color: '#FAF8F5' }} />
-                <div>
-                  <strong style={{ display: 'block', color: '#FAF8F5' }}>Origin & Address:</strong>
-                  <span>Khanewal City, Postal Code 58150, Punjab, Pakistan</span>
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <Mail className="w-4 h-4 shrink-0" style={{ color: '#FAF8F5' }} />
-                <div>
-                  <strong style={{ display: 'block', color: '#FAF8F5' }}>Email:</strong>
-                  <a href="mailto:info@veelana.online" style={{ color: '#FAF8F5', textDecoration: 'underline' }}>
-                    info@veelana.online
-                  </a>
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <h4 className="text-xs font-bold text-[#D4AF37] uppercase tracking-widest mb-4">ORIGIN & DIRECT CONTACT</h4>
+            <ul className="flex flex-col gap-3 text-xs text-[#FAF8F5]/85">
+              <li className="flex items-start gap-3">
+                <MapPin className="w-4 h-4 text-[#D4AF37] shrink-0 mt-0.5" />
+                <span>Khanewal City, Postal Code 58150, Punjab, Pakistan</span>
+              </li>
+              <li className="flex items-center gap-3">
                 <Phone className="w-4 h-4 text-[#25D366] shrink-0" />
-                <div>
-                  <strong style={{ display: 'block', color: '#FAF8F5' }}>WhatsApp / Phone:</strong>
-                  <a href="https://wa.me/923061041609" style={{ color: '#25D366', fontFamily: 'monospace', fontWeight: 'bold' }}>
-                    +92 306 1041609
-                  </a>
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                <Globe className="w-4 h-4 shrink-0" style={{ color: '#FAF8F5' }} />
-                <div>
-                  <strong style={{ display: 'block', color: '#FAF8F5' }}>Official Website:</strong>
-                  <a href="https://veelana.online" style={{ color: '#FAF8F5', textDecoration: 'underline' }}>
-                    veelana.online
-                  </a>
-                </div>
-              </div>
-            </div>
+                <a href="https://wa.me/923061041609" className="text-[#25D366] font-mono font-bold hover:underline">
+                  +92 306 1041609
+                </a>
+              </li>
+              <li className="flex items-center gap-3">
+                <Mail className="w-4 h-4 text-[#D4AF37] shrink-0" />
+                <a href="mailto:info@veelana.online" className="underline hover:text-white">
+                  info@veelana.online
+                </a>
+              </li>
+              <li className="flex items-center gap-3">
+                <Globe className="w-4 h-4 text-[#D4AF37] shrink-0" />
+                <a href="https://veelana.online" className="underline hover:text-white">
+                  veelana.online
+                </a>
+              </li>
+            </ul>
           </div>
 
         </div>
 
         {/* Bottom copyright & Admin CMS Trigger */}
-        <div style={{ paddingTop: '2rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem', color: 'rgba(250, 248, 245, 0.65)', flexWrap: 'wrap', gap: '1rem', borderTop: '1px solid rgba(250,248,245,0.1)' }}>
+        <div className="pt-6 flex flex-col sm:flex-row items-center justify-between text-[11px] text-[#FAF8F5]/65 gap-3">
           <p>© {new Date().getFullYear()} Veelana Herbal Hair Care (veelana.online). All Rights Reserved. Crafted in Khanewal, Pakistan.</p>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
+          <div className="flex items-center gap-5">
             {onOpenAdmin && (
               <button
                 onClick={onOpenAdmin}
-                style={{ color: '#D4AF37', fontWeight: 'bold', fontSize: '0.75rem', textDecoration: 'underline', background: 'none', border: 'none', cursor: 'pointer' }}
+                className="text-[#D4AF37] font-bold underline hover:text-white transition"
               >
                 🔐 Store Admin CMS
               </button>
@@ -142,10 +104,10 @@ export default function Footer({ onOpenAdmin }) {
 
             <button
               onClick={scrollToTop}
-              style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: '#FAF8F5', fontWeight: 'bold', background: 'none', border: 'none', cursor: 'pointer' }}
+              className="flex items-center gap-1 font-bold text-white hover:text-[#D4AF37] transition"
             >
               <span>Back to Top</span>
-              <ArrowUp className="w-4 h-4" />
+              <ArrowUp className="w-3.5 h-3.5" />
             </button>
           </div>
         </div>
