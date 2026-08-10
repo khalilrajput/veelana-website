@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { MessageCircle, Check, Sparkles, Star } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { getProducts } from '../services/productService';
+import { getWhatsAppUrl } from '../utils/whatsapp';
 
 export default function ProductShowcase() {
   const [selectedSize, setSelectedSize] = useState('all'); // 'all', or specific product id
@@ -152,7 +153,7 @@ export default function ProductShowcase() {
 
               {/* Direct WhatsApp Order Button */}
               <a
-                href={`https://wa.me/923061041609?text=${product.waMessage || encodeURIComponent(`Hi, I want to order the ${product.name}`)}`}
+                href={getWhatsAppUrl(`Hi, I want to order the ${product.name}`)}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-olive"

@@ -2,6 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { MessageCircle, ShoppingBag, Sparkles, CheckCircle2 } from 'lucide-react';
 import { motion } from 'framer-motion';
+import { getWhatsAppUrl } from '../utils/whatsapp';
 
 export default function Hero() {
   const trustSpecs = [
@@ -42,7 +43,7 @@ export default function Hero() {
             {/* CTAs */}
             <div className="hero-buttons">
               <a
-                href="https://wa.me/923061041609?text=Hi%20Veelana%20Team%2C%20I%20want%20to%20order%20the%20Herbal%20Hair%20Oil"
+                href={getWhatsAppUrl('Hi Veelana Team, I want to order the Herbal Hair Care Oil')}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="btn-olive"

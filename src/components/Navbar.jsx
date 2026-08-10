@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { Menu, X, MapPin, Leaf, PhoneCall, ChevronRight, MessageCircle } from 'lucide-react';
+import { getWhatsAppUrl } from '../utils/whatsapp';
 
 export default function Navbar() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -78,7 +79,7 @@ export default function Navbar() {
           {/* CTA & Mobile Toggle */}
           <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
             <a
-              href="https://wa.me/923061041609"
+              href={getWhatsAppUrl('Hi Veelana Team, I want to order the Herbal Hair Oil')}
               target="_blank"
               rel="noopener noreferrer"
               className="btn-olive"
@@ -128,7 +129,7 @@ export default function Navbar() {
           ))}
 
           <a
-            href="https://wa.me/923061041609?text=Hi%20Veelana%20Team%2C%20I%20want%20to%20order"
+            href={getWhatsAppUrl('Hi Veelana Team, I want to order the Herbal Hair Care Oil')}
             target="_blank"
             rel="noopener noreferrer"
             className="btn-olive"

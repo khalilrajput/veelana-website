@@ -1,5 +1,6 @@
 import React from 'react';
-import { MapPin, Phone, Mail, Globe, MessageCircle, Clock, ShieldCheck } from 'lucide-react';
+import { MapPin, Phone, Mail, Clock, MessageCircle } from 'lucide-react';
+import { getWhatsAppUrl } from '../utils/whatsapp';
 
 export default function ContactPage() {
   return (
@@ -39,7 +40,7 @@ export default function ContactPage() {
               </div>
               <div>
                 <strong className="block text-sm font-bold text-[#121E14]">WhatsApp Support & Orders</strong>
-                <a href="https://wa.me/923061041609" className="text-xs font-bold text-[#25D366] hover:underline mt-0.5 block">
+                <a href={getWhatsAppUrl('Hi Veelana Team, I have a question about ordering')} className="text-xs font-bold text-[#25D366] hover:underline mt-0.5 block" target="_blank" rel="noopener noreferrer">
                   +92 306 1041609
                 </a>
               </div>
@@ -81,7 +82,7 @@ export default function ContactPage() {
             </div>
 
             <a
-              href="https://wa.me/923061041609?text=Hi%20Veelana%20Team%2C%20I%20have%20a%20question%20about%20ordering"
+              href={getWhatsAppUrl('Hi Veelana Team, I want to place an order')}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full py-3.5 bg-[#25D366] text-[#121E14] font-bold rounded-2xl text-center text-sm flex items-center justify-center gap-2 hover:bg-white transition shadow-lg"
