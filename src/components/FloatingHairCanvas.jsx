@@ -17,7 +17,7 @@ export default function FloatingHairCanvas() {
   const waveSway1 = Math.sin(scrollY * 0.005) * 12;
   const waveSway2 = Math.cos(scrollY * 0.004) * 15;
 
-  // Ultra-fine realistic hair strand paths (Black, Dark Espresso Brown, Warm Chestnut Brown)
+  // Ultra-fine realistic hair strand paths
   const hairStrandsGroup1 = [
     { d: "M 150, 700 Q 90, 500 130, 300 T 110, -100", stroke: "#0D0A08", width: 1.2, opacity: 0.95 },
     { d: "M 155, 710 Q 95, 510 135, 310 T 115, -90", stroke: "#1C130E", width: 0.9, opacity: 0.9 },
@@ -40,6 +40,7 @@ export default function FloatingHairCanvas() {
 
   return (
     <div
+      className="floating-hair-side-canvas"
       style={{
         position: 'fixed',
         top: 0,

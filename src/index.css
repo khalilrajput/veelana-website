@@ -774,6 +774,9 @@ button {
 }
 
 @media (max-width: 1024px) {
+  .floating-hair-side-canvas {
+    display: none !important;
+  }
   .hero-grid, .science-grid, .products-grid {
     grid-template-columns: 1fr;
     gap: 2.5rem;
