@@ -20,12 +20,12 @@ export default function Navbar() {
     <header style={{ position: 'sticky', top: 0, zIndex: 1000, width: '100%' }}>
       {/* Top Bar Badge */}
       <div className="top-bar">
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+        <span className="top-bar-item-1" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
           <MapPin style={{ width: '14px', height: '14px', color: '#D4AF37' }} />
-          📍 Khanewal City, Punjab, Pakistan
+          📍 Khanewal City, Punjab
         </span>
-        <span style={{ opacity: 0.4 }}>|</span>
-        <span style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
+        <span className="top-bar-divider" style={{ opacity: 0.4 }}>|</span>
+        <span className="top-bar-item-2" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
           <Leaf style={{ width: '14px', height: '14px', color: '#D4AF37' }} />
           🌿 100% Organic & Cold-Pressed
         </span>
@@ -40,9 +40,9 @@ export default function Navbar() {
               src="/assets/official_png_logo.png"
               alt="Veelana Official Olive Logo"
               style={{
-                height: '42px',
+                height: '38px',
                 width: 'auto',
-                maxWidth: '110px',
+                maxWidth: '90px',
                 objectFit: 'contain',
                 mixBlendMode: 'multiply',
                 flexShrink: 0
@@ -77,13 +77,13 @@ export default function Navbar() {
           </ul>
 
           {/* CTA & Mobile Toggle */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexShrink: 0 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
             <a
               href={getWhatsAppUrl('Hi Veelana Team, I want to order the Herbal Hair Oil')}
               target="_blank"
               rel="noopener noreferrer"
-              className="btn-olive"
-              style={{ display: 'inline-flex', alignItems: 'center', gap: '0.5rem', padding: '0.55rem 1.25rem', fontSize: '0.8rem' }}
+              className="btn-olive desktop-nav-cta"
+              style={{ alignItems: 'center', gap: '0.5rem', padding: '0.55rem 1.25rem', fontSize: '0.8rem' }}
             >
               <PhoneCall style={{ width: '14px', height: '14px' }} />
               <span>Order WhatsApp</span>
