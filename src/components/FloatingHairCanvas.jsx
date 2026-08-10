@@ -14,10 +14,10 @@ export default function FloatingHairCanvas() {
   // Upward fluid flow motion connected to scroll offset
   const flowOffsetY1 = (scrollY * -0.45) % 500;
   const flowOffsetY2 = (scrollY * -0.6) % 500;
-  const waveSway1 = Math.sin(scrollY * 0.005) * 12;
-  const waveSway2 = Math.cos(scrollY * 0.004) * 15;
+  const waveSway1 = Math.sin(scrollY * 0.005) * 10;
+  const waveSway2 = Math.cos(scrollY * 0.004) * 12;
 
-  // Ultra-fine realistic hair strand paths
+  // Ultra-fine realistic hair strand paths (Black, Dark Espresso Brown, Warm Chestnut Brown)
   const hairStrandsGroup1 = [
     { d: "M 150, 700 Q 90, 500 130, 300 T 110, -100", stroke: "#0D0A08", width: 1.2, opacity: 0.95 },
     { d: "M 155, 710 Q 95, 510 135, 310 T 115, -90", stroke: "#1C130E", width: 0.9, opacity: 0.9 },
@@ -45,20 +45,20 @@ export default function FloatingHairCanvas() {
         position: 'fixed',
         top: 0,
         right: 0,
-        width: '150px',
+        width: '130px',
         height: '100vh',
         pointerEvents: 'none',
-        zIndex: 30,
+        zIndex: 35,
         overflow: 'hidden',
-        opacity: 0.85
+        background: 'transparent'
       }}
     >
       <svg
         width="100%"
         height="100%"
         viewBox="0 0 160 800"
-        preserveAspectRatio="none"
-        style={{ filter: 'drop-shadow(-2px 4px 10px rgba(0, 0, 0, 0.4))' }}
+        preserveAspectRatio="xMaxYMin meet"
+        style={{ filter: 'drop-shadow(-2px 4px 8px rgba(0, 0, 0, 0.25))', background: 'transparent' }}
       >
         <defs>
           <filter id="hairSheen" x="-20%" y="-20%" width="140%" height="140%">
@@ -67,7 +67,7 @@ export default function FloatingHairCanvas() {
           </filter>
         </defs>
 
-        {/* Group 1: Deep Black & Brown Real Hair Lock */}
+        {/* Group 1: Real Hair Lock */}
         <g style={{ transform: `translate3d(${waveSway1}px, ${flowOffsetY1}px, 0)` }} filter="url(#hairSheen)">
           {hairStrandsGroup1.map((s, idx) => (
             <path

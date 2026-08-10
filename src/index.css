@@ -775,7 +775,11 @@ button {
 
 @media (max-width: 1024px) {
   .floating-hair-side-canvas {
-    display: none !important;
+    width: 45px !important;
+    right: 0 !important;
+    opacity: 0.65 !important;
+    pointer-events: none !important;
+    background: transparent !important;
   }
   .hero-grid, .science-grid, .products-grid {
     grid-template-columns: 1fr;
