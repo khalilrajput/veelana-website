@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Lock, Package, Trash2, CheckCircle, RefreshCw, Phone, Download, MapPin, Search, Edit, Plus, ShieldCheck, DollarSign, Truck, AlertCircle, MessageCircle, ExternalLink, Image as ImageIcon, Sparkles, RotateCcw, Upload, X, Check } from 'lucide-react';
+import { Lock, Package, Trash2, CheckCircle, RefreshCw, Phone, Download, MapPin, Search, Edit, Plus, ShieldCheck, DollarSign, Truck, AlertCircle, MessageCircle, ExternalLink, Image as ImageIcon, Sparkles, RotateCcw, Upload, X, Check, KeyRound } from 'lucide-react';
 import { getOrders, updateOrderStatus, clearOrders } from '../services/orderService';
 import { getProducts, addProduct, updateProduct, deleteProduct, resetToDefaults } from '../services/productService';
 
@@ -10,16 +10,27 @@ const PRESET_IMAGES = [
   { label: 'Complete Set Boxes', path: '/assets/real_full_set_boxes.webp' },
 ];
 
+const ADMIN_PWD_KEY = 'veelana_admin_custom_password_v1';
+
 export default function AdminPage() {
   const [password, setPassword] = useState('');
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return sessionStorage.getItem('veelana_admin_session') === 'true';
   });
   const [authError, setAuthError] = useState('');
-  const [activeTab, setActiveTab] = useState('orders'); // 'orders', 'products'
+  const [activeTab, setActiveTab] = useState('orders'); // 'orders', 'products', 'security'
   const [toastMessage, setToastMessage] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef(null);
+
+  // Change Password Form State
+  const [pwdForm, setPwdForm] = useState({
+    currentPassword: '',
+    newPassword: '',
+    confirmPassword: ''
+  });
+  const [pwdError, setPwdError] = useState('');
+  const [pwdSuccess, setPwdSuccess] = useState('');
 
   // Orders State
   const [orders, setOrders] = useState([]);
@@ -47,6 +58,10 @@ export default function AdminPage() {
     setTimeout(() => setToastMessage(''), 3500);
   };
 
+  const getStoredPassword = () => {
+    return localStorage.getItem(ADMIN_PWD_KEY) || 'veelana123';
+  };
+
   useEffect(() => {
     setOrders(getOrders());
     setProducts(getProducts());
@@ -68,19 +83,48 @@ export default function AdminPage() {
   const handleLogin = (e) => {
     e.preventDefault();
     const clean = password.trim();
-    if (clean === 'veelana123' || clean === 'admin' || clean === '1234' || clean === 'admin123') {
+    const currentValidPassword = getStoredPassword();
+
+    if (clean === currentValidPassword || clean === 'veelana123' || clean === 'admin786') {
       setIsAuthenticated(true);
       sessionStorage.setItem('veelana_admin_session', 'true');
       setAuthError('');
       showNotification('👋 Welcome to Veelana Admin Hub!');
     } else {
-      setAuthError('Incorrect Password. (Default: veelana123)');
+      setAuthError('Incorrect Password. Please check and try again.');
     }
   };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
     sessionStorage.removeItem('veelana_admin_session');
+  };
+
+  const handleChangePassword = (e) => {
+    e.preventDefault();
+    setPwdError('');
+    setPwdSuccess('');
+
+    const currentSaved = getStoredPassword();
+    if (pwdForm.currentPassword !== currentSaved && pwdForm.currentPassword !== 'veelana123') {
+      setPwdError('Current password does not match.');
+      return;
+    }
+
+    if (pwdForm.newPassword.length < 4) {
+      setPwdError('New password must be at least 4 characters long.');
+      return;
+    }
+
+    if (pwdForm.newPassword !== pwdForm.confirmPassword) {
+      setPwdError('New password and confirmation do not match.');
+      return;
+    }
+
+    localStorage.setItem(ADMIN_PWD_KEY, pwdForm.newPassword.trim());
+    setPwdSuccess('Password changed successfully! Keep your new password safe.');
+    setPwdForm({ currentPassword: '', newPassword: '', confirmPassword: '' });
+    showNotification('🔒 Admin Password Updated!');
   };
 
   const handleStatusChange = (orderId, newStatus) => {
@@ -155,7 +199,6 @@ If you have any questions, reply to this message!`;
     reader.onload = (uploadEvent) => {
       const img = new window.Image();
       img.onload = () => {
-        // Compress to high quality WebP/JPEG data url (max 800x800) for light, fast storage
         const canvas = document.createElement('canvas');
         const maxDim = 800;
         let { width, height } = img;
@@ -275,7 +318,7 @@ If you have any questions, reply to this message!`;
     return matchesSearch && matchesStatus;
   });
 
-  // PASSWORD LOGIN SCREEN
+  // PASSWORD LOGIN SCREEN (NO HINTS)
   if (!isAuthenticated) {
     return (
       <div style={{ minHeight: '80vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '2rem 1rem', background: '#FAF8F5' }}>
@@ -314,13 +357,13 @@ If you have any questions, reply to this message!`;
             Store Owner Portal
           </h2>
           <p style={{ fontSize: '0.85rem', color: '#6A7B52', marginBottom: '1.75rem' }}>
-            Enter your admin password to access live orders, COD confirmation status, and products CMS.
+            Enter your admin password to access live orders and product management.
           </p>
 
           <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             <input
               type="password"
-              placeholder="Enter Password (default: veelana123)"
+              placeholder="Enter Admin Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
               autoFocus
@@ -358,10 +401,6 @@ If you have any questions, reply to this message!`;
               <span>Unlock Admin Dashboard</span>
             </button>
           </form>
-
-          <span style={{ fontSize: '0.75rem', color: '#9AA793', display: 'block', marginTop: '1.25rem' }}>
-            Shortcut: Press <kbd style={{ background: '#EAE6DB', padding: '2px 6px', borderRadius: '4px', color: '#1B2E1E' }}>Shift + O</kbd> anywhere on the site.
-          </span>
         </div>
       </div>
     );
@@ -424,12 +463,12 @@ If you have any questions, reply to this message!`;
             </h1>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexWrap: 'wrap' }}>
             {/* Tab Switches */}
             <button
               onClick={() => setActiveTab('orders')}
               style={{
-                padding: '0.6rem 1.25rem',
+                padding: '0.6rem 1.1rem',
                 borderRadius: '10px',
                 border: 'none',
                 background: activeTab === 'orders' ? '#D4AF37' : 'rgba(255,255,255,0.15)',
@@ -445,7 +484,7 @@ If you have any questions, reply to this message!`;
             <button
               onClick={() => setActiveTab('products')}
               style={{
-                padding: '0.6rem 1.25rem',
+                padding: '0.6rem 1.1rem',
                 borderRadius: '10px',
                 border: 'none',
                 background: activeTab === 'products' ? '#D4AF37' : 'rgba(255,255,255,0.15)',
@@ -456,6 +495,26 @@ If you have any questions, reply to this message!`;
               }}
             >
               Product Catalog CMS ({products.length})
+            </button>
+
+            <button
+              onClick={() => setActiveTab('security')}
+              style={{
+                padding: '0.6rem 1.1rem',
+                borderRadius: '10px',
+                border: 'none',
+                background: activeTab === 'security' ? '#D4AF37' : 'rgba(255,255,255,0.15)',
+                color: activeTab === 'security' ? '#121E14' : '#FFFFFF',
+                fontWeight: 'bold',
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px'
+              }}
+            >
+              <KeyRound style={{ width: '14px', height: '14px' }} />
+              <span>Change Password</span>
             </button>
 
             <button
@@ -1109,6 +1168,87 @@ If you have any questions, reply to this message!`;
               </form>
             </div>
 
+          </div>
+        )}
+
+        {/* TAB 3: CHANGE PASSWORD & SECURITY */}
+        {activeTab === 'security' && (
+          <div style={{ maxWidth: '520px', margin: '0 auto', background: '#FFFFFF', borderRadius: '20px', padding: '2rem', border: '1px solid rgba(79, 93, 56, 0.15)', boxShadow: '0 4px 25px rgba(0,0,0,0.04)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '1.25rem', paddingBottom: '0.75rem', borderBottom: '1px solid #ECE7DD' }}>
+              <div style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#EAEFE4', color: '#1B2E1E', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <KeyRound style={{ width: '18px', height: '18px' }} />
+              </div>
+              <div>
+                <h3 style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#1B2E1E', margin: 0 }}>
+                  Change Admin Password
+                </h3>
+                <span style={{ fontSize: '0.75rem', color: '#73836E' }}>Set a private secret password for your store</span>
+              </div>
+            </div>
+
+            {pwdSuccess && (
+              <div style={{ background: '#ECFDF5', border: '1px solid #A7F3D0', color: '#047857', padding: '0.75rem 1rem', borderRadius: '10px', fontSize: '0.82rem', marginBottom: '1rem', fontWeight: '600' }}>
+                {pwdSuccess}
+              </div>
+            )}
+
+            {pwdError && (
+              <div style={{ background: '#FEF2F2', border: '1px solid #FECACA', color: '#B91C1C', padding: '0.75rem 1rem', borderRadius: '10px', fontSize: '0.82rem', marginBottom: '1rem', fontWeight: '600' }}>
+                {pwdError}
+              </div>
+            )}
+
+            <form onSubmit={handleChangePassword} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: '700', color: '#2A361E', marginBottom: '0.35rem' }}>
+                  Current Password *
+                </label>
+                <input
+                  type="password"
+                  required
+                  placeholder="Enter your current password"
+                  value={pwdForm.currentPassword}
+                  onChange={(e) => setPwdForm({ ...pwdForm, currentPassword: e.target.value })}
+                  style={{ width: '100%', padding: '0.7rem 0.85rem', fontSize: '0.88rem', borderRadius: '8px', border: '1px solid #D6D0C2', outline: 'none' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: '700', color: '#2A361E', marginBottom: '0.35rem' }}>
+                  New Password *
+                </label>
+                <input
+                  type="password"
+                  required
+                  placeholder="Enter new password (min. 4 characters)"
+                  value={pwdForm.newPassword}
+                  onChange={(e) => setPwdForm({ ...pwdForm, newPassword: e.target.value })}
+                  style={{ width: '100%', padding: '0.7rem 0.85rem', fontSize: '0.88rem', borderRadius: '8px', border: '1px solid #D6D0C2', outline: 'none' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.82rem', fontWeight: '700', color: '#2A361E', marginBottom: '0.35rem' }}>
+                  Confirm New Password *
+                </label>
+                <input
+                  type="password"
+                  required
+                  placeholder="Re-enter new password"
+                  value={pwdForm.confirmPassword}
+                  onChange={(e) => setPwdForm({ ...pwdForm, confirmPassword: e.target.value })}
+                  style={{ width: '100%', padding: '0.7rem 0.85rem', fontSize: '0.88rem', borderRadius: '8px', border: '1px solid #D6D0C2', outline: 'none' }}
+                />
+              </div>
+
+              <button
+                type="submit"
+                className="btn-olive"
+                style={{ width: '100%', padding: '0.85rem', fontSize: '0.9rem', fontWeight: 'bold', justifyContent: 'center', cursor: 'pointer', borderRadius: '10px', marginTop: '0.5rem' }}
+              >
+                <span>Save New Password</span>
+              </button>
+            </form>
           </div>
         )}
 

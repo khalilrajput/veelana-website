@@ -116,11 +116,6 @@ export default function Footer({ onOpenAdmin }) {
               <li><Link to="/privacy-policy" style={{ color: 'rgba(250, 248, 245, 0.85)' }}>Privacy Policy</Link></li>
               <li><Link to="/terms" style={{ color: 'rgba(250, 248, 245, 0.85)' }}>Terms of Service</Link></li>
               <li><Link to="/contact" style={{ color: 'rgba(250, 248, 245, 0.85)' }}>Customer Help Desk</Link></li>
-              <li>
-                <Link to="/admin" style={{ color: '#D4AF37', fontSize: '0.8rem', display: 'inline-flex', alignItems: 'center', gap: '4px', marginTop: '4px' }}>
-                  <span>🔐 Store Admin Portal</span>
-                </Link>
-              </li>
             </ul>
           </div>
 
@@ -177,18 +172,13 @@ export default function Footer({ onOpenAdmin }) {
         <div style={{ paddingTop: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.08)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', fontSize: '0.75rem', color: 'rgba(250, 248, 245, 0.65)', flexWrap: 'wrap', gap: '1rem' }}>
           <p>© {new Date().getFullYear()} Veelana Herbal Hair Care (veelana.online). All Rights Reserved. Crafted in Pakistan.</p>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-            <Link to="/admin" style={{ color: 'rgba(250, 248, 245, 0.5)', textDecoration: 'none', fontSize: '0.72rem' }}>
-              Admin Access (/admin)
-            </Link>
-            <button
-              onClick={scrollToTop}
-              style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#FAF8F5', fontWeight: 'bold', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.75rem' }}
-            >
-              <span>Back to Top</span>
-              <ArrowUp style={{ width: '14px', height: '14px' }} />
-            </button>
-          </div>
+          <button
+            onClick={scrollToTop}
+            style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: '#FAF8F5', fontWeight: 'bold', background: 'none', border: 'none', cursor: 'pointer', fontSize: '0.75rem' }}
+          >
+            <span>Back to Top</span>
+            <ArrowUp style={{ width: '14px', height: '14px' }} />
+          </button>
         </div>
       </div>
     </footer>

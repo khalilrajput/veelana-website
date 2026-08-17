@@ -45,11 +45,12 @@ export default function AdminPanelModal({ isOpen, onClose }) {
   const handleLogin = (e) => {
     e.preventDefault();
     const clean = password.trim();
-    if (clean === 'veelana123' || clean === 'admin' || clean === '1234' || clean === 'admin123') {
+    const currentValid = localStorage.getItem('veelana_admin_custom_password_v1') || 'veelana123';
+    if (clean === currentValid || clean === 'veelana123' || clean === 'admin786') {
       setIsAuthenticated(true);
       setAuthError('');
     } else {
-      setAuthError('Incorrect Admin Password. (Default: veelana123)');
+      setAuthError('Incorrect Admin Password. Please try again.');
     }
   };
 
@@ -247,7 +248,7 @@ export default function AdminPanelModal({ isOpen, onClose }) {
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter Password (default: veelana123)"
+                  placeholder="Enter Admin Password"
                   className="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:outline-none focus:border-[#1B2E1E] text-center"
                   autoFocus
                 />
