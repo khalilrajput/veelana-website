@@ -46,7 +46,7 @@ export default function AdminPanelModal({ isOpen, onClose }) {
     e.preventDefault();
     const clean = password.trim();
     const currentValid = localStorage.getItem('veelana_admin_custom_password_v1') || 'veelana123';
-    if (clean === currentValid || clean === 'veelana123' || clean === 'admin786') {
+    if (clean === currentValid) {
       setIsAuthenticated(true);
       setAuthError('');
     } else {

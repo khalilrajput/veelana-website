@@ -85,7 +85,7 @@ export default function AdminPage() {
     const clean = password.trim();
     const currentValidPassword = getStoredPassword();
 
-    if (clean === currentValidPassword || clean === 'veelana123' || clean === 'admin786') {
+    if (clean === currentValidPassword) {
       setIsAuthenticated(true);
       sessionStorage.setItem('veelana_admin_session', 'true');
       setAuthError('');
@@ -106,7 +106,7 @@ export default function AdminPage() {
     setPwdSuccess('');
 
     const currentSaved = getStoredPassword();
-    if (pwdForm.currentPassword !== currentSaved && pwdForm.currentPassword !== 'veelana123') {
+    if (pwdForm.currentPassword !== currentSaved) {
       setPwdError('Current password does not match.');
       return;
     }
