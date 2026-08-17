@@ -1,33 +1,45 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
-import { Menu, X, MapPin, Leaf, PhoneCall, ChevronRight, MessageCircle } from 'lucide-react';
-import { getWhatsAppUrl } from '../utils/whatsapp';
+import { Menu, X, ShoppingBag, Package, ChevronRight, PhoneCall, Sparkles } from 'lucide-react';
+import { useCart } from '../context/CartContext';
 
-export default function Navbar() {
+export default function Navbar({ onOpenOrder }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [announcementIdx, setAnnouncementIdx] = useState(0);
+  const { totalItemsCount, setIsCartOpen } = useCart();
+
+  const announcements = [
+    { text: '🌿 100% Organic & Cold-Pressed Herbal Hair Care • Pure Botanical Extract' },
+    { text: '🚚 Cash on Delivery Across Pakistan • Free Shipping on Rs. 3,000+' },
+    { text: '🎁 Use Coupon SAVE10 for 10% Off Your Order Today!' },
+    { text: '💬 WhatsApp Direct Support & Dispatch: +92 306 1041609' }
+  ];
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setAnnouncementIdx((prev) => (prev + 1) % announcements.length);
+    }, 4000);
+    return () => clearInterval(timer);
+  }, []);
 
   const navLinks = [
     { name: 'Home', path: '/' },
     { name: 'Products', path: '/products' },
+    { name: 'Track Order', path: '/track-order' },
     { name: 'Why Veelana', path: '/why-veelana' },
     { name: '25+ Herbs', path: '/ingredients' },
     { name: 'How to Use', path: '/how-to-use' },
-    { name: 'Reviews', path: '/reviews' },
+    { name: 'About Us', path: '/about' },
+    { name: 'FAQ', path: '/faq' },
     { name: 'Contact', path: '/contact' },
   ];
 
   return (
     <header style={{ position: 'sticky', top: 0, zIndex: 1000, width: '100%' }}>
-      {/* Top Bar Badge */}
-      <div className="top-bar">
-        <span className="top-bar-item-1" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
-          <MapPin style={{ width: '14px', height: '14px', color: '#D4AF37' }} />
-          📍 Khanewal City, Punjab
-        </span>
-        <span className="top-bar-divider" style={{ opacity: 0.4 }}>|</span>
-        <span className="top-bar-item-2" style={{ display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}>
-          <Leaf style={{ width: '14px', height: '14px', color: '#D4AF37' }} />
-          🌿 100% Organic & Cold-Pressed
+      {/* Top Announcement Bar - Rotating */}
+      <div className="top-bar" style={{ minHeight: '32px', overflow: 'hidden' }}>
+        <span style={{ fontSize: '0.78rem', fontWeight: '500', transition: 'all 0.4s' }}>
+          {announcements[announcementIdx].text}
         </span>
       </div>
 
@@ -37,7 +49,7 @@ export default function Navbar() {
           {/* Brand Logo */}
           <Link to="/" className="nav-brand">
             <img
-              src="/assets/official_png_logo.png"
+              src="/assets/official_png_logo.webp"
               alt="Veelana Official Olive Logo"
               style={{
                 height: '38px',
@@ -76,24 +88,68 @@ export default function Navbar() {
             ))}
           </ul>
 
-          {/* CTA & Mobile Toggle */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
-            <a
-              href={getWhatsAppUrl('Hi Veelana Team, I want to order the Herbal Hair Oil')}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn-olive desktop-nav-cta"
-              style={{ alignItems: 'center', gap: '0.5rem', padding: '0.55rem 1.25rem', fontSize: '0.8rem' }}
+          {/* CTA, Shopping Cart & Mobile Toggle */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexShrink: 0 }}>
+            {/* Shopping Cart Trigger Button */}
+            <button
+              onClick={() => setIsCartOpen(true)}
+              aria-label="Open Shopping Cart"
+              style={{
+                position: 'relative',
+                background: '#FAF8F5',
+                border: '1px solid rgba(79, 93, 56, 0.25)',
+                borderRadius: '50%',
+                width: '42px',
+                height: '42px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                color: '#1B2E1E',
+                transition: 'all 0.2s',
+              }}
             >
-              <PhoneCall style={{ width: '14px', height: '14px' }} />
-              <span>Order WhatsApp</span>
-            </a>
+              <ShoppingBag style={{ width: '18px', height: '18px' }} />
+              {totalItemsCount > 0 && (
+                <span
+                  style={{
+                    position: 'absolute',
+                    top: '-3px',
+                    right: '-3px',
+                    background: '#2D6A4F',
+                    color: '#FAF8F5',
+                    fontSize: '0.7rem',
+                    fontWeight: '800',
+                    borderRadius: '999px',
+                    minWidth: '18px',
+                    height: '18px',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    padding: '0 4px',
+                    boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+                  }}
+                >
+                  {totalItemsCount}
+                </span>
+              )}
+            </button>
 
+            {/* Quick Buy CTA */}
+            <button
+              onClick={() => onOpenOrder ? onOpenOrder('200ml') : setIsCartOpen(true)}
+              className="btn-olive desktop-nav-cta"
+              style={{ alignItems: 'center', gap: '0.5rem', padding: '0.55rem 1.25rem', fontSize: '0.82rem', cursor: 'pointer', minHeight: '42px' }}
+            >
+              <span>Order Now</span>
+            </button>
+
+            {/* Mobile Burger Menu Button */}
             <button
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="mobile-menu-btn"
               aria-label="Toggle Mobile Menu"
-              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.35rem' }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.5rem', minHeight: '44px', minWidth: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
             >
               {mobileMenuOpen ? <X style={{ width: '24px', height: '24px' }} /> : <Menu style={{ width: '24px', height: '24px' }} />}
             </button>
@@ -111,7 +167,7 @@ export default function Navbar() {
               onClick={() => setMobileMenuOpen(false)}
               className="nav-link"
               style={({ isActive }) => ({
-                fontSize: '1rem',
+                fontSize: '0.95rem',
                 fontWeight: '700',
                 padding: '0.75rem 1rem',
                 borderRadius: '12px',
@@ -120,7 +176,8 @@ export default function Navbar() {
                 border: '1px solid rgba(0,0,0,0.06)',
                 display: 'flex',
                 alignItems: 'center',
-                justifyContent: 'space-between'
+                justifyContent: 'space-between',
+                minHeight: '48px'
               })}
             >
               <span>{link.name}</span>
@@ -128,16 +185,17 @@ export default function Navbar() {
             </NavLink>
           ))}
 
-          <a
-            href={getWhatsAppUrl('Hi Veelana Team, I want to order the Herbal Hair Care Oil')}
-            target="_blank"
-            rel="noopener noreferrer"
+          <button
+            onClick={() => {
+              setMobileMenuOpen(false);
+              setIsCartOpen(true);
+            }}
             className="btn-olive"
-            style={{ marginTop: '0.75rem', width: '100%', padding: '0.85rem', justifyContent: 'center', background: '#25D366', color: '#121E14', borderColor: '#25D366' }}
+            style={{ marginTop: '0.75rem', width: '100%', padding: '0.85rem', justifyContent: 'center', background: '#4F5D38', color: '#FAF8F5', borderColor: '#4F5D38', minHeight: '48px', cursor: 'pointer' }}
           >
-            <MessageCircle style={{ width: '18px', height: '18px', fill: 'currentColor' }} />
-            <span>Order Directly on WhatsApp (+92 306 1041609)</span>
-          </a>
+            <ShoppingBag style={{ width: '18px', height: '18px' }} />
+            <span>View Shopping Cart ({totalItemsCount})</span>
+          </button>
         </div>
       )}
     </header>

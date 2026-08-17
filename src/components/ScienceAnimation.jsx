@@ -24,24 +24,24 @@ export default function ScienceAnimation() {
 
   const restorationSteps = [
     {
-      title: "1. Deep Scalp Penetration",
+      title: "Step 1: Scalp Penetration",
       desc: "Micro-droplets of cold-pressed oil seep into the follicle pore within minutes.",
-      time: "0.0s - 0.8s"
+      benefit: "Scalp Absorption"
     },
     {
-      title: "2. Root Activation",
+      title: "Step 2: Follicle Activation",
       desc: "Scalp tissue absorbs vital bio-active nutrients, stimulating cellular circulation.",
-      time: "0.8s - 1.5s"
+      benefit: "Blood Circulation"
     },
     {
-      title: "3. 25+ Herb Absorption",
-      desc: "Bhringraj, Amla, and Rosemary strengthen the keratin core of each strand.",
-      time: "1.5s - 3.0s"
+      title: "Step 3: Root Anchoring",
+      desc: "Bhringraj, Amla, and Rosemary strengthen the keratin core of each hair strand.",
+      benefit: "Keratin Strengthening"
     },
     {
-      title: "4. Thicker Strand Growth",
-      desc: "Follicles anchor firmly, producing lustrous, dense, resilient natural hair.",
-      time: "3.0s - 5.0s"
+      title: "Step 4: Density & Growth",
+      desc: "Follicles anchor firmly into scalp tissue, producing dense, resilient natural hair.",
+      benefit: "Follicle Revival"
     }
   ];
 
@@ -83,7 +83,7 @@ export default function ScienceAnimation() {
               marginBottom: '1rem'
             }}>
               <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#8DAA63' }}></span>
-              Live Follicle Simulation Loop
+              Live Follicle Simulation
             </div>
 
             {/* SVG Canvas */}
@@ -228,7 +228,7 @@ export default function ScienceAnimation() {
             {/* Bottom Caption */}
             <div style={{ marginTop: '1rem', textTransform: 'uppercase', fontSize: '0.72rem', color: '#FAF8F5', letterSpacing: '1px', fontWeight: 'bold' }}>
               <Sparkles className="w-3.5 h-3.5 inline mr-1" />
-              Continuous Follicle Simulation (Resets every 5s)
+              Real Cold-Pressed Herbal Action
             </div>
 
           </div>
@@ -253,7 +253,7 @@ export default function ScienceAnimation() {
                       {step.title}
                     </h3>
                     <span style={{ fontSize: '0.72rem', color: '#3A4828', background: '#EAEFE4', padding: '0.2rem 0.65rem', borderRadius: '9999px', fontFamily: 'sans-serif', fontWeight: 'bold' }}>
-                      {step.time}
+                      {step.benefit}
                     </span>
                   </div>
                   <p style={{ fontSize: '0.88rem', color: 'rgba(250, 248, 245, 0.85)', marginTop: '0.25rem', fontWeight: '300' }}>

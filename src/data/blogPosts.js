@@ -7,7 +7,7 @@ export const BLOG_POSTS = [
     date: 'August 8, 2026',
     readTime: '5 min read',
     category: 'Hair Science & Formulation',
-    image: '/assets/real_full_set_boxes.jpg',
+    image: '/assets/real_full_set_boxes.webp',
     keywords: ['cold pressed hair oil', 'Amla hair growth', 'Bhringraj scalp treatment', 'follicle revival'],
     content: `
       <h2>The Molecular Physics of Hair Shaft Penetration</h2>
@@ -33,7 +33,7 @@ export const BLOG_POSTS = [
     date: 'August 5, 2026',
     readTime: '4 min read',
     category: 'Scalp Health & Safety',
-    image: '/assets/real_250ml_single.jpg',
+    image: '/assets/real_250ml_single.webp',
     keywords: ['paraben free hair oil', 'mineral oil danger', 'scalp inflammation', 'hair loss causes'],
     content: `
       <h2>The Hidden Danger in Generic Store Oils</h2>
@@ -52,12 +52,12 @@ export const BLOG_POSTS = [
   {
     id: 'ultimate-nightly-hair-oiling-routine',
     title: 'The Ultimate Nightly Hair Oiling Routine: 4 Steps to Stop Hair Loss in 10 Days',
-    snippet: 'Master the traditional scalp massage technique used in Khanewal to maximize micro-blood flow and follicle absorption.',
+    snippet: 'Master the traditional scalp massage technique to maximize micro-blood flow and follicle absorption.',
     author: 'Veelana Wellness Guide',
     date: 'July 28, 2026',
     readTime: '6 min read',
     category: 'Hair Care Routine',
-    image: '/assets/real_100ml_double.jpg',
+    image: '/assets/real_100ml_double.webp',
     keywords: ['nightly hair oiling', 'scalp massage technique', 'stop hair loss fast', 'Veelana routine'],
     content: `
       <h2>Maximizing Follicle Absorption at Night</h2>
@@ -75,18 +75,18 @@ export const BLOG_POSTS = [
     `
   },
   {
-    id: 'khanewal-botanical-heritage-story',
-    title: 'Khanewal’s Botanical Heritage: The Story Behind Traditional Slow-Cold-Pressing',
-    snippet: 'Explore how ancient Ayurvedic slow-infusion methods in Khanewal City create Pakistan’s most authentic hair care elixir.',
+    id: 'botanical-heritage-story',
+    title: 'Traditional Botanical Heritage: The Story Behind Slow-Cold-Pressing',
+    snippet: 'Explore how ancient Ayurvedic slow-infusion methods create Pakistan’s most authentic herbal hair care elixir.',
     author: 'Khizar Veelana Founder',
     date: 'July 15, 2026',
     readTime: '7 min read',
     category: 'Brand Heritage & Tradition',
-    image: '/assets/real_250ml_and_100ml.jpg',
-    keywords: ['Khanewal hair oil', 'Ayurvedic cold pressing', 'Pakistani herbal oil', 'Veelana heritage'],
+    image: '/assets/real_250ml_and_100ml.webp',
+    keywords: ['Ayurvedic cold pressing', 'Pakistani herbal oil', 'Veelana heritage'],
     content: `
-      <h2>Deeply Rooted in the Fertile Soils of Khanewal</h2>
-      <p>In the heart of Punjab, Khanewal has long been celebrated for its rich agricultural soil and clean botanical cultivation. Veelana was founded with a single mission: to preserve authentic, unadulterated herbal hair remedies passed down through generations.</p>
+      <h2>Deeply Rooted in the Fertile Soils of Punjab</h2>
+      <p>In the heart of Punjab, rich agricultural soil and clean botanical cultivation have long fostered authentic herbal remedies. Veelana was founded with a single mission: to preserve authentic, unadulterated herbal hair remedies passed down through generations.</p>
 
       <p>Instead of industrial chemical acceleration, every batch of Veelana Herbal Oil undergoes a slow 72-hour cold maceration process where raw herbs are steeped in pure sesame and coconut oils, allowing the full spectrum of phytochemicals to infuse naturally.</p>
 

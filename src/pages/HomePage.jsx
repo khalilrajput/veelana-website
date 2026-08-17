@@ -7,13 +7,13 @@ import IngredientsGrid from '../components/IngredientsGrid';
 import HowToUse from '../components/HowToUse';
 import Testimonials from '../components/Testimonials';
 
-export default function HomePage() {
+export default function HomePage({ onOpenOrder }) {
   return (
     <div>
-      <Hero />
+      <Hero onOpenOrder={onOpenOrder} />
       <ScienceAnimation />
       <ValueGrid />
-      <ProductShowcase />
+      <ProductShowcase onOpenOrder={onOpenOrder} />
       <IngredientsGrid />
       <HowToUse />
       <Testimonials />

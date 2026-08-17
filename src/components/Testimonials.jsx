@@ -9,7 +9,7 @@ export default function Testimonials() {
       name: 'Ayesha Khan',
       city: 'Lahore',
       rating: 5,
-      bottle: '250ml Value Pack',
+      bottle: '200ml Value Pack',
       text: 'Veelana completely saved my post-partum hair loss! Within 4 weeks of massaging my scalp twice a week, I noticed baby hair sprouting along my hairline. The natural herbal aroma is so comforting.',
       verified: true
     },
@@ -27,8 +27,8 @@ export default function Testimonials() {
       name: 'Muhammad Usman',
       city: 'Multan',
       rating: 5,
-      bottle: '250ml Value Pack',
-      text: 'Ordered from Khanewal directly to Multan. Received my 250ml bottle in pristine condition. My crown thinning has noticeably reduced. 100% genuine herbal quality!',
+      bottle: '200ml Value Pack',
+      text: 'Ordered online with express delivery to Multan. Received my 200ml bottle in pristine condition. My crown thinning has noticeably reduced. 100% genuine herbal quality!',
       verified: true
     },
     {
@@ -36,7 +36,7 @@ export default function Testimonials() {
       name: 'Zainab Bibi',
       city: 'Karachi',
       rating: 5,
-      bottle: '250ml Value Pack',
+      bottle: '200ml Value Pack',
       text: 'Free from chemical smell! You can literally see the pure rich botanical color. My split ends are gone and my long hair has never looked so glossy and healthy.',
       verified: true
     }

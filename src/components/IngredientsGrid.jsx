@@ -94,7 +94,7 @@ export default function IngredientsGrid() {
             Harnessing Nature's Potent Botanical Elixirs
           </h2>
           <p className="section-subtitle" style={{ color: '#4F5E52' }}>
-            Every bottle contains 25+ handpicked Ayurvedic & modern herbs infused over slow cold-pressing methods in Khanewal.
+            Every bottle contains 25+ handpicked Ayurvedic & modern herbs infused over slow cold-pressing methods with artisan precision.
           </p>
         </div>
 

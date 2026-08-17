@@ -15,7 +15,7 @@ export default function HowToUsePage() {
           4 Easy Steps to Maximum Follicle Growth
         </h1>
         <p className="text-sm md:text-base text-[#4F5E52] max-w-2xl mx-auto mt-3">
-          Follow our authentic Khanewal oiling routine 3 times per week to nourish your roots and stop hair fall.
+          Follow our authentic botanical oiling routine 3 times per week to nourish your roots and stop hair fall.
         </p>
       </div>
 

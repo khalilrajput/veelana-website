@@ -1,6 +1,6 @@
 import React from 'react';
 import ValueGrid from '../components/ValueGrid';
-import { ShieldCheck, Leaf, CheckCircle2, ArrowRight } from 'lucide-react';
+import { ShieldCheck, CheckCircle2, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function WhyVeelanaPage() {
@@ -15,7 +15,7 @@ export default function WhyVeelanaPage() {
           Why Discerning Families Choose Veelana
         </h1>
         <p className="text-sm md:text-base text-[#4F5E52] max-w-2xl mx-auto mt-4 leading-relaxed">
-          We reject cheap mineral oils, parabens, sulfates, and synthetic chemicals. Every drop of Veelana is 100% organic, vegan, and slow-pressed in Khanewal.
+          We reject cheap mineral oils, parabens, sulfates, and synthetic chemicals. Every drop of Veelana is 100% organic, vegan, and slow-pressed using traditional botanical heritage.
         </p>
       </div>
 
@@ -50,7 +50,7 @@ export default function WhyVeelanaPage() {
               <CheckCircle2 className="w-5 h-5 text-[#4F5D38] shrink-0 mt-0.5" />
               <div>
                 <strong className="block text-[#121E14]">100% Vegan & Cruelty-Free</strong>
-                <span>Sourced responsibly from organic herbal farms in Khanewal.</span>
+                <span>Sourced responsibly from certified organic herbal growers in Punjab.</span>
               </div>
             </div>
           </div>

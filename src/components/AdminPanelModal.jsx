@@ -1,7 +1,14 @@
-import React, { useState, useEffect } from 'react';
-import { X, Plus, Edit, Trash2, ShieldCheck, Download, Upload, RefreshCw, CheckCircle, Package } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { X, Plus, Edit, Trash2, ShieldCheck, Download, Upload, RefreshCw, CheckCircle, Package, Image as ImageIcon } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { getProducts, addProduct, updateProduct, deleteProduct, resetToDefaults, exportProductsJSON, importProductsJSON } from '../services/productService';
+
+const PRESET_IMAGES = [
+  { label: '200ml Bottle', path: '/assets/real_250ml_single.webp' },
+  { label: '100ml Bottle', path: '/assets/real_100ml_double.webp' },
+  { label: 'Family Bundle', path: '/assets/real_250ml_and_100ml.webp' },
+  { label: 'Complete Set Boxes', path: '/assets/real_full_set_boxes.webp' },
+];
 
 export default function AdminPanelModal({ isOpen, onClose }) {
   const [password, setPassword] = useState('');
@@ -9,19 +16,22 @@ export default function AdminPanelModal({ isOpen, onClose }) {
   const [authError, setAuthError] = useState('');
   const [products, setProducts] = useState([]);
   const [editingProduct, setEditingProduct] = useState(null);
-  const [activeTab, setActiveTab] = useState('products'); // 'products', 'add', 'export'
+  const [activeTab, setActiveTab] = useState('products'); // 'products', 'form', 'export'
   const [jsonInput, setJsonInput] = useState('');
   const [statusMsg, setStatusMsg] = useState('');
+  const [isUploading, setIsUploading] = useState(false);
+  const fileInputRef = useRef(null);
 
   // Form State for Add / Edit
   const [formData, setFormData] = useState({
     name: '',
     subtitle: '',
-    price: '',
-    originalPrice: '',
-    badge: '',
-    image: '',
-    featuresText: '',
+    price: 'Rs. 1,899',
+    originalPrice: 'Rs. 2,450',
+    category: 'bottles',
+    badge: 'Popular Herbal Choice',
+    image: '/assets/real_250ml_single.webp',
+    featuresText: '100% Cold-Pressed Organic Formula\n25+ Ayurvedic Herb Infusion\nParaben, Sulphate & Mineral Oil Free\nFast Delivery Across Pakistan',
     popular: false,
     inStock: true,
   });
@@ -34,7 +44,8 @@ export default function AdminPanelModal({ isOpen, onClose }) {
 
   const handleLogin = (e) => {
     e.preventDefault();
-    if (password === 'veelana123' || password === 'admin' || password === '1234') {
+    const clean = password.trim();
+    if (clean === 'veelana123' || clean === 'admin' || clean === '1234' || clean === 'admin123') {
       setIsAuthenticated(true);
       setAuthError('');
     } else {
@@ -47,11 +58,12 @@ export default function AdminPanelModal({ isOpen, onClose }) {
     setFormData({
       name: '',
       subtitle: '',
-      price: 'Rs. 1,990',
-      originalPrice: 'Rs. 2,490',
+      price: 'Rs. 1,899',
+      originalPrice: 'Rs. 2,450',
+      category: 'bottles',
       badge: 'New Herbal Release',
-      image: '/assets/real_250ml_single.jpg',
-      featuresText: '100% Cold-Pressed Herbal Formula\n25+ Ayurvedic Herb Infusion\nParaben, Sulphate & Mineral Oil Free\nFast WhatsApp Dispatch Across Pakistan',
+      image: '/assets/real_250ml_single.webp',
+      featuresText: '100% Cold-Pressed Herbal Formula\n25+ Ayurvedic Herb Infusion\nParaben, Sulphate & Mineral Oil Free\nFast Cash on Delivery',
       popular: false,
       inStock: true,
     });
@@ -65,13 +77,62 @@ export default function AdminPanelModal({ isOpen, onClose }) {
       subtitle: product.subtitle || '',
       price: product.price || '',
       originalPrice: product.originalPrice || '',
+      category: product.category || 'bottles',
       badge: product.badge || '',
-      image: product.image || '',
-      featuresText: Array.isArray(product.features) ? product.features.join('\n') : '',
+      image: product.image || '/assets/real_250ml_single.webp',
+      featuresText: Array.isArray(product.features) ? product.features.join('\n') : (product.features || ''),
       popular: !!product.popular,
       inStock: product.inStock !== false,
     });
     setActiveTab('form');
+  };
+
+  // Direct Image File Upload Handler
+  const handleImageFileUpload = (e) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    if (!file.type.startsWith('image/')) {
+      alert('Please select a valid image file (PNG, JPG, JPEG, or WEBP).');
+      return;
+    }
+
+    setIsUploading(true);
+    const reader = new FileReader();
+    reader.onload = (uploadEvent) => {
+      const img = new window.Image();
+      img.onload = () => {
+        const canvas = document.createElement('canvas');
+        const maxDim = 800;
+        let { width, height } = img;
+        if (width > height) {
+          if (width > maxDim) {
+            height = Math.round((height * maxDim) / width);
+            width = maxDim;
+          }
+        } else {
+          if (height > maxDim) {
+            width = Math.round((width * maxDim) / height);
+            height = maxDim;
+          }
+        }
+        canvas.width = width;
+        canvas.height = height;
+        const ctx = canvas.getContext('2d');
+        ctx.drawImage(img, 0, 0, width, height);
+        
+        const compressedDataUrl = canvas.toDataURL('image/webp', 0.88);
+        setFormData((prev) => ({ ...prev, image: compressedDataUrl }));
+        setIsUploading(false);
+        showStatus('📷 Image uploaded & optimized!');
+      };
+      img.onerror = () => {
+        setIsUploading(false);
+        alert('Failed to load image.');
+      };
+      img.src = uploadEvent.target.result;
+    };
+    reader.readAsDataURL(file);
   };
 
   const handleSaveForm = (e) => {
@@ -108,7 +169,7 @@ export default function AdminPanelModal({ isOpen, onClose }) {
   };
 
   const handleReset = () => {
-    if (window.confirm('Reset catalog back to original default 100ml and 250ml bottles?')) {
+    if (window.confirm('Reset catalog back to original default 4 bottles and bundles?')) {
       resetToDefaults();
       setProducts(getProducts());
       showStatus('Catalog reset to defaults.');
@@ -161,7 +222,7 @@ export default function AdminPanelModal({ isOpen, onClose }) {
               <Package className="w-5 h-5 text-[#D4AF37]" />
               <div>
                 <h3 className="font-serif text-lg font-bold">Veelana Store Management CMS</h3>
-                <p className="text-xs text-[#EAEFE4]/80">Add, Edit & Manage Products Live</p>
+                <p className="text-xs text-[#EAEFE4]/80">Add, Edit & Upload Images Live</p>
               </div>
             </div>
             <button
@@ -172,307 +233,355 @@ export default function AdminPanelModal({ isOpen, onClose }) {
             </button>
           </div>
 
-          {/* Login View */}
-          {!isAuthenticated ? (
-            <div className="p-8 text-center max-w-md mx-auto">
-              <ShieldCheck className="w-12 h-12 text-[#1B2E1E] mx-auto mb-3" />
-              <h4 className="font-serif text-xl font-bold text-[#121E14]">Admin Security Check</h4>
-              <p className="text-xs text-[#4F5E52] mt-1 mb-6">
-                Enter your store management password to access the CMS product editor. (Default: <strong>veelana123</strong>)
-              </p>
-
-              <form onSubmit={handleLogin} className="space-y-4">
+          {/* Body Content */}
+          <div className="p-6">
+            {!isAuthenticated ? (
+              /* Password Form */
+              <form onSubmit={handleLogin} className="max-w-xs mx-auto py-8 text-center space-y-4">
+                <div className="w-12 h-12 rounded-full bg-[#1B2E1E] text-[#D4AF37] flex items-center justify-center mx-auto mb-2">
+                  <ShieldCheck className="w-6 h-6" />
+                </div>
+                <h4 className="font-serif text-xl font-bold text-[#121E14]">Store Admin Access</h4>
+                <p className="text-xs text-gray-500">Enter your store password to manage products.</p>
                 <input
                   type="password"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="Enter Admin Password..."
-                  className="w-full px-4 py-3 rounded-xl border border-gray-300 focus:outline-none focus:border-[#1B2E1E] bg-white text-sm"
+                  placeholder="Enter Password (default: veelana123)"
+                  className="w-full px-4 py-2.5 text-sm border border-gray-300 rounded-xl focus:outline-none focus:border-[#1B2E1E] text-center"
                   autoFocus
                 />
                 {authError && <p className="text-xs text-red-600 font-semibold">{authError}</p>}
                 <button
                   type="submit"
-                  className="w-full py-3 bg-[#1B2E1E] text-white rounded-xl font-semibold text-sm hover:bg-[#3A4828] transition shadow-md"
+                  className="w-full py-2.5 bg-[#1B2E1E] text-[#FAF8F5] font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-[#2D4532] transition"
                 >
-                  Unlock Admin CMS Panel
+                  Unlock CMS
                 </button>
               </form>
-            </div>
-          ) : (
-            /* Authenticated CMS Dashboard */
-            <div className="p-6">
-              {/* Notification Banner */}
-              {statusMsg && (
-                <div className="mb-4 px-4 py-2 bg-emerald-100 border border-emerald-300 text-emerald-800 text-xs font-semibold rounded-lg flex items-center gap-2">
-                  <CheckCircle className="w-4 h-4" />
-                  <span>{statusMsg}</span>
-                </div>
-              )}
+            ) : (
+              /* Authenticated CMS View */
+              <div className="space-y-6">
+                {/* Navigation Tabs */}
+                <div className="flex items-center justify-between border-b border-gray-200 pb-3 flex-wrap gap-2">
+                  <div className="flex gap-2">
+                    <button
+                      onClick={() => setActiveTab('products')}
+                      className={`px-4 py-1.5 rounded-lg text-xs font-bold transition ${
+                        activeTab === 'products' ? 'bg-[#1B2E1E] text-[#FAF8F5]' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      Product List ({products.length})
+                    </button>
+                    <button
+                      onClick={startAddNew}
+                      className={`px-4 py-1.5 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
+                        activeTab === 'form' && !editingProduct ? 'bg-[#1B2E1E] text-[#FAF8F5]' : 'bg-[#D4AF37]/20 text-[#3A4828] hover:bg-[#D4AF37]/30'
+                      }`}
+                    >
+                      <Plus className="w-3.5 h-3.5" />
+                      Add Product
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('export')}
+                      className={`px-4 py-1.5 rounded-lg text-xs font-bold transition ${
+                        activeTab === 'export' ? 'bg-[#1B2E1E] text-[#FAF8F5]' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      Export / Backup
+                    </button>
+                  </div>
 
-              {/* Navigation Tabs */}
-              <div className="flex flex-wrap items-center justify-between border-b border-gray-200 pb-3 mb-6 gap-2">
-                <div className="flex gap-2">
-                  <button
-                    onClick={() => setActiveTab('products')}
-                    className={`px-4 py-2 rounded-lg text-xs font-bold transition ${
-                      activeTab === 'products'
-                        ? 'bg-[#1B2E1E] text-white'
-                        : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                    }`}
-                  >
-                    All Products ({products.length})
-                  </button>
-                  <button
-                    onClick={startAddNew}
-                    className={`px-4 py-2 rounded-lg text-xs font-bold transition flex items-center gap-1 ${
-                      activeTab === 'form' && !editingProduct
-                        ? 'bg-[#1B2E1E] text-white'
-                        : 'bg-emerald-50 text-emerald-800 border border-emerald-200 hover:bg-emerald-100'
-                    }`}
-                  >
-                    <Plus className="w-3.5 h-3.5" />
-                    Add New Product
-                  </button>
-                </div>
-
-                <div className="flex gap-2">
-                  <button
-                    onClick={handleExport}
-                    className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs font-semibold flex items-center gap-1"
-                    title="Export JSON Backup"
-                  >
-                    <Download className="w-3.5 h-3.5" />
-                    Export Catalog
-                  </button>
-                  <button
-                    onClick={() => setActiveTab('json')}
-                    className="px-3 py-1.5 bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-lg text-xs font-semibold flex items-center gap-1"
-                  >
-                    <Upload className="w-3.5 h-3.5" />
-                    Import JSON
-                  </button>
                   <button
                     onClick={handleReset}
-                    className="px-3 py-1.5 bg-red-50 hover:bg-red-100 text-red-700 rounded-lg text-xs font-semibold flex items-center gap-1"
-                    title="Reset to original 100ml and 250ml"
+                    className="text-xs text-gray-500 hover:text-red-600 flex items-center gap-1 font-semibold"
+                    title="Restore original products"
                   >
                     <RefreshCw className="w-3.5 h-3.5" />
-                    Reset
+                    Reset to Default
                   </button>
                 </div>
-              </div>
 
-              {/* TAB 1: ALL PRODUCTS LIST */}
-              {activeTab === 'products' && (
-                <div className="space-y-4 max-h-[450px] overflow-y-auto pr-1">
-                  {products.map((prod) => (
-                    <div
-                      key={prod.id}
-                      className="p-4 bg-white rounded-xl border border-gray-200 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm"
-                    >
-                      <div className="flex items-center gap-4 w-full md:w-auto">
-                        <img
-                          src={prod.image}
-                          alt={prod.name}
-                          className="w-14 h-14 object-cover rounded-lg border border-gray-100 shrink-0"
-                          onError={(e) => { e.target.src = '/assets/real_100ml_double.jpg'; }}
-                        />
-                        <div>
-                          <div className="flex items-center gap-2">
-                            <h5 className="font-serif font-bold text-base text-[#121E14]">{prod.name}</h5>
-                            {prod.popular && (
-                              <span className="px-2 py-0.5 bg-[#D4AF37]/20 text-[#3A4828] text-[10px] font-bold rounded-full uppercase">
-                                Popular
-                              </span>
-                            )}
+                {/* Status Message Notification */}
+                {statusMsg && (
+                  <div className="p-3 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs rounded-xl flex items-center gap-2">
+                    <CheckCircle className="w-4 h-4 text-emerald-600" />
+                    <span>{statusMsg}</span>
+                  </div>
+                )}
+
+                {/* TAB 1: PRODUCT LIST */}
+                {activeTab === 'products' && (
+                  <div className="space-y-3 max-h-[460px] overflow-y-auto pr-1">
+                    {products.map((prod) => (
+                      <div
+                        key={prod.id}
+                        className="p-4 bg-white rounded-xl border border-gray-200 flex flex-col md:flex-row items-center justify-between gap-4 shadow-sm"
+                      >
+                        <div className="flex items-center gap-4 w-full md:w-auto">
+                          <img
+                            src={prod.image}
+                            alt={prod.name}
+                            className="w-14 h-14 object-contain rounded-lg border border-gray-100 shrink-0 bg-[#FAF8F5] p-1"
+                            onError={(e) => { e.target.src = '/assets/real_250ml_single.webp'; }}
+                          />
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <h5 className="font-serif font-bold text-base text-[#121E14]">{prod.name}</h5>
+                              {prod.popular && (
+                                <span className="px-2 py-0.5 bg-[#D4AF37]/20 text-[#3A4828] text-[10px] font-bold rounded-full uppercase">
+                                  Popular
+                                </span>
+                              )}
+                            </div>
+                            <p className="text-xs text-gray-500">{prod.subtitle}</p>
+                            <div className="flex items-center gap-2 mt-1">
+                              <span className="text-xs font-bold text-[#1B2E1E]">{prod.price}</span>
+                              {prod.originalPrice && (
+                                <span className="text-xs text-gray-400 line-through">{prod.originalPrice}</span>
+                              )}
+                            </div>
                           </div>
-                          <p className="text-xs text-gray-500">{prod.subtitle}</p>
-                          <div className="flex items-center gap-2 mt-1">
-                            <span className="text-xs font-bold text-[#1B2E1E]">{prod.price}</span>
-                            {prod.originalPrice && (
-                              <span className="text-xs text-gray-400 line-through">{prod.originalPrice}</span>
-                            )}
-                          </div>
+                        </div>
+
+                        <div className="flex items-center gap-2 w-full md:w-auto justify-end">
+                          <button
+                            onClick={() => startEdit(prod)}
+                            className="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg text-xs font-semibold flex items-center gap-1"
+                          >
+                            <Edit className="w-3.5 h-3.5" />
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => handleDelete(prod.id, prod.name)}
+                            className="px-3 py-1.5 bg-red-50 text-red-700 hover:bg-red-100 rounded-lg text-xs font-semibold flex items-center gap-1"
+                          >
+                            <Trash2 className="w-3.5 h-3.5" />
+                            Delete
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+
+                {/* TAB 2: ADD / EDIT FORM */}
+                {activeTab === 'form' && (
+                  <form onSubmit={handleSaveForm} className="space-y-4 max-h-[480px] overflow-y-auto pr-1">
+                    {/* Image Upload Box */}
+                    <div className="p-3.5 bg-gray-50 border border-dashed border-gray-300 rounded-xl space-y-3">
+                      <label className="block text-xs font-bold text-gray-800">
+                        Product Image (Upload from Computer or Choose Preset)
+                      </label>
+
+                      <div className="flex items-center gap-3">
+                        <div className="w-14 h-14 bg-white border border-gray-200 rounded-lg p-1 flex items-center justify-center shrink-0 overflow-hidden">
+                          <img
+                            src={formData.image || '/assets/real_250ml_single.webp'}
+                            alt="Preview"
+                            className="max-h-full max-w-full object-contain"
+                            onError={(e) => { e.target.src = '/assets/real_250ml_single.webp'; }}
+                          />
+                        </div>
+
+                        <div className="flex-1">
+                          <input
+                            type="file"
+                            ref={fileInputRef}
+                            accept="image/png, image/jpeg, image/jpg, image/webp"
+                            onChange={handleImageFileUpload}
+                            className="hidden"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => fileInputRef.current?.click()}
+                            disabled={isUploading}
+                            className="px-3 py-1.5 bg-[#1B2E1E] text-white text-xs font-bold rounded-lg flex items-center gap-1.5 shadow-sm"
+                          >
+                            <Upload className="w-3.5 h-3.5 text-[#D4AF37]" />
+                            <span>{isUploading ? 'Uploading...' : 'Upload Image File (PNG/JPG/WEBP)'}</span>
+                          </button>
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2 w-full md:w-auto justify-end">
-                        <button
-                          onClick={() => startEdit(prod)}
-                          className="px-3 py-1.5 bg-blue-50 text-blue-700 hover:bg-blue-100 rounded-lg text-xs font-semibold flex items-center gap-1"
-                        >
-                          <Edit className="w-3.5 h-3.5" />
-                          Edit
-                        </button>
-                        <button
-                          onClick={() => handleDelete(prod.id, prod.name)}
-                          className="px-3 py-1.5 bg-red-50 text-red-700 hover:bg-red-100 rounded-lg text-xs font-semibold flex items-center gap-1"
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                          Delete
-                        </button>
+                      {/* Presets */}
+                      <div className="flex items-center gap-1.5 flex-wrap pt-1">
+                        <span className="text-[11px] text-gray-500 font-semibold">Presets:</span>
+                        {PRESET_IMAGES.map((img) => (
+                          <button
+                            key={img.path}
+                            type="button"
+                            onClick={() => setFormData({ ...formData, image: img.path })}
+                            className={`px-2 py-0.5 text-[11px] rounded font-medium border ${
+                              formData.image === img.path ? 'bg-[#1B2E1E] text-white border-[#1B2E1E]' : 'bg-white text-gray-700 border-gray-200'
+                            }`}
+                          >
+                            {img.label}
+                          </button>
+                        ))}
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
 
-              {/* TAB 2: ADD / EDIT FORM */}
-              {activeTab === 'form' && (
-                <form onSubmit={handleSaveForm} className="space-y-4 max-h-[480px] overflow-y-auto pr-1">
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-bold text-gray-700 mb-1">Product Name *</label>
+                        <input
+                          type="text"
+                          value={formData.name}
+                          onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                          placeholder="e.g. Veelana 200ml Master Bottle"
+                          className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-[#1B2E1E]"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-gray-700 mb-1">Subtitle / Tagline</label>
+                        <input
+                          type="text"
+                          value={formData.subtitle}
+                          onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
+                          placeholder="e.g. 2-3 Months Regrowth Routine"
+                          className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-[#1B2E1E]"
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-gray-700 mb-1">Selling Price *</label>
+                        <input
+                          type="text"
+                          value={formData.price}
+                          onChange={(e) => setFormData({ ...formData, price: e.target.value })}
+                          placeholder="e.g. Rs. 1,899"
+                          className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-[#1B2E1E]"
+                          required
+                        />
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-gray-700 mb-1">Original Price (Slash Price)</label>
+                        <input
+                          type="text"
+                          value={formData.originalPrice}
+                          onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
+                          placeholder="e.g. Rs. 2,450"
+                          className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-[#1B2E1E]"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div>
+                        <label className="block text-xs font-bold text-gray-700 mb-1">Category</label>
+                        <select
+                          value={formData.category}
+                          onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                          className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-[#1B2E1E]"
+                        >
+                          <option value="bottles">Individual Bottles</option>
+                          <option value="bundles">Special Bundles & Twin Packs</option>
+                        </select>
+                      </div>
+                      <div>
+                        <label className="block text-xs font-bold text-gray-700 mb-1">Badge Text</label>
+                        <input
+                          type="text"
+                          value={formData.badge}
+                          onChange={(e) => setFormData({ ...formData, badge: e.target.value })}
+                          placeholder="e.g. BEST VALUE or 10% OFF"
+                          className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-[#1B2E1E]"
+                        />
+                      </div>
+                    </div>
+
                     <div>
-                      <label className="block text-xs font-bold text-gray-700 mb-1">Product Name *</label>
-                      <input
-                        type="text"
-                        value={formData.name}
-                        onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                        placeholder="e.g. Veelana 500ml Family Bottle"
+                      <label className="block text-xs font-bold text-gray-700 mb-1">
+                        Key Features (One feature per line)
+                      </label>
+                      <textarea
+                        rows={3}
+                        value={formData.featuresText}
+                        onChange={(e) => setFormData({ ...formData, featuresText: e.target.value })}
+                        placeholder="25+ Pure Cold-Pressed Herbs&#10;100% Organic & Vegan&#10;Free Cash on Delivery"
                         className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-[#1B2E1E]"
-                        required
                       />
                     </div>
-                    <div>
-                      <label className="block text-xs font-bold text-gray-700 mb-1">Subtitle / Tagline</label>
-                      <input
-                        type="text"
-                        value={formData.subtitle}
-                        onChange={(e) => setFormData({ ...formData, subtitle: e.target.value })}
-                        placeholder="e.g. Mega Value Pack"
-                        className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-[#1B2E1E]"
-                      />
+
+                    <div className="flex items-center gap-4">
+                      <label className="flex items-center gap-2 text-xs font-semibold text-gray-700 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={formData.popular}
+                          onChange={(e) => setFormData({ ...formData, popular: e.target.checked })}
+                          className="rounded text-[#1B2E1E]"
+                        />
+                        Highlight as "Most Popular"
+                      </label>
+                      <label className="flex items-center gap-2 text-xs font-semibold text-gray-700 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={formData.inStock}
+                          onChange={(e) => setFormData({ ...formData, inStock: e.target.checked })}
+                          className="rounded text-[#1B2E1E]"
+                        />
+                        In Stock
+                      </label>
                     </div>
-                    <div>
-                      <label className="block text-xs font-bold text-gray-700 mb-1">Selling Price *</label>
-                      <input
-                        type="text"
-                        value={formData.price}
-                        onChange={(e) => setFormData({ ...formData, price: e.target.value })}
-                        placeholder="e.g. Rs. 4,990"
-                        className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-[#1B2E1E]"
-                        required
-                      />
+
+                    <div className="pt-2 flex justify-end gap-2">
+                      <button
+                        type="button"
+                        onClick={() => setActiveTab('products')}
+                        className="px-4 py-2 bg-gray-100 text-gray-700 font-semibold text-xs rounded-xl hover:bg-gray-200"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        className="px-6 py-2 bg-[#1B2E1E] text-[#FAF8F5] font-bold text-xs uppercase tracking-wider rounded-xl hover:bg-[#2D4532]"
+                      >
+                        {editingProduct ? 'Save Changes' : 'Create Product'}
+                      </button>
                     </div>
-                    <div>
-                      <label className="block text-xs font-bold text-gray-700 mb-1">Original Price (Slash Price)</label>
-                      <input
-                        type="text"
-                        value={formData.originalPrice}
-                        onChange={(e) => setFormData({ ...formData, originalPrice: e.target.value })}
-                        placeholder="e.g. Rs. 6,200"
-                        className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-[#1B2E1E]"
+                  </form>
+                )}
+
+                {/* TAB 3: EXPORT & IMPORT BACKUP */}
+                {activeTab === 'export' && (
+                  <div className="space-y-4">
+                    <div className="p-4 bg-white rounded-xl border border-gray-200 space-y-3">
+                      <h5 className="font-serif font-bold text-sm text-[#121E14]">Export Catalog Backup</h5>
+                      <p className="text-xs text-gray-500">
+                        Download your current live product catalog as a JSON file backup.
+                      </p>
+                      <button
+                        onClick={handleExport}
+                        className="px-4 py-2 bg-[#4F5D38] text-white rounded-lg text-xs font-bold flex items-center gap-1.5 hover:bg-[#3E4A2C]"
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                        Download Catalog JSON
+                      </button>
+                    </div>
+
+                    <div className="p-4 bg-white rounded-xl border border-gray-200 space-y-3">
+                      <h5 className="font-serif font-bold text-sm text-[#121E14]">Import Catalog from JSON</h5>
+                      <textarea
+                        rows={4}
+                        value={jsonInput}
+                        onChange={(e) => setJsonInput(e.target.value)}
+                        placeholder="Paste valid JSON catalog array here..."
+                        className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-[#1B2E1E] font-mono"
                       />
+                      <button
+                        onClick={handleImport}
+                        className="px-4 py-2 bg-[#1B2E1E] text-white rounded-lg text-xs font-bold flex items-center gap-1.5 hover:bg-[#2D4532]"
+                      >
+                        <Upload className="w-3.5 h-3.5 text-[#D4AF37]" />
+                        Restore Products from JSON
+                      </button>
                     </div>
                   </div>
-
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-xs font-bold text-gray-700 mb-1">Badge Text</label>
-                      <input
-                        type="text"
-                        value={formData.badge}
-                        onChange={(e) => setFormData({ ...formData, badge: e.target.value })}
-                        placeholder="e.g. Best Value for Families"
-                        className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-[#1B2E1E]"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-xs font-bold text-gray-700 mb-1">Product Image Path / URL</label>
-                      <input
-                        type="text"
-                        value={formData.image}
-                        onChange={(e) => setFormData({ ...formData, image: e.target.value })}
-                        placeholder="e.g. /assets/real_250ml_single.jpg"
-                        className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-[#1B2E1E]"
-                      />
-                    </div>
-                  </div>
-
-                  <div>
-                    <label className="block text-xs font-bold text-gray-700 mb-1">
-                      Key Features (One feature per line)
-                    </label>
-                    <textarea
-                      rows={4}
-                      value={formData.featuresText}
-                      onChange={(e) => setFormData({ ...formData, featuresText: e.target.value })}
-                      placeholder={"500ml Extra Volume\nIdeal for full family use\n25+ Herbal extract infusion\nFree Shipping across Pakistan"}
-                      className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-[#1B2E1E]"
-                    />
-                  </div>
-
-                  <div className="flex items-center gap-6 pt-2">
-                    <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-gray-700">
-                      <input
-                        type="checkbox"
-                        checked={formData.popular}
-                        onChange={(e) => setFormData({ ...formData, popular: e.target.checked })}
-                        className="rounded text-[#1B2E1E]"
-                      />
-                      Mark as "Most Popular" Card
-                    </label>
-
-                    <label className="flex items-center gap-2 cursor-pointer text-xs font-semibold text-gray-700">
-                      <input
-                        type="checkbox"
-                        checked={formData.inStock}
-                        onChange={(e) => setFormData({ ...formData, inStock: e.target.checked })}
-                        className="rounded text-[#1B2E1E]"
-                      />
-                      In Stock
-                    </label>
-                  </div>
-
-                  <div className="flex justify-end gap-3 pt-4 border-t">
-                    <button
-                      type="button"
-                      onClick={() => setActiveTab('products')}
-                      className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg text-xs font-semibold"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="submit"
-                      className="px-6 py-2 bg-[#1B2E1E] text-white rounded-lg text-xs font-bold hover:bg-[#3A4828] transition shadow"
-                    >
-                      {editingProduct ? 'Save Product Changes' : 'Publish New Product'}
-                    </button>
-                  </div>
-                </form>
-              )}
-
-              {/* TAB 3: IMPORT JSON */}
-              {activeTab === 'json' && (
-                <div className="space-y-4">
-                  <p className="text-xs text-gray-600">
-                    Paste a valid Veelana catalog JSON string to update your product list in bulk.
-                  </p>
-                  <textarea
-                    rows={8}
-                    value={jsonInput}
-                    onChange={(e) => setJsonInput(e.target.value)}
-                    placeholder='[ { "id": "custom1", "name": "Veelana Serum", ... } ]'
-                    className="w-full p-3 font-mono text-xs border rounded-xl focus:outline-none focus:border-[#1B2E1E]"
-                  />
-                  <div className="flex justify-end gap-3">
-                    <button
-                      onClick={() => setActiveTab('products')}
-                      className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg text-xs font-semibold"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      onClick={handleImport}
-                      className="px-6 py-2 bg-[#1B2E1E] text-white rounded-lg text-xs font-bold hover:bg-[#3A4828] transition"
-                    >
-                      Import & Apply JSON
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
+                )}
+              </div>
+            )}
+          </div>
         </motion.div>
       </div>
     </AnimatePresence>

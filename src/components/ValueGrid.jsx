@@ -8,31 +8,36 @@ export default function ValueGrid() {
       title: '25+ Herbal Ingredients',
       desc: 'Formulated with 25 cold-pressed herbs including Amla, Bhringraj, Brahmi, Neem, and Rosemary.',
       icon: Leaf,
-      badge: '100% Pure'
+      badge: '100% Pure',
+      detail: '72-Hour Slow Cold Extraction'
     },
     {
       title: 'Paraben Free',
       desc: 'Zero harmful synthetic preservatives that disrupt natural scalp hormone balance.',
       icon: ShieldCheck,
-      badge: 'Zero Toxins'
+      badge: 'Zero Toxins',
+      detail: 'Dermatologically Safe Standard'
     },
     {
       title: 'Sulphate Free',
       desc: 'Free from aggressive chemical detergents that strip away essential hair moisture.',
       icon: Droplet,
-      badge: 'Gentle Care'
+      badge: 'Gentle Care',
+      detail: 'Maintains Scalp Sebum Balance'
     },
     {
       title: 'Mineral Oil Free',
       desc: 'No heavy petroleum byproducts that clog pores or weigh down fine strands.',
       icon: Sparkles,
-      badge: 'Clean Formula'
+      badge: 'Clean Formula',
+      detail: 'Zero Paraffin / Petroleum Additives'
     },
     {
       title: '100% Vegan & Cruelty-Free',
       desc: 'Entirely plant-derived, never tested on animals, ethically harvested in Punjab.',
       icon: HeartHandshake,
-      badge: 'Ethical Standard'
+      badge: 'Ethical Standard',
+      detail: 'Ethically Sourced Botanicals'
     }
   ];
 
@@ -86,7 +91,7 @@ export default function ValueGrid() {
 
                 <div style={{ marginTop: '1.5rem', paddingTop: '1rem', borderTop: '1px solid rgba(27, 46, 30, 0.1)', display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.75rem', fontWeight: 'bold', color: '#1B2E1E' }}>
                   <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#D4AF37' }}></span>
-                  <span>Veelana Quality Assured</span>
+                  <span>{prop.detail}</span>
                 </div>
               </motion.div>
             );

@@ -2,7 +2,7 @@ import React from 'react';
 import ProductShowcase from '../components/ProductShowcase';
 import { ShoppingBag, ShieldCheck } from 'lucide-react';
 
-export default function ProductsPage() {
+export default function ProductsPage({ onOpenOrder }) {
   return (
     <div className="py-12 bg-[#FAF8F5]">
       <div className="container mx-auto px-4 max-w-5xl text-center mb-8">
@@ -14,11 +14,11 @@ export default function ProductsPage() {
           Choose Your Veelana Experience
         </h1>
         <p className="text-sm md:text-base text-[#4F5E52] max-w-2xl mx-auto mt-3">
-          Direct WhatsApp ordering with priority dispatch across Pakistan. Handcrafted in Khanewal City.
+          Direct WhatsApp ordering with priority dispatch across Pakistan. Handcrafted in small fresh batches.
         </p>
       </div>
 
-      <ProductShowcase />
+      <ProductShowcase onOpenOrder={onOpenOrder} />
     </div>
   );
 }

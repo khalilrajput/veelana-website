@@ -27,7 +27,7 @@ export default function SciencePage() {
         <div className="p-8 rounded-3xl bg-[#1B2E1E] text-white shadow-xl">
           <h3 className="font-serif text-2xl md:text-3xl font-bold mb-3">Ready to Experience Follicle Revival?</h3>
           <p className="text-sm text-gray-300 mb-6 max-w-xl mx-auto">
-            Choose your size today and experience 100% natural, cold-pressed botanical hair care crafted in Khanewal City.
+            Choose your size today and experience 100% natural, cold-pressed botanical hair care crafted with botanical purity.
           </p>
           <Link to="/products" className="btn-olive bg-[#D4AF37] text-[#121E14] hover:bg-white inline-flex items-center gap-2 px-6 py-3 rounded-full font-bold">
             Explore Products & Sizes <ArrowRight className="w-4 h-4" />
