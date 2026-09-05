@@ -1,19 +1,44 @@
+import { normalizePakistanPhone, calculateCodRiskScore } from './firebase';
+
 const ORDERS_STORAGE_KEY = 'veelana_customer_orders_v1';
 
-// Save new order to local storage
+// Save new order to local storage & cloud
 export function createOrder(orderData) {
   try {
     const existing = getOrders();
     const orderId = orderData.id || `VLN-${Math.floor(10000 + Math.random() * 90000)}`;
     const timestamp = new Date().toISOString();
     
+    // Normalize phone number
+    const phoneDetails = normalizePakistanPhone(orderData.phone);
+
+    // Calculate COD Risk
+    const riskAssessment = calculateCodRiskScore(orderData, existing);
+
+    // Full Address composite
+    const composedAddress = orderData.houseStreet 
+      ? `${orderData.houseStreet}${orderData.area ? `, ${orderData.area}` : ''}${orderData.landmark ? `, Near ${orderData.landmark}` : ''}, ${orderData.city}, ${orderData.province || 'Pakistan'}`
+      : (orderData.address || `${orderData.city}, ${orderData.province || 'Pakistan'}`);
+
     const newOrder = {
       id: orderId,
       createdAt: timestamp,
-      status: 'Pending', // Pending, Confirmed, Shipped, Delivered, Cancelled
+      status: 'Pending', // Pending, Confirmed, Packed, Dispatched, Delivered, Cancelled
       trackingNumber: `TRX-${Math.floor(100000 + Math.random() * 900000)}PK`,
-      courierPartner: 'Trax / Leopard Logistics Express',
-      ...orderData
+      courierPartner: orderData.courierPartner || 'Trax / Leopard Logistics Express',
+      ...orderData,
+      phone: phoneDetails.display || orderData.phone,
+      normalizedPhone: phoneDetails.international,
+      cleanPhone: phoneDetails.clean,
+      address: composedAddress,
+      riskAssessment,
+      statusHistory: [
+        {
+          status: 'Pending',
+          timestamp,
+          note: 'Order placed via website checkout'
+        }
+      ]
     };
 
     const updatedOrders = [newOrder, ...existing];
@@ -50,25 +75,41 @@ export function findOrder(query) {
   
   return orders.find(order => {
     const matchId = (order.id || '').toLowerCase().replace(/[^a-z0-9]/g, '').includes(clean);
-    const matchPhone = (order.phone || '').replace(/[^0-9]/g, '').includes(clean);
+    const matchPhone = (order.cleanPhone || order.phone || '').replace(/[^0-9]/g, '').includes(clean);
     return matchId || matchPhone;
   }) || null;
 }
 
-// Update order status
+// Update order status with audit history
 export function updateOrderStatus(orderId, newStatus, trackingNotes = '') {
   try {
     const orders = getOrders();
-    const updated = orders.map(order => 
-      order.id === orderId 
-        ? { 
-            ...order, 
-            status: newStatus, 
-            updatedAt: new Date().toISOString(),
-            trackingNotes: trackingNotes || order.trackingNotes 
-          } 
-        : order
-    );
+    const timestamp = new Date().toISOString();
+
+    const updated = orders.map(order => {
+      if (order.id === orderId) {
+        const prevHistory = order.statusHistory || [
+          { status: order.status || 'Pending', timestamp: order.createdAt || timestamp, note: 'Initial status' }
+        ];
+
+        return { 
+          ...order, 
+          status: newStatus, 
+          updatedAt: timestamp,
+          trackingNotes: trackingNotes || order.trackingNotes,
+          statusHistory: [
+            ...prevHistory,
+            {
+              status: newStatus,
+              timestamp,
+              note: trackingNotes || `Status changed to ${newStatus}`
+            }
+          ]
+        };
+      }
+      return order;
+    });
+
     localStorage.setItem(ORDERS_STORAGE_KEY, JSON.stringify(updated));
     window.dispatchEvent(new Event('veelana_orders_updated'));
     return updated;
@@ -107,13 +148,13 @@ export function formatWhatsAppOrderMessage(order) {
 👤 *Customer Name:* ${order.fullName}
 📞 *Phone / WhatsApp:* ${order.phone}
 📍 *Delivery Address:* ${order.address}
-🏙️ *City:* ${order.city}
-
+🏙️ *City:* ${order.city} ${order.province ? `(${order.province})` : ''}
+${order.landmark ? `📌 *Nearest Landmark:* ${order.landmark}\n` : ''}
 🛒 *ORDER ITEMS:*
 ${itemsBreakdown}
 
 ${order.couponCode ? `🏷️ *Coupon Applied:* ${order.couponCode} (-Rs. ${order.discountAmount || 0})\n` : ''}💰 *Total Payable:* ${order.totalPrice || `Rs. ${order.totalAmount}`}
-💳 *Payment Method:* ${order.paymentMethod} (Cash on Delivery)
+💳 *Payment Method:* ${order.paymentMethod || 'COD'} (Cash on Delivery)
 ${order.notes ? `📝 *Special Instructions:* ${order.notes}\n` : ''}--------------------------------
 *Tracking Ref:* ${order.trackingNumber || 'Pending Assignment'}
 Please confirm my order for express packing & nationwide courier dispatch!`;
@@ -130,8 +171,9 @@ Order ID: #${order.id}
 Date: ${new Date(order.createdAt).toLocaleString()}
 Customer Name: ${order.fullName}
 Phone: ${order.phone}
-City: ${order.city}
+City: ${order.city} (${order.province || 'Pakistan'})
 Address: ${order.address}
+Landmark: ${order.landmark || 'N/A'}
 
 Items:
 ${order.items ? order.items.map(i => `- ${i.name} x ${i.quantity} (Rs. ${i.price * i.quantity})`).join('\n') : `${order.productName} (${order.bottleSize}) x ${order.quantity}`}

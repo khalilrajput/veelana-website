@@ -56,12 +56,12 @@ export default function Footer({ onOpenAdmin }) {
               </span>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                 <a
-                  href="https://instagram.com/veelanaofficial"
+                  href="https://www.instagram.com/veelaan.official?utm_source=qr&igsi=bWl1dTFta3l4cGI1"
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)', color: '#E1306C', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s' }}
-                  title="Instagram @veelanaofficial"
-                  aria-label="Instagram @veelanaofficial"
+                  title="Instagram @veelaan.official"
+                  aria-label="Instagram @veelaan.official"
                 >
                   <InstagramIcon size={16} />
                 </a>
@@ -76,12 +76,12 @@ export default function Footer({ onOpenAdmin }) {
                   <FacebookIcon size={16} />
                 </a>
                 <a
-                  href="https://tiktok.com/@veelanaofficial"
+                  href="https://www.tiktok.com/@www.veelana.online?_r=1&_t=ZS-99STtqPMSfN"
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)', color: '#FAF8F5', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s' }}
-                  title="TikTok @veelanaofficial"
-                  aria-label="TikTok @veelanaofficial"
+                  title="TikTok @www.veelana.online"
+                  aria-label="TikTok @www.veelana.online"
                 >
                   <TikTokIcon size={16} />
                 </a>

@@ -50,16 +50,46 @@ export default function ScienceAnimation() {
       <div className="container">
         
         {/* Heading */}
-        <div className="text-center" style={{ marginBottom: '3.5rem' }}>
-          <div className="section-badge" style={{ background: 'rgba(250, 248, 245, 0.15)', borderColor: 'rgba(250, 248, 245, 0.3)', color: '#FAF8F5' }}>
-            <Activity className="w-4 h-4 text-[#FAF8F5]" />
-            Continuous Micro-Nutrient Delivery
+        <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 2.25rem' }}>
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '0.45rem',
+            padding: '0.35rem 0.95rem',
+            borderRadius: '999px',
+            background: 'rgba(212, 175, 55, 0.12)',
+            border: '1px solid rgba(212, 175, 55, 0.3)',
+            color: '#E8CA65',
+            fontSize: '0.72rem',
+            fontWeight: '700',
+            letterSpacing: '0.08em',
+            textTransform: 'uppercase',
+            marginBottom: '0.65rem'
+          }}>
+            <Activity className="w-3.5 h-3.5 text-[#D4AF37]" />
+            <span>Continuous Micro-Nutrient Delivery</span>
           </div>
-          <h2 className="section-title" style={{ color: '#FAF8F5' }}>
+
+          <h2 style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: 'clamp(2rem, 3.8vw, 2.75rem)',
+            fontWeight: '700',
+            color: '#FAF8F5',
+            lineHeight: 1.08,
+            marginBottom: 'var(--space-loose)'
+          }}>
             How Veelana Restores Your Hair
           </h2>
-          <p className="section-subtitle" style={{ color: 'rgba(250, 248, 245, 0.85)' }}>
-            Witness the biological interaction when cold-pressed herbal oil impacts dormant scalp follicles.
+
+          <p style={{
+            fontSize: '1.0625rem',
+            color: 'rgba(250, 248, 245, 0.88)',
+            lineHeight: 1.6,
+            maxWidth: '580px',
+            margin: '0 auto',
+            fontWeight: '400'
+          }}>
+            Witness the biological interaction when 26 cold-pressed botanicals penetrate deep to awaken dormant hair roots.
           </p>
         </div>
 
@@ -70,24 +100,24 @@ export default function ScienceAnimation() {
             
             {/* Status Pill */}
             <div style={{
-              background: 'rgba(250, 248, 245, 0.15)',
-              padding: '0.45rem 1.1rem',
+              background: 'rgba(0, 0, 0, 0.45)',
+              padding: '0.35rem 0.95rem',
               borderRadius: '9999px',
-              border: '1px solid rgba(250, 248, 245, 0.3)',
-              fontSize: '0.78rem',
-              color: '#FAF8F5',
+              border: '1px solid rgba(212, 175, 55, 0.3)',
+              fontSize: '0.74rem',
+              color: '#E8CA65',
               display: 'flex',
               alignItems: 'center',
-              gap: '0.5rem',
-              fontWeight: '600',
-              marginBottom: '1rem'
+              gap: '0.45rem',
+              fontWeight: '700',
+              marginBottom: '0.85rem'
             }}>
-              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#8DAA63' }}></span>
+              <span style={{ width: '7px', height: '7px', borderRadius: '50%', background: '#10B981', boxShadow: '0 0 8px #10B981' }}></span>
               Live Follicle Simulation
             </div>
 
             {/* SVG Canvas */}
-            <div className="svg-animation-canvas" style={{ width: '100%', maxWidth: '340px', height: '260px' }}>
+            <div className="svg-animation-canvas" style={{ width: '100%', maxWidth: '320px', height: '220px' }}>
               <svg key={animationCycle} width="100%" height="100%" viewBox="0 0 300 240">
                 <defs>
                   {/* Glowing Amber Gradient for Drop */}
@@ -152,6 +182,8 @@ export default function ScienceAnimation() {
                 <motion.ellipse
                   cx="140"
                   cy="163"
+                  rx="0"
+                  ry="0"
                   fill="none"
                   stroke="#FAF8F5"
                   strokeWidth="2"
@@ -171,6 +203,8 @@ export default function ScienceAnimation() {
                 <motion.ellipse
                   cx="140"
                   cy="163"
+                  rx="0"
+                  ry="0"
                   fill="none"
                   stroke="#8DAA63"
                   strokeWidth="1.5"
@@ -238,25 +272,34 @@ export default function ScienceAnimation() {
             {restorationSteps.map((step, idx) => (
               <motion.div
                 key={idx}
-                initial={{ opacity: 0, x: 20 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: idx * 0.08 }}
                 viewport={{ once: true }}
                 className="step-card"
               >
                 <div className="step-num">
-                  {idx + 1}
+                  0{idx + 1}
                 </div>
                 <div style={{ flex: 1 }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 'bold', color: '#FAF8F5' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '0.4rem' }}>
+                    <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.02rem', fontWeight: '700', color: '#FAF8F5', margin: 0 }}>
                       {step.title}
                     </h3>
-                    <span style={{ fontSize: '0.72rem', color: '#3A4828', background: '#EAEFE4', padding: '0.2rem 0.65rem', borderRadius: '9999px', fontFamily: 'sans-serif', fontWeight: 'bold' }}>
+                    <span style={{
+                      fontSize: '0.65rem',
+                      color: '#E8CA65',
+                      background: 'rgba(212, 175, 55, 0.12)',
+                      border: '1px solid rgba(212, 175, 55, 0.28)',
+                      padding: '0.15rem 0.55rem',
+                      borderRadius: '999px',
+                      fontWeight: '700',
+                      letterSpacing: '0.02em'
+                    }}>
                       {step.benefit}
                     </span>
                   </div>
-                  <p style={{ fontSize: '0.88rem', color: 'rgba(250, 248, 245, 0.85)', marginTop: '0.25rem', fontWeight: '300' }}>
+                  <p style={{ fontSize: '0.875rem', color: 'rgba(250, 248, 245, 0.85)', margin: '0.35rem 0 0', lineHeight: 1.6, fontWeight: '400' }}>
                     {step.desc}
                   </p>
                 </div>

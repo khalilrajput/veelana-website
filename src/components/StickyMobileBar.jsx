@@ -7,7 +7,7 @@ export default function StickyMobileBar({ onOpenOrder }) {
 
   return (
     <div
-      className="md:hidden"
+      className="sticky-mobile-bar"
       style={{
         position: 'fixed',
         bottom: 0,
@@ -26,12 +26,12 @@ export default function StickyMobileBar({ onOpenOrder }) {
       }}
     >
       <div>
-        <span style={{ display: 'block', fontSize: '0.65rem', color: '#A0B195', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: 'bold' }}>
-          Pure Botanical Oil
+        <span style={{ display: 'block', fontSize: '0.62rem', color: '#D4AF37', textTransform: 'uppercase', letterSpacing: '0.5px', fontWeight: '700' }}>
+          ⭐ Special Deal: 200ml Bottle
         </span>
         <div style={{ display: 'flex', alignItems: 'baseline', gap: '0.35rem' }}>
-          <span style={{ fontSize: '1.15rem', fontWeight: '800', color: '#FAF8F5' }}>From Rs. 999</span>
-          <span style={{ fontSize: '0.7rem', color: 'rgba(250,248,245,0.6)', textDecoration: 'line-through' }}>Rs. 1,490</span>
+          <span style={{ fontSize: '1.1rem', fontWeight: '800', color: '#FAF8F5' }}>Rs. 1,899</span>
+          <span style={{ fontSize: '0.72rem', color: 'rgba(250,248,245,0.6)', textDecoration: 'line-through' }}>Rs. 2,450</span>
         </div>
       </div>
 

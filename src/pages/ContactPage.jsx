@@ -230,20 +230,20 @@ Please reply with guidance!`;
                   <FacebookIcon size={18} />
                 </a>
                 <a
-                  href="https://instagram.com/veelanaofficial"
+                  href="https://www.instagram.com/veelaan.official?utm_source=qr&igsi=bWl1dTFta3l4cGI1"
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#F0F5ED', color: '#E1306C', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(79, 93, 56, 0.15)' }}
-                  title="Official Instagram"
+                  title="Official Instagram @veelaan.official"
                 >
                   <InstagramIcon size={18} />
                 </a>
                 <a
-                  href="https://tiktok.com/@veelanaofficial"
+                  href="https://www.tiktok.com/@www.veelana.online?_r=1&_t=ZS-99STtqPMSfN"
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{ width: '36px', height: '36px', borderRadius: '50%', background: '#F0F5ED', color: '#121E14', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px solid rgba(79, 93, 56, 0.15)' }}
-                  title="Official TikTok"
+                  title="Official TikTok @www.veelana.online"
                 >
                   <TikTokIcon size={18} />
                 </a>

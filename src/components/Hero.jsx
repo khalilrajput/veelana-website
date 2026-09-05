@@ -12,7 +12,7 @@ export default function Hero({ onOpenOrder }) {
   ];
 
   return (
-    <section id="home" className="hero-section" style={{ padding: '2.5rem 0' }}>
+    <section id="home" className="hero-section">
       <div className="container">
         <div className="hero-grid">
           
@@ -30,12 +30,12 @@ export default function Hero({ onOpenOrder }) {
 
             {/* Main Headline */}
             <h1 className="hero-title">
-              Healthy Hair Starts at the <span>Roots</span>
+              Beauty Begins at the <span>Roots</span>
             </h1>
 
             {/* Sub-headline */}
             <p className="hero-subtitle">
-              Nourish your scalp with <strong>25+ cold-pressed herbs</strong>. Formulated to revive dormant follicles, eliminate hair fall, and boost rich natural volume. Direct fresh artisan batch dispatch across Pakistan.
+              Nourish your scalp with <strong>26 cold-pressed herbs</strong>. Formulated to revive dormant follicles, eliminate hair fall, and boost rich natural volume. Direct fresh artisan batch dispatch across Pakistan.
             </p>
 
             {/* CTAs */}
@@ -43,7 +43,6 @@ export default function Hero({ onOpenOrder }) {
               <button
                 onClick={() => onOpenOrder ? onOpenOrder('200ml') : window.open(getWhatsAppUrl('Hi Veelana Team, I want to order the 200ml Bottle'), '_blank')}
                 className="btn-olive"
-                style={{ cursor: 'pointer', padding: '0.85rem 1.5rem', minHeight: '48px' }}
               >
                 <ShoppingBag style={{ width: '18px', height: '18px' }} />
                 <span>Get 200ml Pack — Rs. 1,899</span>
@@ -52,22 +51,21 @@ export default function Hero({ onOpenOrder }) {
               <button
                 onClick={() => onOpenOrder ? onOpenOrder('100ml') : window.open(getWhatsAppUrl('Hi Veelana Team, I want to order the 100ml Bottle'), '_blank')}
                 className="btn-outline-olive"
-                style={{ cursor: 'pointer', padding: '0.85rem 1.5rem', minHeight: '48px' }}
               >
                 <span>Get 100ml Trial — Rs. 999</span>
               </button>
             </div>
 
             {/* Micro-copy under CTA */}
-            <div style={{ marginTop: '0.75rem', fontSize: '0.75rem', color: '#4F5E52', display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
-              <ShieldCheck style={{ width: '14px', height: '14px', color: '#25D366' }} />
+            <div style={{ marginTop: '0.85rem', fontSize: '0.875rem', color: 'var(--color-text-muted)', display: 'flex', alignItems: 'center', gap: '0.4rem', flexWrap: 'wrap' }}>
+              <ShieldCheck style={{ width: '15px', height: '15px', color: '#25D366' }} />
               <span>Cash on Delivery Across Pakistan • Fresh Cold-Pressed Batches • 7-Day Exchange Support</span>
             </div>
 
             {/* Key Trust Specs 2-Column Grid on Mobile */}
-            <div className="trust-specs-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.6rem', marginTop: '1.25rem' }}>
+            <div className="trust-specs-grid" style={{ gridTemplateColumns: 'repeat(2, 1fr)', gap: '0.65rem', marginTop: '1.25rem' }}>
               {trustSpecs.map((spec, i) => (
-                <div key={i} className="trust-spec-item" style={{ fontSize: '0.78rem' }}>
+                <div key={i} className="trust-spec-item">
                   <CheckCircle2 style={{ width: '15px', height: '15px', color: '#3A4828', flexShrink: 0 }} />
                   <span>{spec}</span>
                 </div>

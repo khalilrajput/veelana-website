@@ -37,8 +37,8 @@ export default function Navbar({ onOpenOrder }) {
   return (
     <header style={{ position: 'sticky', top: 0, zIndex: 1000, width: '100%' }}>
       {/* Top Announcement Bar - Rotating */}
-      <div className="top-bar" style={{ minHeight: '32px', overflow: 'hidden' }}>
-        <span style={{ fontSize: '0.78rem', fontWeight: '500', transition: 'all 0.4s' }}>
+      <div className="top-bar">
+        <span className="top-bar-text">
           {announcements[announcementIdx].text}
         </span>
       </div>
@@ -51,6 +51,7 @@ export default function Navbar({ onOpenOrder }) {
             <img
               src="/assets/official_png_logo.webp"
               alt="Veelana Official Olive Logo"
+              className="nav-brand-img"
               style={{
                 height: '38px',
                 width: 'auto',
@@ -89,11 +90,12 @@ export default function Navbar({ onOpenOrder }) {
           </ul>
 
           {/* CTA, Shopping Cart & Mobile Toggle */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flexShrink: 0 }}>
+          <div className="nav-actions" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
             {/* Shopping Cart Trigger Button */}
             <button
               onClick={() => setIsCartOpen(true)}
               aria-label="Open Shopping Cart"
+              className="nav-cart-btn"
               style={{
                 position: 'relative',
                 background: '#FAF8F5',
@@ -149,7 +151,7 @@ export default function Navbar({ onOpenOrder }) {
               onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
               className="mobile-menu-btn"
               aria-label="Toggle Mobile Menu"
-              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.5rem', minHeight: '44px', minWidth: '44px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.5rem', minHeight: '44px', minWidth: '44px' }}
             >
               {mobileMenuOpen ? <X style={{ width: '24px', height: '24px' }} /> : <Menu style={{ width: '24px', height: '24px' }} />}
             </button>

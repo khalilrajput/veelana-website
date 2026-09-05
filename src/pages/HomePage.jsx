@@ -2,6 +2,8 @@ import React from 'react';
 import Hero from '../components/Hero';
 import ScienceAnimation from '../components/ScienceAnimation';
 import ValueGrid from '../components/ValueGrid';
+import HairQuiz from '../components/HairQuiz';
+import RoutineBuilder from '../components/RoutineBuilder';
 import ProductShowcase from '../components/ProductShowcase';
 import IngredientsGrid from '../components/IngredientsGrid';
 import HowToUse from '../components/HowToUse';
@@ -13,9 +15,11 @@ export default function HomePage({ onOpenOrder }) {
       <Hero onOpenOrder={onOpenOrder} />
       <ScienceAnimation />
       <ValueGrid />
+      <HairQuiz onOpenOrder={onOpenOrder} />
       <ProductShowcase onOpenOrder={onOpenOrder} />
+      <RoutineBuilder onOpenOrder={onOpenOrder} />
       <IngredientsGrid />
-      <HowToUse />
+      <HowToUse onOpenOrder={onOpenOrder} />
       <Testimonials />
     </div>
   );

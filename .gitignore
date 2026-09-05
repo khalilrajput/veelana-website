@@ -18,7 +18,9 @@ dist-ssr
 .idea
 .DS_Store
 *.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+# Local Scratch & Test Artifacts
+toWEBP/
+typeui-temp/
+*.png
+!public/**/*.png
+!src/**/*.png

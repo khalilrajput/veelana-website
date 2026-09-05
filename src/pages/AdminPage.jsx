@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Lock, Package, Trash2, CheckCircle, RefreshCw, Phone, Download, MapPin, Search, Edit, Plus, ShieldCheck, DollarSign, Truck, AlertCircle, MessageCircle, ExternalLink, Image as ImageIcon, Sparkles, RotateCcw, Upload, X, Check, KeyRound } from 'lucide-react';
+import { Lock, Package, Trash2, CheckCircle, RefreshCw, Phone, Download, MapPin, Search, Edit, Plus, ShieldCheck, DollarSign, Truck, AlertCircle, MessageCircle, ExternalLink, Image as ImageIcon, Sparkles, RotateCcw, Upload, X, Check, KeyRound, Printer, FileText, TrendingUp, Calculator, AlertTriangle, Eye, ArrowUpRight, Copy } from 'lucide-react';
 import { getOrders, updateOrderStatus, clearOrders } from '../services/orderService';
 import { getProducts, addProduct, updateProduct, deleteProduct, resetToDefaults } from '../services/productService';
 
@@ -11,6 +11,7 @@ const PRESET_IMAGES = [
 ];
 
 const ADMIN_PWD_KEY = 'veelana_admin_custom_password_v1';
+const EXPENSES_STORAGE_KEY = 'veelana_admin_expenses_v1';
 
 export default function AdminPage() {
   const [password, setPassword] = useState('');
@@ -18,10 +19,15 @@ export default function AdminPage() {
     return sessionStorage.getItem('veelana_admin_session') === 'true';
   });
   const [authError, setAuthError] = useState('');
-  const [activeTab, setActiveTab] = useState('orders'); // 'orders', 'products', 'security'
+  const [activeTab, setActiveTab] = useState('orders'); // 'orders', 'products', 'analytics', 'security'
   const [toastMessage, setToastMessage] = useState('');
   const [isUploading, setIsUploading] = useState(false);
   const fileInputRef = useRef(null);
+
+  // Selected Order for Printable Shipping Label / Invoice / History Modal
+  const [printLabelOrder, setPrintLabelOrder] = useState(null);
+  const [printInvoiceOrder, setPrintInvoiceOrder] = useState(null);
+  const [viewHistoryOrder, setViewHistoryOrder] = useState(null);
 
   // Change Password Form State
   const [pwdForm, setPwdForm] = useState({
@@ -36,6 +42,21 @@ export default function AdminPage() {
   const [orders, setOrders] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
+
+  // Expenses & Financial Calculation State
+  const [financialSettings, setFinancialSettings] = useState(() => {
+    try {
+      const saved = localStorage.getItem(EXPENSES_STORAGE_KEY);
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return {
+      cogsPercentage: 25, // 25% product manufacturing & oil cost
+      packagingPerOrder: 120, // Rs. 120 bubble wrap + box + tape + flyers
+      courierFeePerOrder: 199, // Rs. 199 average courier booking fee
+      monthlyAdSpend: 15000, // Monthly Meta / TikTok Ad Budget
+      miscellaneousExpenses: 5000 // Miscellaneous overhead
+    };
+  });
 
   // Products State
   const [products, setProducts] = useState([]);
@@ -149,7 +170,7 @@ Tracking Ref: ${order.trackingNumber || 'Trax / Leopard Logistics Express'}
 Total Amount: ${order.totalPrice || `Rs. ${order.totalAmount}`} (Cash on Delivery)
 If you have any questions, reply to this message!`;
 
-    const cleanPhone = order.phone.replace(/[^0-9]/g, '');
+    const cleanPhone = (order.cleanPhone || order.phone).replace(/[^0-9]/g, '');
     const intPhone = cleanPhone.startsWith('0') ? `92${cleanPhone.slice(1)}` : cleanPhone;
     window.open(`https://wa.me/${intPhone}?text=${encodeURIComponent(text)}`, '_blank');
   };
@@ -159,7 +180,7 @@ If you have any questions, reply to this message!`;
       alert('No orders to export.');
       return;
     }
-    const headers = ['Order ID', 'Date', 'Customer Name', 'Phone', 'Address', 'City', 'Total Amount', 'Payment Method', 'Status', 'Notes'];
+    const headers = ['Order ID', 'Date', 'Customer Name', 'Phone', 'Address', 'City', 'Province', 'Landmark', 'Total Amount', 'Payment Method', 'Status', 'Risk Score', 'Notes'];
     const rows = orders.map((o) => [
       o.id,
       new Date(o.createdAt).toLocaleString(),
@@ -167,9 +188,12 @@ If you have any questions, reply to this message!`;
       `"${o.phone}"`,
       `"${o.address}"`,
       `"${o.city}"`,
+      `"${o.province || 'Punjab'}"`,
+      `"${o.landmark || ''}"`,
       `"${o.totalPrice || o.totalAmount}"`,
-      `"${o.paymentMethod}"`,
-      `"${o.status}"`,
+      `"${o.paymentMethod || 'COD'}"`,
+      `"${o.status || 'Pending'}"`,
+      `"${o.riskAssessment?.score || 50}/100"`,
       `"${o.notes || ''}"`,
     ]);
 
@@ -300,12 +324,21 @@ If you have any questions, reply to this message!`;
   // Metrics Calculations
   const totalOrders = orders.length;
   const pendingOrders = orders.filter((o) => (o.status || 'Pending').toLowerCase() === 'pending').length;
+  const confirmedOrders = orders.filter((o) => (o.status || '').toLowerCase() === 'confirmed').length;
   const dispatchedOrders = orders.filter((o) => (o.status || '').toLowerCase() === 'dispatched').length;
   const deliveredOrders = orders.filter((o) => (o.status || '').toLowerCase() === 'delivered').length;
+  
   const totalRevenue = orders.reduce((acc, o) => {
     const num = parseInt(String(o.totalPrice || o.totalAmount).replace(/[^0-9]/g, ''), 10) || 0;
     return acc + num;
   }, 0);
+
+  // Financial Estimates
+  const totalCOGS = Math.round(totalRevenue * (financialSettings.cogsPercentage / 100));
+  const totalPackagingCost = totalOrders * financialSettings.packagingPerOrder;
+  const totalCourierCost = totalOrders * financialSettings.courierFeePerOrder;
+  const totalEstimatedCosts = totalCOGS + totalPackagingCost + totalCourierCost + financialSettings.monthlyAdSpend + financialSettings.miscellaneousExpenses;
+  const estimatedNetProfit = totalRevenue - totalEstimatedCosts;
 
   const filteredOrders = orders.filter((order) => {
     const matchesSearch =
@@ -357,7 +390,7 @@ If you have any questions, reply to this message!`;
             Store Owner Portal
           </h2>
           <p style={{ fontSize: '0.85rem', color: '#6A7B52', marginBottom: '1.75rem' }}>
-            Enter your admin password to access live orders and product management.
+            Enter your admin password to access live orders, profit reports, and product management.
           </p>
 
           <form onSubmit={handleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
@@ -436,7 +469,387 @@ If you have any questions, reply to this message!`;
         </div>
       )}
 
-      <div className="container" style={{ maxWidth: '1200px', margin: '0 auto' }}>
+      {/* PRINTABLE SHIPPING LABEL MODAL */}
+      {printLabelOrder && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 999999,
+            background: 'rgba(18, 30, 20, 0.75)',
+            backdropFilter: 'blur(6px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1rem',
+            overflowY: 'auto',
+          }}
+          onClick={() => setPrintLabelOrder(null)}
+        >
+          <div
+            style={{
+              background: '#FFFFFF',
+              borderRadius: '20px',
+              padding: '1.75rem',
+              maxWidth: '540px',
+              width: '100%',
+              boxShadow: '0 25px 60px rgba(0,0,0,0.3)',
+              border: '1px solid rgba(79, 93, 56, 0.2)',
+              position: 'relative',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #ECE7DD', paddingBottom: '0.85rem', marginBottom: '1.25rem' }}>
+              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 'bold', color: '#1B2E1E', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Printer style={{ width: '20px', height: '20px', color: '#4F5D38' }} />
+                <span>Courier Shipping Label (Sticker)</span>
+              </h3>
+              <button
+                onClick={() => setPrintLabelOrder(null)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: '#7A8C74' }}
+              >
+                <X style={{ width: '20px', height: '20px' }} />
+              </button>
+            </div>
+
+            {/* Thermal Label Format Preview */}
+            <div
+              id="thermal-shipping-label"
+              style={{
+                border: '2px solid #000000',
+                padding: '1rem',
+                borderRadius: '8px',
+                background: '#FFFFFF',
+                color: '#000000',
+                fontFamily: 'monospace',
+                fontSize: '0.8rem',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '0.75rem',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '2px solid #000000', paddingBottom: '0.5rem' }}>
+                <div>
+                  <div style={{ fontWeight: '900', fontSize: '1.1rem', letterSpacing: '0.5px' }}>VEELANA HERBAL CARE</div>
+                  <div style={{ fontSize: '0.68rem', color: '#333333' }}>Pure Organic Hair Growth Oil • Pakistan</div>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontSize: '0.72rem', fontWeight: 'bold' }}>COD PARCEL</div>
+                  <div style={{ fontWeight: '900', fontSize: '1.2rem', color: '#047857' }}>
+                    {printLabelOrder.totalPrice || `Rs. ${printLabelOrder.totalAmount}`}
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '0.5rem', borderBottom: '1px solid #CCCCCC', paddingBottom: '0.5rem' }}>
+                <div>
+                  <span style={{ fontSize: '0.68rem', color: '#666666', display: 'block', textTransform: 'uppercase' }}>Order Ref</span>
+                  <strong style={{ fontSize: '0.95rem' }}>#{printLabelOrder.id}</strong>
+                </div>
+                <div>
+                  <span style={{ fontSize: '0.68rem', color: '#666666', display: 'block', textTransform: 'uppercase' }}>Booking Date</span>
+                  <strong>{new Date(printLabelOrder.createdAt).toLocaleDateString('en-PK')}</strong>
+                </div>
+              </div>
+
+              {/* Recipient Box */}
+              <div style={{ background: '#F8F8F8', padding: '0.75rem', borderRadius: '6px', border: '1px solid #DDDDDD', display: 'flex', flexDirection: 'column', gap: '3px' }}>
+                <span style={{ fontSize: '0.68rem', color: '#666666', fontWeight: 'bold', textTransform: 'uppercase', display: 'block' }}>
+                  SHIP TO (CUSTOMER):
+                </span>
+                <div style={{ fontWeight: 'bold', fontSize: '0.95rem', color: '#000000' }}>{printLabelOrder.fullName}</div>
+                <div style={{ fontWeight: 'bold', color: '#047857', fontSize: '0.9rem' }}>📞 {printLabelOrder.phone}</div>
+                <div style={{ fontSize: '0.8rem', color: '#222222' }}>{printLabelOrder.address}</div>
+                <div style={{ fontWeight: 'bold', fontSize: '0.82rem', textTransform: 'uppercase', color: '#000000', marginTop: '2px' }}>
+                  🏙️ {printLabelOrder.city}, {printLabelOrder.province || 'Punjab'}
+                </div>
+                {printLabelOrder.landmark && (
+                  <div style={{ fontSize: '0.75rem', color: '#78350F', background: '#FEF3C7', padding: '3px 6px', borderRadius: '4px', fontWeight: 'bold', marginTop: '3px' }}>
+                    📌 Near: {printLabelOrder.landmark}
+                  </div>
+                )}
+              </div>
+
+              {/* Items List */}
+              <div style={{ borderBottom: '1px solid #CCCCCC', paddingBottom: '0.5rem' }}>
+                <span style={{ fontSize: '0.68rem', color: '#666666', fontWeight: 'bold', display: 'block', textTransform: 'uppercase', marginBottom: '3px' }}>
+                  PARCEL CONTENTS:
+                </span>
+                {printLabelOrder.items && Array.isArray(printLabelOrder.items) ? (
+                  printLabelOrder.items.map((it, i) => (
+                    <div key={i} style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.78rem' }}>
+                      <span>{it.name}</span>
+                      <strong>x{it.quantity}</strong>
+                    </div>
+                  ))
+                ) : (
+                  <div style={{ fontSize: '0.78rem' }}>{printLabelOrder.productName || 'Veelana 200ml Bottle'} x {printLabelOrder.quantity || 1}</div>
+                )}
+              </div>
+
+              {/* Barcode Mock */}
+              <div style={{ textAlign: 'center', paddingTop: '4px' }}>
+                <div style={{ height: '36px', background: '#000000', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', letterSpacing: '6px', fontFamily: 'monospace', fontSize: '0.85rem', fontWeight: 'bold' }}>
+                  |||||||||||||||||||||||||||||
+                </div>
+                <span style={{ fontSize: '0.7rem', color: '#555555', fontWeight: 'bold', display: 'block', marginTop: '2px' }}>
+                  {printLabelOrder.trackingNumber || `TRX-${printLabelOrder.id}PK`}
+                </span>
+              </div>
+            </div>
+
+            <div style={{ marginTop: '1.25rem', display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+              <button
+                onClick={() => setPrintLabelOrder(null)}
+                style={{ padding: '0.6rem 1.1rem', background: '#EAEFE4', color: '#2A361E', border: 'none', borderRadius: '8px', fontSize: '0.82rem', fontWeight: 'bold', cursor: 'pointer' }}
+              >
+                Close
+              </button>
+              <button
+                onClick={() => window.print()}
+                style={{ padding: '0.6rem 1.25rem', background: '#1B2E1E', color: '#FAF8F5', border: 'none', borderRadius: '8px', fontSize: '0.82rem', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                <Printer style={{ width: '15px', height: '15px', color: '#D4AF37' }} />
+                <span>Print Label</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* PRINTABLE INVOICE MODAL */}
+      {printInvoiceOrder && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 999999,
+            background: 'rgba(18, 30, 20, 0.75)',
+            backdropFilter: 'blur(6px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1rem',
+            overflowY: 'auto',
+          }}
+          onClick={() => setPrintInvoiceOrder(null)}
+        >
+          <div
+            style={{
+              background: '#FFFFFF',
+              borderRadius: '20px',
+              padding: '1.75rem',
+              maxWidth: '580px',
+              width: '100%',
+              boxShadow: '0 25px 60px rgba(0,0,0,0.3)',
+              border: '1px solid rgba(79, 93, 56, 0.2)',
+              position: 'relative',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #ECE7DD', paddingBottom: '0.85rem', marginBottom: '1.25rem' }}>
+              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.25rem', fontWeight: 'bold', color: '#1B2E1E', margin: 0, display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <FileText style={{ width: '20px', height: '20px', color: '#4F5D38' }} />
+                <span>Official Customer Bill Invoice</span>
+              </h3>
+              <button
+                onClick={() => setPrintInvoiceOrder(null)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: '#7A8C74' }}
+              >
+                <X style={{ width: '20px', height: '20px' }} />
+              </button>
+            </div>
+
+            <div
+              id="customer-bill-invoice"
+              style={{
+                padding: '1rem',
+                background: '#FFFFFF',
+                color: '#111827',
+                fontSize: '0.82rem',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1rem',
+              }}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', borderBottom: '1px solid #E5E7EB', paddingBottom: '0.75rem' }}>
+                <div>
+                  <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.35rem', fontWeight: 'bold', color: '#1B2E1E', margin: 0 }}>
+                    VEELANA HERBAL CARE
+                  </h4>
+                  <p style={{ color: '#6B7280', fontSize: '0.75rem', margin: '2px 0 0' }}>Direct Botanical Hair Revival • Pakistan</p>
+                  <p style={{ color: '#6B7280', fontSize: '0.75rem', margin: '2px 0 0' }}>WhatsApp: +92 306 1041609 | veelanaofficial@gmail.com</p>
+                </div>
+                <div style={{ textAlign: 'right' }}>
+                  <div style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#111827' }}>INVOICE #{printInvoiceOrder.id}</div>
+                  <div style={{ color: '#6B7280', fontSize: '0.75rem' }}>Date: {new Date(printInvoiceOrder.createdAt).toLocaleDateString('en-PK')}</div>
+                  <div style={{ display: 'inline-block', marginTop: '4px', padding: '2px 8px', background: '#ECFDF5', color: '#065F46', borderRadius: '4px', fontSize: '0.72rem', fontWeight: 'bold' }}>
+                    {printInvoiceOrder.status || 'Pending'}
+                  </div>
+                </div>
+              </div>
+
+              <div style={{ background: '#FAF8F5', padding: '0.85rem', borderRadius: '8px', border: '1px solid #E5E7EB' }}>
+                <span style={{ fontSize: '0.7rem', color: '#6B7280', textTransform: 'uppercase', fontWeight: 'bold', display: 'block', marginBottom: '2px' }}>
+                  BILLED TO:
+                </span>
+                <div style={{ fontWeight: 'bold', fontSize: '0.95rem', color: '#111827' }}>{printInvoiceOrder.fullName}</div>
+                <div style={{ color: '#047857', fontWeight: 'bold' }}>📞 {printInvoiceOrder.phone}</div>
+                <div style={{ color: '#4B5563', fontSize: '0.8rem' }}>{printInvoiceOrder.address}</div>
+                <div style={{ color: '#111827', fontWeight: 'bold', fontSize: '0.82rem', marginTop: '2px' }}>
+                  {printInvoiceOrder.city}, {printInvoiceOrder.province || 'Pakistan'}
+                </div>
+              </div>
+
+              {/* Items Table */}
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr style={{ borderBottom: '2px solid #E5E7EB', textAlign: 'left', fontSize: '0.75rem', color: '#6B7280', textTransform: 'uppercase' }}>
+                    <th style={{ padding: '0.5rem 0' }}>Item Description</th>
+                    <th style={{ padding: '0.5rem 0', textAlign: 'center' }}>Qty</th>
+                    <th style={{ padding: '0.5rem 0', textAlign: 'right' }}>Price</th>
+                    <th style={{ padding: '0.5rem 0', textAlign: 'right' }}>Total</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {printInvoiceOrder.items && Array.isArray(printInvoiceOrder.items) ? (
+                    printInvoiceOrder.items.map((it, i) => (
+                      <tr key={i} style={{ borderBottom: '1px solid #F3F4F6' }}>
+                        <td style={{ padding: '0.5rem 0', fontWeight: '500' }}>{it.name}</td>
+                        <td style={{ padding: '0.5rem 0', textAlign: 'center' }}>{it.quantity}</td>
+                        <td style={{ padding: '0.5rem 0', textAlign: 'right' }}>Rs. {it.price.toLocaleString()}</td>
+                        <td style={{ padding: '0.5rem 0', textAlign: 'right', fontWeight: 'bold' }}>Rs. {(it.price * it.quantity).toLocaleString()}</td>
+                      </tr>
+                    ))
+                  ) : (
+                    <tr style={{ borderBottom: '1px solid #F3F4F6' }}>
+                      <td style={{ padding: '0.5rem 0', fontWeight: '500' }}>{printInvoiceOrder.productName || 'Veelana 200ml Bottle'}</td>
+                      <td style={{ padding: '0.5rem 0', textAlign: 'center' }}>{printInvoiceOrder.quantity || 1}</td>
+                      <td style={{ padding: '0.5rem 0', textAlign: 'right' }}>{printInvoiceOrder.totalPrice || 'Rs. 1,899'}</td>
+                      <td style={{ padding: '0.5rem 0', textAlign: 'right', fontWeight: 'bold' }}>{printInvoiceOrder.totalPrice || 'Rs. 1,899'}</td>
+                    </tr>
+                  )}
+                </tbody>
+              </table>
+
+              {/* Summary */}
+              <div style={{ display: 'flex', justifyContent: 'flex-end', paddingTop: '0.5rem' }}>
+                <div style={{ width: '200px', display: 'flex', flexDirection: 'column', gap: '4px', textAlign: 'right', fontSize: '0.82rem' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', color: '#4B5563' }}>
+                    <span>Subtotal:</span>
+                    <span>Rs. {(printInvoiceOrder.subtotal || printInvoiceOrder.totalAmount).toLocaleString()}</span>
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', color: '#4B5563' }}>
+                    <span>Delivery:</span>
+                    <span>{printInvoiceOrder.shippingFee === 0 ? 'FREE' : `Rs. ${printInvoiceOrder.shippingFee || 0}`}</span>
+                  </div>
+                  {printInvoiceOrder.discountAmount > 0 && (
+                    <div style={{ display: 'flex', justifyContent: 'space-between', color: '#047857', fontWeight: 'bold' }}>
+                      <span>Discount ({printInvoiceOrder.couponCode}):</span>
+                      <span>-Rs. {printInvoiceOrder.discountAmount}</span>
+                    </div>
+                  )}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.95rem', fontWeight: 'bold', color: '#111827', borderTop: '1px solid #E5E7EB', paddingTop: '4px', marginTop: '2px' }}>
+                    <span>Total (COD):</span>
+                    <span style={{ color: '#065F46' }}>{printInvoiceOrder.totalPrice || `Rs. ${printInvoiceOrder.totalAmount}`}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <div style={{ marginTop: '1.25rem', display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+              <button
+                onClick={() => setPrintInvoiceOrder(null)}
+                style={{ padding: '0.6rem 1.1rem', background: '#EAEFE4', color: '#2A361E', border: 'none', borderRadius: '8px', fontSize: '0.82rem', fontWeight: 'bold', cursor: 'pointer' }}
+              >
+                Close
+              </button>
+              <button
+                onClick={() => window.print()}
+                style={{ padding: '0.6rem 1.25rem', background: '#1B2E1E', color: '#FAF8F5', border: 'none', borderRadius: '8px', fontSize: '0.82rem', fontWeight: 'bold', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '6px' }}
+              >
+                <Printer style={{ width: '15px', height: '15px', color: '#D4AF37' }} />
+                <span>Print Invoice</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* STATUS HISTORY MODAL */}
+      {viewHistoryOrder && (
+        <div
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 999999,
+            background: 'rgba(18, 30, 20, 0.75)',
+            backdropFilter: 'blur(6px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '1rem',
+            overflowY: 'auto',
+          }}
+          onClick={() => setViewHistoryOrder(null)}
+        >
+          <div
+            style={{
+              background: '#FFFFFF',
+              borderRadius: '20px',
+              padding: '1.75rem',
+              maxWidth: '460px',
+              width: '100%',
+              boxShadow: '0 25px 60px rgba(0,0,0,0.3)',
+              border: '1px solid rgba(79, 93, 56, 0.2)',
+              position: 'relative',
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid #ECE7DD', paddingBottom: '0.85rem', marginBottom: '1.25rem' }}>
+              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.2rem', fontWeight: 'bold', color: '#1B2E1E', margin: 0 }}>
+                Status Audit Trail (#{viewHistoryOrder.id})
+              </h3>
+              <button
+                onClick={() => setViewHistoryOrder(null)}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '4px', color: '#7A8C74' }}
+              >
+                <X style={{ width: '20px', height: '20px' }} />
+              </button>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
+              {viewHistoryOrder.statusHistory && viewHistoryOrder.statusHistory.length > 0 ? (
+                viewHistoryOrder.statusHistory.map((hist, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '0.75rem', fontSize: '0.82rem' }}>
+                    <div style={{ width: '10px', height: '10px', borderRadius: '50%', background: '#2D6A4F', marginTop: '4px', flexShrink: 0 }} />
+                    <div>
+                      <strong style={{ color: '#1B2E1E', display: 'block' }}>{hist.status}</strong>
+                      <span style={{ fontSize: '0.72rem', color: '#73836E' }}>{new Date(hist.timestamp).toLocaleString('en-PK')}</span>
+                      {hist.note && <p style={{ color: '#5A6B53', margin: '2px 0 0', fontSize: '0.78rem' }}>{hist.note}</p>}
+                    </div>
+                  </div>
+                ))
+              ) : (
+                <div style={{ fontSize: '0.82rem', color: '#73836E' }}>
+                  Order recorded with status: {viewHistoryOrder.status || 'Pending'}
+                </div>
+              )}
+            </div>
+
+            <div style={{ marginTop: '1.25rem', display: 'flex', justifyContent: 'flex-end' }}>
+              <button
+                onClick={() => setViewHistoryOrder(null)}
+                style={{ padding: '0.6rem 1.1rem', background: '#EAEFE4', color: '#2A361E', border: 'none', borderRadius: '8px', fontSize: '0.82rem', fontWeight: 'bold', cursor: 'pointer' }}
+              >
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      <div className="container" style={{ maxWidth: '1240px', margin: '0 auto' }}>
         
         {/* Top Admin Header Bar */}
         <div
@@ -459,7 +872,7 @@ If you have any questions, reply to this message!`;
               VEELANA STORE MANAGEMENT HUB
             </span>
             <h1 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.85rem', fontWeight: 'bold', margin: '0.2rem 0 0', color: '#FFFFFF' }}>
-              Admin Operations Dashboard
+              Admin Operations & Financial Dashboard
             </h1>
           </div>
 
@@ -498,6 +911,26 @@ If you have any questions, reply to this message!`;
             </button>
 
             <button
+              onClick={() => setActiveTab('analytics')}
+              style={{
+                padding: '0.6rem 1.1rem',
+                borderRadius: '10px',
+                border: 'none',
+                background: activeTab === 'analytics' ? '#D4AF37' : 'rgba(255,255,255,0.15)',
+                color: activeTab === 'analytics' ? '#121E14' : '#FFFFFF',
+                fontWeight: 'bold',
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '5px'
+              }}
+            >
+              <Calculator style={{ width: '14px', height: '14px' }} />
+              <span>Profit & Expenses</span>
+            </button>
+
+            <button
               onClick={() => setActiveTab('security')}
               style={{
                 padding: '0.6rem 1.1rem',
@@ -514,7 +947,7 @@ If you have any questions, reply to this message!`;
               }}
             >
               <KeyRound style={{ width: '14px', height: '14px' }} />
-              <span>Change Password</span>
+              <span>Security</span>
             </button>
 
             <button
@@ -536,16 +969,24 @@ If you have any questions, reply to this message!`;
         </div>
 
         {/* METRICS ROW */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(190px, 1fr))', gap: '1rem', marginBottom: '2rem' }}>
           {/* Total Revenue */}
           <div style={{ background: '#FFFFFF', padding: '1.25rem', borderRadius: '16px', border: '1px solid rgba(79, 93, 56, 0.15)', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}>
-            <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#73836E', textTransform: 'uppercase' }}>Total Order Value</span>
+            <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#73836E', textTransform: 'uppercase' }}>Gross Revenue</span>
             <h3 style={{ fontSize: '1.6rem', fontWeight: '800', color: '#1B2E1E', margin: '0.35rem 0 0' }}>
               Rs. {totalRevenue.toLocaleString()}
             </h3>
           </div>
 
-          {/* Total Orders */}
+          {/* Estimated Net Profit */}
+          <div style={{ background: '#ECFDF5', padding: '1.25rem', borderRadius: '16px', border: '1px solid #A7F3D0', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#047857', textTransform: 'uppercase' }}>Est. Net Profit</span>
+            <h3 style={{ fontSize: '1.6rem', fontWeight: '800', color: '#047857', margin: '0.35rem 0 0' }}>
+              Rs. {Math.max(0, estimatedNetProfit).toLocaleString()}
+            </h3>
+          </div>
+
+          {/* Total Bookings */}
           <div style={{ background: '#FFFFFF', padding: '1.25rem', borderRadius: '16px', border: '1px solid rgba(79, 93, 56, 0.15)', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}>
             <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#73836E', textTransform: 'uppercase' }}>Total Bookings</span>
             <h3 style={{ fontSize: '1.6rem', fontWeight: '800', color: '#1B2E1E', margin: '0.35rem 0 0' }}>
@@ -555,7 +996,7 @@ If you have any questions, reply to this message!`;
 
           {/* Pending COD Confirmation */}
           <div style={{ background: '#FFFBEB', padding: '1.25rem', borderRadius: '16px', border: '1px solid #FDE68A', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}>
-            <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#B45309', textTransform: 'uppercase' }}>Pending COD Confirm</span>
+            <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#B45309', textTransform: 'uppercase' }}>Pending COD Verify</span>
             <h3 style={{ fontSize: '1.6rem', fontWeight: '800', color: '#B45309', margin: '0.35rem 0 0' }}>
               {pendingOrders}
             </h3>
@@ -570,9 +1011,9 @@ If you have any questions, reply to this message!`;
           </div>
 
           {/* Delivered */}
-          <div style={{ background: '#ECFDF5', padding: '1.25rem', borderRadius: '16px', border: '1px solid #A7F3D0', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}>
-            <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#047857', textTransform: 'uppercase' }}>Completed Deliveries</span>
-            <h3 style={{ fontSize: '1.6rem', fontWeight: '800', color: '#047857', margin: '0.35rem 0 0' }}>
+          <div style={{ background: '#FAF8F5', padding: '1.25rem', borderRadius: '16px', border: '1px solid #D6D0C2', boxShadow: '0 2px 10px rgba(0,0,0,0.03)' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#5A6B53', textTransform: 'uppercase' }}>Delivered Parcels</span>
+            <h3 style={{ fontSize: '1.6rem', fontWeight: '800', color: '#2A361E', margin: '0.35rem 0 0' }}>
               {deliveredOrders}
             </h3>
           </div>
@@ -683,43 +1124,66 @@ If you have any questions, reply to this message!`;
               <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left', fontSize: '0.85rem' }}>
                 <thead>
                   <tr style={{ background: '#FAF8F5', borderBottom: '2px solid #ECE7DD', color: '#5A6B53', textTransform: 'uppercase', fontSize: '0.72rem', letterSpacing: '0.8px' }}>
-                    <th style={{ padding: '0.85rem 1rem' }}>Order Ref</th>
-                    <th style={{ padding: '0.85rem 1rem' }}>Date</th>
+                    <th style={{ padding: '0.85rem 1rem' }}>Order Ref & Risk</th>
                     <th style={{ padding: '0.85rem 1rem' }}>Customer Details</th>
                     <th style={{ padding: '0.85rem 1rem' }}>Items Ordered</th>
                     <th style={{ padding: '0.85rem 1rem' }}>Total Payable</th>
                     <th style={{ padding: '0.85rem 1rem' }}>Live Status</th>
-                    <th style={{ padding: '0.85rem 1rem', textAlign: 'center' }}>WhatsApp Action</th>
+                    <th style={{ padding: '0.85rem 1rem', textAlign: 'center' }}>Courier & Actions</th>
                   </tr>
                 </thead>
                 <tbody>
                   {filteredOrders.length === 0 ? (
                     <tr>
-                      <td colSpan="7" style={{ padding: '3rem 1rem', textAlign: 'center', color: '#73836E' }}>
-                        No orders match your criteria. When customers place orders via website or cart, they appear here in real-time.
+                      <td colSpan="6" style={{ padding: '3rem 1rem', textAlign: 'center', color: '#73836E' }}>
+                        No orders match your criteria. When customers place orders on website or cart, they appear here in real-time.
                       </td>
                     </tr>
                   ) : (
                     filteredOrders.map((order) => (
                       <tr key={order.id} style={{ borderBottom: '1px solid #F0ECE4' }}>
-                        {/* Order ID */}
-                        <td style={{ padding: '1rem', fontWeight: 'bold', color: '#1B2E1E', verticalAlign: 'top' }}>
-                          #{order.id}
-                        </td>
+                        {/* Order ID & COD Risk */}
+                        <td style={{ padding: '1rem', verticalAlign: 'top' }}>
+                          <div style={{ fontWeight: 'bold', color: '#1B2E1E', fontSize: '0.95rem' }}>
+                            #{order.id}
+                          </div>
+                          <div style={{ color: '#5F7057', fontSize: '0.75rem', marginTop: '2px' }}>
+                            {new Date(order.createdAt).toLocaleDateString('en-PK', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                          </div>
 
-                        {/* Date */}
-                        <td style={{ padding: '1rem', color: '#5F7057', fontSize: '0.78rem', verticalAlign: 'top' }}>
-                          {new Date(order.createdAt).toLocaleDateString('en-PK', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })}
+                          {/* COD RTO Risk Badge */}
+                          {order.riskAssessment && (
+                            <span
+                              style={{
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '3px',
+                                fontSize: '0.68rem',
+                                fontWeight: 'bold',
+                                color: order.riskAssessment.badgeColor,
+                                background: order.riskAssessment.badgeBg,
+                                padding: '2px 6px',
+                                borderRadius: '4px',
+                                marginTop: '4px',
+                              }}
+                            >
+                              <ShieldCheck style={{ width: '11px', height: '11px' }} />
+                              {order.riskAssessment.riskLevel} ({order.riskAssessment.score}/100)
+                            </span>
+                          )}
                         </td>
 
                         {/* Customer */}
-                        <td style={{ padding: '1rem', verticalAlign: 'top' }}>
-                          <strong style={{ color: '#1B2E1E', display: 'block' }}>{order.fullName}</strong>
-                          <span style={{ color: '#25D366', fontWeight: 'bold', display: 'block', fontSize: '0.8rem' }}>{order.phone}</span>
-                          <span style={{ color: '#5A6B53', fontSize: '0.78rem', display: 'block' }}>{order.address}, {order.city}</span>
-                          {order.notes && (
-                            <span style={{ fontSize: '0.72rem', color: '#D97706', display: 'block', marginTop: '2px' }}>
-                              Note: {order.notes}
+                        <td style={{ padding: '1rem', verticalAlign: 'top', minWidth: '220px' }}>
+                          <strong style={{ color: '#1B2E1E', display: 'block', fontSize: '0.9rem' }}>{order.fullName}</strong>
+                          <span style={{ color: '#25D366', fontWeight: 'bold', display: 'block', fontSize: '0.82rem' }}>📞 {order.phone}</span>
+                          <span style={{ color: '#5A6B53', fontSize: '0.78rem', display: 'block' }}>{order.address}</span>
+                          <span style={{ color: '#1B2E1E', fontWeight: '600', fontSize: '0.75rem', display: 'block', marginTop: '2px' }}>
+                            🏙️ {order.city} ({order.province || 'Punjab'})
+                          </span>
+                          {order.landmark && (
+                            <span style={{ fontSize: '0.72rem', color: '#92400E', background: '#FEF3C7', padding: '1px 5px', borderRadius: '4px', display: 'inline-block', marginTop: '3px' }}>
+                              📌 Near: {order.landmark}
                             </span>
                           )}
                         </td>
@@ -776,30 +1240,71 @@ If you have any questions, reply to this message!`;
                             <option value="Delivered">Delivered</option>
                             <option value="Cancelled">Cancelled</option>
                           </select>
+
+                          <button
+                            onClick={() => setViewHistoryOrder(order)}
+                            style={{ display: 'flex', alignItems: 'center', gap: '3px', fontSize: '0.7rem', color: '#6A7B52', background: 'none', border: 'none', cursor: 'pointer', marginTop: '4px' }}
+                          >
+                            <Eye style={{ width: '11px', height: '11px' }} />
+                            <span>Audit Trail</span>
+                          </button>
                         </td>
 
-                        {/* Action */}
-                        <td style={{ padding: '1rem', textAlign: 'center', verticalAlign: 'top' }}>
-                          <button
-                            onClick={() => sendWhatsAppUpdate(order)}
-                            title="Send WhatsApp update to customer"
-                            style={{
-                              background: '#25D366',
-                              color: '#FFFFFF',
-                              border: 'none',
-                              borderRadius: '8px',
-                              padding: '0.45rem 0.75rem',
-                              fontSize: '0.78rem',
-                              fontWeight: 'bold',
-                              cursor: 'pointer',
-                              display: 'inline-flex',
-                              alignItems: 'center',
-                              gap: '4px',
-                            }}
-                          >
-                            <MessageCircle style={{ width: '14px', height: '14px' }} />
-                            <span>Notify</span>
-                          </button>
+                        {/* Action Buttons: 1-Click Copy for Courier, WhatsApp Notify, Tracking Number */}
+                        <td style={{ padding: '1rem', textAlign: 'center', verticalAlign: 'top', minWidth: '160px' }}>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '6px', alignItems: 'center' }}>
+                            {/* 1-Click Copy for Courier Portal (Trax / Leopard / PostEx) */}
+                            <button
+                              onClick={() => {
+                                const courierText = `Name: ${order.fullName}\nPhone: ${order.phone}\nCity: ${order.city}\nAddress: ${order.address}${order.landmark ? ` (Near: ${order.landmark})` : ''}\nCOD Amount: ${String(order.totalPrice || order.totalAmount).replace(/[^0-9]/g, '')}\nOrder ID: ${order.id}`;
+                                navigator.clipboard.writeText(courierText);
+                                showNotification(`📋 Copied for Courier Portal! (#${order.id})`);
+                              }}
+                              title="Copy details formatted for Trax / Leopard / PostEx portal"
+                              style={{
+                                background: '#1B2E1E',
+                                color: '#FAF8F5',
+                                border: 'none',
+                                borderRadius: '6px',
+                                padding: '0.4rem 0.75rem',
+                                fontSize: '0.75rem',
+                                fontWeight: 'bold',
+                                cursor: 'pointer',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '5px',
+                                width: '100%',
+                                justifyContent: 'center',
+                              }}
+                            >
+                              <Copy style={{ width: '12px', height: '12px', color: '#D4AF37' }} />
+                              <span>Copy for Courier</span>
+                            </button>
+
+                            {/* WhatsApp Dispatch Notification */}
+                            <button
+                              onClick={() => sendWhatsAppUpdate(order)}
+                              title="Send WhatsApp update to customer"
+                              style={{
+                                background: '#25D366',
+                                color: '#FFFFFF',
+                                border: 'none',
+                                borderRadius: '6px',
+                                padding: '0.4rem 0.75rem',
+                                fontSize: '0.75rem',
+                                fontWeight: 'bold',
+                                cursor: 'pointer',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '4px',
+                                width: '100%',
+                                justifyContent: 'center',
+                              }}
+                            >
+                              <MessageCircle style={{ width: '13px', height: '13px' }} />
+                              <span>WhatsApp Notify</span>
+                            </button>
+                          </div>
                         </td>
                       </tr>
                     ))
@@ -1171,7 +1676,146 @@ If you have any questions, reply to this message!`;
           </div>
         )}
 
-        {/* TAB 3: CHANGE PASSWORD & SECURITY */}
+        {/* TAB 3: PROFIT & FINANCIAL CALCULATOR */}
+        {activeTab === 'analytics' && (
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
+            
+            {/* Left: Profit Summary Report */}
+            <div style={{ background: '#FFFFFF', borderRadius: '20px', padding: '1.75rem', border: '1px solid rgba(79, 93, 56, 0.15)', boxShadow: '0 4px 25px rgba(0,0,0,0.04)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem', paddingBottom: '0.75rem', borderBottom: '1px solid #ECE7DD' }}>
+                <TrendingUp style={{ width: '20px', height: '20px', color: '#047857' }} />
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#1B2E1E', margin: 0 }}>
+                  Real Profit & Unit Economics
+                </h3>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem', fontSize: '0.9rem' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.6rem 0.85rem', background: '#FAF8F5', borderRadius: '8px' }}>
+                  <span className="font-semibold text-gray-700">Gross Sales Revenue:</span>
+                  <strong className="text-gray-900">Rs. {totalRevenue.toLocaleString()}</strong>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.6rem 0.85rem', color: '#B91C1C' }}>
+                  <span>Estimated Product Cost (COGS @ {financialSettings.cogsPercentage}%):</span>
+                  <strong>- Rs. {totalCOGS.toLocaleString()}</strong>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.6rem 0.85rem', color: '#B91C1C' }}>
+                  <span>Packaging Costs ({totalOrders} orders x Rs. {financialSettings.packagingPerOrder}):</span>
+                  <strong>- Rs. {totalPackagingCost.toLocaleString()}</strong>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.6rem 0.85rem', color: '#B91C1C' }}>
+                  <span>Courier & COD Charges ({totalOrders} orders x Rs. {financialSettings.courierFeePerOrder}):</span>
+                  <strong>- Rs. {totalCourierCost.toLocaleString()}</strong>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.6rem 0.85rem', color: '#B91C1C' }}>
+                  <span>Estimated Monthly Ad Spend (Meta/TikTok):</span>
+                  <strong>- Rs. {financialSettings.monthlyAdSpend.toLocaleString()}</strong>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', padding: '0.6rem 0.85rem', color: '#B91C1C' }}>
+                  <span>Miscellaneous Operational Overhead:</span>
+                  <strong>- Rs. {financialSettings.miscellaneousExpenses.toLocaleString()}</strong>
+                </div>
+
+                <div style={{ borderTop: '2px solid #1B2E1E', paddingTop: '0.85rem', marginTop: '0.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: '#ECFDF5', padding: '0.85rem', borderRadius: '10px' }}>
+                  <div>
+                    <span style={{ fontSize: '0.75rem', color: '#047857', fontWeight: 'bold', textTransform: 'uppercase' }}>Estimated Net Profit</span>
+                    <div style={{ fontSize: '1.4rem', fontWeight: '900', color: '#047857' }}>
+                      Rs. {Math.max(0, estimatedNetProfit).toLocaleString()}
+                    </div>
+                  </div>
+                  <span style={{ fontSize: '0.85rem', fontWeight: 'bold', color: '#047857', background: '#A7F3D0', padding: '4px 10px', borderRadius: '6px' }}>
+                    {totalRevenue > 0 ? `${Math.round((estimatedNetProfit / totalRevenue) * 100)}% Margin` : '0%'}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right: Cost & Expense Configuration */}
+            <div style={{ background: '#FFFFFF', borderRadius: '20px', padding: '1.75rem', border: '1px solid rgba(79, 93, 56, 0.15)', boxShadow: '0 4px 25px rgba(0,0,0,0.04)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', marginBottom: '1.25rem', paddingBottom: '0.75rem', borderBottom: '1px solid #ECE7DD' }}>
+                <Calculator style={{ width: '20px', height: '20px', color: '#4F5D38' }} />
+                <h3 style={{ fontSize: '1.25rem', fontWeight: 'bold', color: '#1B2E1E', margin: 0 }}>
+                  Expense & Cost Settings
+                </h3>
+              </div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">
+                    Product Manufacturing & Oil Cost (% of Price)
+                  </label>
+                  <input
+                    type="number"
+                    value={financialSettings.cogsPercentage}
+                    onChange={(e) => {
+                      const updated = { ...financialSettings, cogsPercentage: Number(e.target.value) };
+                      setFinancialSettings(updated);
+                      localStorage.setItem(EXPENSES_STORAGE_KEY, JSON.stringify(updated));
+                    }}
+                    className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-[#1B2E1E]"
+                  />
+                  <span className="text-[11px] text-gray-500 mt-1 block">Default: 25% (Herbal oil extraction, bottles, labels)</span>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">
+                    Packaging & Box Cost Per Order (PKR)
+                  </label>
+                  <input
+                    type="number"
+                    value={financialSettings.packagingPerOrder}
+                    onChange={(e) => {
+                      const updated = { ...financialSettings, packagingPerOrder: Number(e.target.value) };
+                      setFinancialSettings(updated);
+                      localStorage.setItem(EXPENSES_STORAGE_KEY, JSON.stringify(updated));
+                    }}
+                    className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-[#1B2E1E]"
+                  />
+                  <span className="text-[11px] text-gray-500 mt-1 block">Flyers, bubble wrap, branded box, tape</span>
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">
+                    Courier / Trax Delivery Fee Per Order (PKR)
+                  </label>
+                  <input
+                    type="number"
+                    value={financialSettings.courierFeePerOrder}
+                    onChange={(e) => {
+                      const updated = { ...financialSettings, courierFeePerOrder: Number(e.target.value) };
+                      setFinancialSettings(updated);
+                      localStorage.setItem(EXPENSES_STORAGE_KEY, JSON.stringify(updated));
+                    }}
+                    className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-[#1B2E1E]"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-xs font-bold text-gray-700 mb-1">
+                    Monthly Meta (Facebook / Instagram) & TikTok Ad Budget (PKR)
+                  </label>
+                  <input
+                    type="number"
+                    value={financialSettings.monthlyAdSpend}
+                    onChange={(e) => {
+                      const updated = { ...financialSettings, monthlyAdSpend: Number(e.target.value) };
+                      setFinancialSettings(updated);
+                      localStorage.setItem(EXPENSES_STORAGE_KEY, JSON.stringify(updated));
+                    }}
+                    className="w-full px-3 py-2 text-xs border rounded-lg focus:outline-none focus:border-[#1B2E1E]"
+                  />
+                </div>
+              </div>
+            </div>
+
+          </div>
+        )}
+
+        {/* TAB 4: CHANGE PASSWORD & SECURITY */}
         {activeTab === 'security' && (
           <div style={{ maxWidth: '520px', margin: '0 auto', background: '#FFFFFF', borderRadius: '20px', padding: '2rem', border: '1px solid rgba(79, 93, 56, 0.15)', boxShadow: '0 4px 25px rgba(0,0,0,0.04)' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', marginBottom: '1.25rem', paddingBottom: '0.75rem', borderBottom: '1px solid #ECE7DD' }}>

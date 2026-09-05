@@ -1,0 +1,1873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Veelana Botanical Hair Oil — Complete UI / UX Design Showcase</title>
+  
+  <!-- Google Fonts: Editorial Serif + Clean Modern Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,600;0,700;0,800;1,500;1,600&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    /* -------------------------------------------------------------
+       VEELANA LUXURY BOTANICAL DESIGN SYSTEM TOKENS
+       ------------------------------------------------------------- */
+    :root {
+      --color-olive-dark: #1B2E1E;      /* Deep Forest Olive */
+      --color-olive-primary: #4F5D38;   /* Herbal Sage Green */
+      --color-olive-light: #7E9460;     /* Fresh Leaf Green */
+      --color-gold: #D4AF37;            /* Artisan Gold Accent */
+      --color-gold-hover: #E8CA65;      /* Warm Gold Hover */
+      --color-gold-light: #FAF6EC;      /* Soft Gold Tint */
+      --color-bg-linen: #FAF8F5;        /* Warm Organic Linen */
+      --color-bg-card: #FFFFFF;         /* Crisp Luxury Card */
+      --color-text-main: #1B2E1E;       /* Deep High-Contrast Text */
+      --color-text-muted: #556550;      /* Soft Botanical Text */
+      --color-text-subtle: #8A9A86;     /* Muted Grey Green */
+      --color-border: rgba(79, 93, 56, 0.14);
+      --font-heading: 'Playfair Display', Georgia, serif;
+      --font-sans: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-lg: 20px;
+      --radius-full: 9999px;
+      --shadow-sm: 0 2px 8px rgba(27, 46, 30, 0.04);
+      --shadow-md: 0 8px 24px rgba(27, 46, 30, 0.06);
+      --shadow-lg: 0 16px 40px rgba(27, 46, 30, 0.1);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-sans);
+      background-color: var(--color-bg-linen);
+      color: var(--color-text-main);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* -------------------------------------------------------------
+       DESIGNER TOOLBAR (Device Preview & Mode Switcher)
+       ------------------------------------------------------------- */
+    .designer-toolbar {
+      position: sticky;
+      top: 0;
+      z-index: 9999;
+      background: #121A13;
+      color: #FAF8F5;
+      padding: 0.65rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.3);
+      font-size: 0.8rem;
+    }
+
+    .designer-toolbar .brand-tag {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-weight: 700;
+      letter-spacing: 0.05em;
+    }
+
+    .designer-toolbar .brand-tag span.badge {
+      background: var(--color-gold);
+      color: #121A13;
+      padding: 0.15rem 0.5rem;
+      border-radius: var(--radius-full);
+      font-size: 0.65rem;
+      font-weight: 800;
+      text-transform: uppercase;
+    }
+
+    .view-toggles {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+
+    .view-toggle-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      color: #FAF8F5;
+      padding: 0.35rem 0.85rem;
+      border-radius: var(--radius-sm);
+      font-size: 0.75rem;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+
+    .view-toggle-btn.active, .view-toggle-btn:hover {
+      background: var(--color-gold);
+      color: #121A13;
+      border-color: var(--color-gold);
+    }
+
+    /* Frame container for mobile preview mode */
+    #page-viewport-wrapper {
+      transition: max-width 0.35s ease, margin 0.35s ease, box-shadow 0.35s ease;
+      background: var(--color-bg-linen);
+      min-height: 100vh;
+    }
+
+    #page-viewport-wrapper.mobile-mode {
+      max-width: 414px;
+      margin: 2rem auto;
+      border: 10px solid #1E2B20;
+      border-radius: 40px;
+      box-shadow: 0 25px 80px rgba(0, 0, 0, 0.4);
+      overflow: hidden;
+      position: relative;
+    }
+
+    /* -------------------------------------------------------------
+       COMMON ATOMS & UTILITIES
+       ------------------------------------------------------------- */
+    .container {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 1.25rem;
+    }
+
+    .section-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.35rem 0.95rem;
+      border-radius: var(--radius-full);
+      background: rgba(79, 93, 56, 0.08);
+      border: 1px solid rgba(79, 93, 56, 0.18);
+      color: var(--color-text-main);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin-bottom: 0.65rem;
+    }
+
+    .section-title {
+      font-family: var(--font-heading);
+      font-size: clamp(1.85rem, 3.5vw, 2.5rem);
+      font-weight: 700;
+      color: var(--color-olive-dark);
+      line-height: 1.2;
+      margin: 0 0 0.5rem;
+    }
+
+    .section-subtitle {
+      font-size: 0.92rem;
+      color: var(--color-text-muted);
+      line-height: 1.6;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .btn-primary {
+      background: var(--color-olive-dark);
+      color: #FAF8F5;
+      padding: 0.85rem 1.6rem;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 0.88rem;
+      border: 1px solid rgba(212, 175, 55, 0.35);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      box-shadow: 0 4px 14px rgba(27, 46, 30, 0.15);
+      transition: all 0.2s;
+    }
+
+    .btn-primary:hover {
+      background: var(--color-olive-primary);
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(27, 46, 30, 0.25);
+    }
+
+    .btn-secondary {
+      background: #FFFFFF;
+      color: var(--color-olive-dark);
+      padding: 0.85rem 1.6rem;
+      border-radius: var(--radius-sm);
+      font-weight: 700;
+      font-size: 0.88rem;
+      border: 1.5px solid var(--color-olive-dark);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-secondary:hover {
+      background: var(--color-gold-light);
+      border-color: var(--color-gold);
+    }
+
+    /* -------------------------------------------------------------
+       1. TOP ANNOUNCEMENT BAR
+       ------------------------------------------------------------- */
+    .top-bar {
+      background: var(--color-olive-dark);
+      color: #FAF8F5;
+      padding: 0.45rem 1rem;
+      font-size: 0.75rem;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 1.5rem;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+    }
+
+    .top-bar span.highlight {
+      color: var(--color-gold);
+      font-weight: 700;
+    }
+
+    /* -------------------------------------------------------------
+       2. HEADER & NAVIGATION
+       ------------------------------------------------------------- */
+    .site-header {
+      background: var(--color-bg-linen);
+      padding: 1.1rem 0;
+      border-bottom: 1px solid var(--color-border);
+      position: sticky;
+      top: 41px;
+      z-index: 100;
+      backdrop-filter: blur(10px);
+    }
+
+    .nav-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand-logo {
+      display: flex;
+      flex-direction: column;
+      text-decoration: none;
+    }
+
+    .brand-logo h1 {
+      font-family: var(--font-heading);
+      font-size: 1.8rem;
+      font-weight: 800;
+      letter-spacing: 2px;
+      color: var(--color-olive-dark);
+      line-height: 1;
+    }
+
+    .brand-logo span {
+      font-size: 0.55rem;
+      color: var(--color-olive-primary);
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      font-weight: 700;
+      margin-top: 2px;
+    }
+
+    .nav-menu {
+      display: flex;
+      align-items: center;
+      gap: 1.6rem;
+      list-style: none;
+    }
+
+    .nav-menu a {
+      text-decoration: none;
+      color: var(--color-text-main);
+      font-size: 0.88rem;
+      font-weight: 600;
+      transition: color 0.2s;
+    }
+
+    .nav-menu a:hover {
+      color: var(--color-gold);
+    }
+
+    /* -------------------------------------------------------------
+       3. HERO SECTION
+       ------------------------------------------------------------- */
+    .hero-section {
+      padding: 3.5rem 0 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 0.9fr;
+      gap: 3rem;
+      align-items: center;
+    }
+
+    .hero-content h2 {
+      font-family: var(--font-heading);
+      font-size: clamp(2.4rem, 4.5vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.15;
+      color: var(--color-olive-dark);
+      margin-bottom: 1rem;
+    }
+
+    .hero-content h2 span {
+      font-style: italic;
+      color: var(--color-olive-primary);
+      border-bottom: 2px solid var(--color-gold);
+    }
+
+    .hero-content p {
+      font-size: 1.05rem;
+      color: var(--color-text-muted);
+      line-height: 1.65;
+      margin-bottom: 2rem;
+      max-width: 540px;
+    }
+
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-bottom: 2.5rem;
+    }
+
+    .trust-specs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      border-top: 1px solid var(--color-border);
+      padding-top: 1.5rem;
+    }
+
+    .trust-spec-item {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .trust-spec-item .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      background: var(--color-gold);
+      flex-shrink: 0;
+    }
+
+    .trust-spec-item span {
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--color-olive-dark);
+    }
+
+    .hero-image-card {
+      background: #FFFFFF;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-lg);
+      text-align: center;
+      position: relative;
+    }
+
+    .hero-image-card .floating-badge {
+      position: absolute;
+      top: -12px;
+      right: 20px;
+      background: var(--color-olive-dark);
+      color: var(--color-gold);
+      font-size: 0.7rem;
+      font-weight: 800;
+      padding: 0.35rem 0.9rem;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      letter-spacing: 0.05em;
+    }
+
+    .hero-image-card img {
+      max-width: 100%;
+      height: auto;
+      border-radius: var(--radius-md);
+      object-fit: contain;
+    }
+
+    /* -------------------------------------------------------------
+       4. SCIENCE ANIMATION SECTION (Biological Follicle Simulation)
+       ------------------------------------------------------------- */
+    .science-section {
+      background: var(--color-olive-dark);
+      color: #FAF8F5;
+      padding: 3.8rem 0 4.2rem;
+      border-top: 1px solid rgba(79, 93, 56, 0.2);
+      border-bottom: 1px solid rgba(79, 93, 56, 0.2);
+    }
+
+    .science-section .section-title {
+      color: #FAF8F5;
+    }
+
+    .science-section .section-subtitle {
+      color: rgba(250, 248, 245, 0.85);
+    }
+
+    .science-grid {
+      display: grid;
+      grid-template-columns: 1fr 1.15fr;
+      gap: 2.5rem;
+      align-items: center;
+      margin-top: 2.5rem;
+    }
+
+    .simulation-box {
+      background: #0E1B10;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: 0 16px 40px rgba(0, 0, 0, 0.4);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .pulse-pill {
+      background: rgba(0, 0, 0, 0.5);
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      padding: 0.35rem 0.95rem;
+      border-radius: var(--radius-full);
+      font-size: 0.74rem;
+      color: var(--color-gold-hover);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+    }
+
+    .pulse-pill .led {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: #10B981;
+      box-shadow: 0 0 8px #10B981;
+      animation: pulse 1.8s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .svg-canvas-wrapper {
+      width: 100%;
+      max-width: 320px;
+      height: 210px;
+    }
+
+    .science-steps {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+    }
+
+    .science-step-card {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(250, 248, 245, 0.12);
+      padding: 0.95rem 1.15rem;
+      border-radius: var(--radius-md);
+      display: flex;
+      gap: 1rem;
+      align-items: center;
+      transition: all 0.25s;
+    }
+
+    .science-step-card:hover {
+      border-color: rgba(212, 175, 55, 0.45);
+      background: rgba(255, 255, 255, 0.08);
+      transform: translateX(4px);
+    }
+
+    .step-num-box {
+      width: 36px;
+      height: 36px;
+      border-radius: var(--radius-sm);
+      background: #0A140C;
+      border: 1px solid rgba(212, 175, 55, 0.35);
+      color: var(--color-gold-hover);
+      font-family: var(--font-heading);
+      font-weight: 700;
+      font-size: 1.1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .step-info {
+      flex: 1;
+    }
+
+    .step-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+    }
+
+    .step-header h4 {
+      font-family: var(--font-heading);
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: #FAF8F5;
+    }
+
+    .benefit-tag {
+      font-size: 0.65rem;
+      color: var(--color-gold-hover);
+      background: rgba(212, 175, 55, 0.12);
+      border: 1px solid rgba(212, 175, 55, 0.28);
+      padding: 0.15rem 0.55rem;
+      border-radius: var(--radius-full);
+      font-weight: 700;
+    }
+
+    .step-info p {
+      font-size: 0.8rem;
+      color: rgba(250, 248, 245, 0.8);
+      margin-top: 0.25rem;
+      line-height: 1.5;
+    }
+
+    /* -------------------------------------------------------------
+       5. WHY CHOOSE VEELANA (6 Symmetrical Luxury Pillars)
+       ------------------------------------------------------------- */
+    .why-section {
+      padding: 3.8rem 0 4.2rem;
+      background: var(--color-bg-linen);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .value-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-top: 2.25rem;
+    }
+
+    .value-card {
+      background: #FFFFFF;
+      border: 1px solid var(--color-border);
+      padding: 1.35rem 1.25rem;
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.25s;
+    }
+
+    .value-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(212, 175, 55, 0.45);
+      box-shadow: var(--shadow-md);
+    }
+
+    .value-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.85rem;
+    }
+
+    .value-icon-box {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      background: linear-gradient(135deg, #1B2E1E 0%, #2F4D33 100%);
+      color: var(--color-gold-hover);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 2px 8px rgba(27, 46, 30, 0.15);
+    }
+
+    .value-badge {
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: #B38E2A;
+      background: #FAF6EC;
+      padding: 0.2rem 0.55rem;
+      border-radius: 6px;
+      border: 1px solid rgba(212, 175, 55, 0.25);
+      text-transform: uppercase;
+    }
+
+    .value-title {
+      font-family: var(--font-heading);
+      font-size: 1.08rem;
+      font-weight: 700;
+      color: var(--color-olive-dark);
+      margin-bottom: 0.35rem;
+    }
+
+    .value-desc {
+      font-size: 0.82rem;
+      color: #4B5563;
+      line-height: 1.55;
+      margin-bottom: 0.85rem;
+    }
+
+    .value-detail {
+      padding-top: 0.65rem;
+      border-top: 1px solid rgba(79, 93, 56, 0.08);
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+      font-size: 0.74rem;
+      font-weight: 600;
+      color: #2D4A27;
+    }
+
+    .value-detail .gold-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--color-gold);
+    }
+
+    /* -------------------------------------------------------------
+       6. HAIR DIAGNOSIS QUIZ (Compact Interactive Wizard)
+       ------------------------------------------------------------- */
+    .quiz-section {
+      padding: 3.5rem 0 4rem;
+      background: var(--color-bg-linen);
+    }
+
+    .quiz-card {
+      max-width: 760px;
+      margin: 0 auto;
+      background: #FFFFFF;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 1.6rem 1.5rem;
+      box-shadow: var(--shadow-md);
+    }
+
+    .quiz-progress-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.55rem;
+    }
+
+    .quiz-progress-bar {
+      height: 4px;
+      background: #EAEFE4;
+      border-radius: var(--radius-full);
+      overflow: hidden;
+      margin-bottom: 1.25rem;
+    }
+
+    .quiz-progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--color-olive-dark), var(--color-olive-primary));
+      transition: width 0.35s ease;
+    }
+
+    .quiz-question-title {
+      font-family: var(--font-heading);
+      font-size: 1.2rem;
+      font-weight: 700;
+      color: var(--color-olive-dark);
+      margin-bottom: 0.25rem;
+    }
+
+    .quiz-options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      margin-top: 1rem;
+    }
+
+    .quiz-opt-btn {
+      background: #FFFFFF;
+      border: 1.5px solid #E2DDCF;
+      border-radius: var(--radius-md);
+      padding: 0.85rem 1rem;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+
+    .quiz-opt-btn:hover {
+      border-color: var(--color-gold);
+      background: var(--color-gold-light);
+    }
+
+    .quiz-opt-btn.selected {
+      border-color: var(--color-olive-dark);
+      background: #FAF8F3;
+      box-shadow: 0 4px 14px rgba(27, 46, 30, 0.08);
+    }
+
+    /* -------------------------------------------------------------
+       7. PRODUCT SHOWCASE & SPECIAL DEALS
+       ------------------------------------------------------------- */
+    .products-section {
+      padding: 3.8rem 0 4.2rem;
+      background: #F7F5EE;
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+      margin-top: 2.5rem;
+    }
+
+    .product-card {
+      background: #FFFFFF;
+      border: 1.5px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem 1.4rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.25s;
+    }
+
+    .product-card.featured {
+      border: 2px solid var(--color-olive-dark);
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+    }
+
+    .product-card .top-badge {
+      position: absolute;
+      top: -12px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--color-olive-dark);
+      color: var(--color-gold);
+      font-size: 0.68rem;
+      font-weight: 800;
+      padding: 0.3rem 0.9rem;
+      border-radius: var(--radius-full);
+      border: 1px solid rgba(212, 175, 55, 0.4);
+      white-space: nowrap;
+    }
+
+    .product-price-row {
+      display: flex;
+      align-items: baseline;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 0.5rem 0 1rem;
+    }
+
+    .product-price-row .current {
+      font-size: 1.7rem;
+      font-weight: 900;
+      color: var(--color-olive-dark);
+    }
+
+    .product-price-row .original {
+      font-size: 0.95rem;
+      color: var(--color-text-subtle);
+      text-decoration: line-through;
+    }
+
+    .product-img-box {
+      height: 180px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #FAF8F5;
+      border-radius: var(--radius-md);
+      padding: 0.75rem;
+      margin-bottom: 1.25rem;
+    }
+
+    .product-img-box img {
+      max-height: 100%;
+      max-width: 100%;
+      object-fit: contain;
+    }
+
+    .product-features {
+      list-style: none;
+      margin-bottom: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      font-size: 0.82rem;
+      color: #374151;
+    }
+
+    .product-features li {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    /* -------------------------------------------------------------
+       8. CUSTOM ROUTINE BUNDLE CONSOLE
+       ------------------------------------------------------------- */
+    .builder-section {
+      padding: 3.8rem 0 4.2rem;
+      background: var(--color-bg-linen);
+    }
+
+    .builder-layout {
+      display: grid;
+      grid-template-columns: 1.35fr 1fr;
+      gap: 1.75rem;
+      align-items: start;
+      margin-top: 2.25rem;
+    }
+
+    .builder-console {
+      background: #FFFFFF;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: var(--shadow-sm);
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .builder-oil-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    .builder-oil-card {
+      background: #FFFFFF;
+      border: 1.5px solid #E2DDCF;
+      border-radius: var(--radius-md);
+      padding: 0.9rem 0.75rem;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.2s;
+      position: relative;
+    }
+
+    .builder-oil-card.selected {
+      border-color: var(--color-olive-dark);
+      background: #FAF8F3;
+      box-shadow: 0 4px 16px rgba(27, 46, 30, 0.1);
+    }
+
+    .builder-addon-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+      margin-top: 0.75rem;
+    }
+
+    .builder-addon-card {
+      background: #FFFFFF;
+      border: 1.5px solid #E2DDCF;
+      border-radius: var(--radius-sm);
+      padding: 0.85rem 0.9rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s;
+    }
+
+    .builder-addon-card.selected {
+      border-color: var(--color-olive-primary);
+      background: #FAF8F3;
+    }
+
+    .summary-card {
+      background: #FFFFFF;
+      border: 1.5px solid var(--color-olive-dark);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem 1.35rem;
+      box-shadow: var(--shadow-md);
+      position: sticky;
+      top: 100px;
+    }
+
+    /* -------------------------------------------------------------
+       9. 4-STEP HOW TO USE RITUAL
+       ------------------------------------------------------------- */
+    .routine-section {
+      padding: 3.8rem 0 4.2rem;
+      background: #FAF8F5;
+      border-top: 1px solid var(--color-border);
+      border-bottom: 1px solid var(--color-border);
+    }
+
+    .routine-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1.25rem;
+      margin-top: 2.25rem;
+    }
+
+    .routine-card {
+      background: #FFFFFF;
+      border: 1px solid var(--color-border);
+      padding: 1.4rem 1.25rem;
+      border-radius: var(--radius-md);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: var(--shadow-sm);
+      transition: all 0.25s;
+    }
+
+    .routine-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(212, 175, 55, 0.45);
+      box-shadow: var(--shadow-md);
+    }
+
+    .routine-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid rgba(79, 93, 56, 0.08);
+    }
+
+    .routine-num {
+      font-family: var(--font-heading);
+      font-size: 1.35rem;
+      font-weight: 800;
+      color: var(--color-olive-dark);
+    }
+
+    .routine-action-tag {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      color: #B38E2A;
+      background: #FAF6EC;
+      padding: 0.15rem 0.5rem;
+      border-radius: 6px;
+      border: 1px solid rgba(212, 175, 55, 0.25);
+    }
+
+    .routine-tip-box {
+      padding: 0.5rem 0.65rem;
+      border-radius: 8px;
+      background: #F9F7F1;
+      border: 1px solid rgba(212, 175, 55, 0.22);
+      font-size: 0.72rem;
+      color: #654C12;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-weight: 500;
+      margin-top: 1rem;
+    }
+
+    /* -------------------------------------------------------------
+       10. REVIEWS & SOCIAL PROOF
+       ------------------------------------------------------------- */
+    .reviews-section {
+      padding: 3.8rem 0 4.2rem;
+      background: #F7F5EE;
+    }
+
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1.25rem;
+      margin-top: 2.25rem;
+    }
+
+    .review-card {
+      background: #FFFFFF;
+      border: 1px solid var(--color-border);
+      border-radius: var(--radius-md);
+      padding: 1.4rem;
+      box-shadow: var(--shadow-sm);
+    }
+
+    .review-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.75rem;
+    }
+
+    .review-stars {
+      color: #F59E0B;
+      font-size: 0.9rem;
+      letter-spacing: 2px;
+    }
+
+    .verified-pill {
+      font-size: 0.65rem;
+      font-weight: 700;
+      color: #047857;
+      background: #ECFDF5;
+      padding: 2px 7px;
+      border-radius: var(--radius-full);
+    }
+
+    /* -------------------------------------------------------------
+       11. LUXURY FOOTER
+       ------------------------------------------------------------- */
+    .footer {
+      background: var(--color-olive-dark);
+      color: #FAF8F5;
+      padding: 4rem 0 2rem;
+      border-top: 1px solid rgba(212, 175, 55, 0.2);
+    }
+
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1fr;
+      gap: 3rem;
+      padding-bottom: 3rem;
+      border-bottom: 1px solid rgba(250, 248, 245, 0.12);
+    }
+
+    .footer h4 {
+      font-family: var(--font-heading);
+      font-size: 1.15rem;
+      margin-bottom: 1rem;
+      color: var(--color-gold);
+    }
+
+    .footer p, .footer a {
+      font-size: 0.85rem;
+      color: rgba(250, 248, 245, 0.8);
+      text-decoration: none;
+      line-height: 1.8;
+    }
+
+    .footer a:hover {
+      color: var(--color-gold);
+    }
+
+    /* -------------------------------------------------------------
+       12. MOBILE STICKY BOTTOM BAR
+       ------------------------------------------------------------- */
+    .mobile-bottom-bar {
+      display: none;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--color-olive-dark);
+      color: #FAF8F5;
+      padding: 0.65rem 1.25rem;
+      border-top: 2px solid var(--color-gold);
+      box-shadow: 0 -10px 25px rgba(0,0,0,0.3);
+      z-index: 900;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* -------------------------------------------------------------
+       RESPONSIVE MEDIA QUERIES
+       ------------------------------------------------------------- */
+    @media (max-width: 991px) {
+      .hero-grid, .science-grid, .builder-layout, .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+      }
+      .products-grid, .value-grid, .routine-grid, .reviews-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .nav-menu {
+        display: none;
+      }
+    }
+
+    @media (max-width: 640px) {
+      .products-grid, .value-grid, .routine-grid, .reviews-grid, .quiz-options-grid, .builder-oil-grid, .builder-addon-grid {
+        grid-template-columns: 1fr;
+      }
+      .trust-specs-grid {
+        grid-template-columns: 1fr;
+      }
+      .mobile-bottom-bar {
+        display: flex;
+      }
+      .footer {
+        padding-bottom: 5.5rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- =============================================================
+       TOP DESIGNER TOOLBAR (Interactive Mode & Device Toggle)
+       ============================================================= -->
+  <div class="designer-toolbar">
+    <div class="brand-tag">
+      <span>🌿 VEELANA OFFICIAL</span>
+      <span class="badge">UI / UX Showcase</span>
+    </div>
+    <div class="view-toggles">
+      <span style="font-size: 0.72rem; color: #A0B195; margin-right: 0.5rem;">Preview Canvas:</span>
+      <button class="view-toggle-btn active" id="btn-desktop" onclick="setMode('desktop')">💻 Desktop View</button>
+      <button class="view-toggle-btn" id="btn-mobile" onclick="setMode('mobile')">📱 Mobile View (375px)</button>
+    </div>
+  </div>
+
+  <!-- Main Viewport Canvas -->
+  <div id="page-viewport-wrapper">
+
+    <!-- 1. Top Announcement Bar -->
+    <div class="top-bar">
+      <span>🚚 <span class="highlight">FREE Cash on Delivery</span> Nationwide Across Pakistan</span>
+      <span>•</span>
+      <span>🌿 26 Cold-Pressed Raw Botanicals</span>
+      <span>•</span>
+      <span>⭐ Verified Pure Chemical-Free Formula</span>
+    </div>
+
+    <!-- 2. Header & Navigation -->
+    <header class="site-header">
+      <div class="container">
+        <div class="nav-row">
+          <a href="#hero" class="brand-logo">
+            <h1>VEELANA</h1>
+            <span>Botanical Hair Oil</span>
+          </a>
+
+          <ul class="nav-menu">
+            <li><a href="#science">The Science</a></li>
+            <li><a href="#why-veelana">Why Veelana</a></li>
+            <li><a href="#hair-quiz">Hair Quiz</a></li>
+            <li><a href="#products">Special Deals</a></li>
+            <li><a href="#bundle-builder">Build Routine</a></li>
+            <li><a href="#how-to-use">How to Use</a></li>
+            <li><a href="#reviews">Reviews</a></li>
+          </ul>
+
+          <div>
+            <a href="#products" class="btn-primary" style="padding: 0.55rem 1.25rem; font-size: 0.82rem;">
+              Order Now — COD
+            </a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- 3. Hero Section -->
+    <section id="hero" class="hero-section">
+      <div class="container">
+        <div class="hero-grid">
+          
+          <div class="hero-content">
+            <div class="section-badge">
+              <span style="color: var(--color-gold);">✦</span>
+              <span>Pure Botanical Root Elixir</span>
+            </div>
+
+            <h2>Beauty Begins at the <span>Roots</span></h2>
+
+            <p>
+              Nourish your scalp with <strong>26 cold-pressed herbs</strong>. Formulated to revive dormant follicles, combat shedding, and lock in deep natural gloss. Direct fresh artisan batch dispatch across Pakistan.
+            </p>
+
+            <div class="hero-actions">
+              <a href="#products" class="btn-primary">
+                <span>Get 200ml Pack — Rs. 1,899</span>
+                <span>→</span>
+              </a>
+              <a href="#products" class="btn-secondary">
+                <span>100ml Starter — Rs. 999</span>
+              </a>
+            </div>
+
+            <div class="trust-specs-grid">
+              <div class="trust-spec-item">
+                <div class="dot"></div>
+                <span>26 Cold-Pressed Botanicals</span>
+              </div>
+              <div class="trust-spec-item">
+                <div class="dot"></div>
+                <span>Zero Paraffin / Mineral Oil</span>
+              </div>
+              <div class="trust-spec-item">
+                <div class="dot"></div>
+                <span>Cash on Delivery (COD)</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Product Showcase Card -->
+          <div class="hero-image-card">
+            <div class="floating-badge">⭐ Best Seller 200ml</div>
+            <img src="assets/real_250ml_single.webp" alt="Veelana Herbal Hair Oil Bottle" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1608248597359-002715fe39a5?auto=format&fit=crop&w=600&q=80';" />
+            <div style="margin-top: 1rem; display: flex; justify-content: space-between; align-items: center;">
+              <span style="font-size: 0.85rem; font-weight: 700; color: var(--color-olive-dark);">Veelana 200ml Master Pack</span>
+              <span style="font-size: 1.05rem; font-weight: 800; color: var(--color-olive-dark);">Rs. 1,899 <del style="font-size: 0.78rem; color: #888;">2,450</del></span>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 4. Science Animation Section -->
+    <section id="science" class="science-section">
+      <div class="container">
+        <div style="text-align: center; max-width: 620px; margin: 0 auto 2rem;">
+          <div class="section-badge" style="background: rgba(212, 175, 55, 0.12); border-color: rgba(212, 175, 55, 0.3); color: var(--color-gold-hover);">
+            <span>✦</span> Continuous Micro-Nutrient Delivery
+          </div>
+          <h2 class="section-title">How Veelana Restores Your Hair</h2>
+          <p class="section-subtitle">Witness the biological interaction when 26 cold-pressed botanicals penetrate deep to awaken dormant follicles.</p>
+        </div>
+
+        <div class="science-grid">
+          
+          <div class="simulation-box">
+            <div class="pulse-pill">
+              <span class="led"></span>
+              <span>Live Follicle Simulation</span>
+            </div>
+            
+            <!-- Scalp Biological Animation Graphic -->
+            <div class="svg-canvas-wrapper">
+              <svg width="100%" height="100%" viewBox="0 0 300 210">
+                <path d="M 20,165 Q 150,130 280,165 L 280,205 L 20,205 Z" fill="#243821" stroke="#4F5D38" stroke-width="2" />
+                <circle cx="70" cy="152" r="3" fill="#D4AF37" />
+                <circle cx="110" cy="144" r="3" fill="#D4AF37" />
+                <circle cx="150" cy="141" r="4" fill="#D4AF37" />
+                <circle cx="190" cy="144" r="3" fill="#D4AF37" />
+                <circle cx="230" cy="152" r="3" fill="#D4AF37" />
+                <!-- Hair Strands -->
+                <path d="M 70,152 Q 60,95 55,40" stroke="#8DAA63" stroke-width="3" stroke-linecap="round" fill="none" />
+                <path d="M 110,144 Q 105,80 100,25" stroke="#E8CA65" stroke-width="3" stroke-linecap="round" fill="none" />
+                <path d="M 150,141 Q 150,75 150,20" stroke="#FAF8F5" stroke-width="3.5" stroke-linecap="round" fill="none" />
+                <path d="M 190,144 Q 195,80 200,25" stroke="#E8CA65" stroke-width="3" stroke-linecap="round" fill="none" />
+                <path d="M 230,152 Q 240,95 245,40" stroke="#8DAA63" stroke-width="3" stroke-linecap="round" fill="none" />
+                <!-- Golden Droplet -->
+                <path d="M 150,60 C 150,60 144,72 144,78 C 144,84 147,88 150,88 C 153,88 156,84 156,78 C 156,72 150,60 150,60 Z" fill="#D4AF37" />
+              </svg>
+            </div>
+            <span style="font-size: 0.7rem; color: #FAF8F5; text-transform: uppercase; letter-spacing: 1px; font-weight: 700;">Real Cold-Pressed Herbal Action</span>
+          </div>
+
+          <div class="science-steps">
+            <div class="science-step-card">
+              <div class="step-num-box">01</div>
+              <div class="step-info">
+                <div class="step-header">
+                  <h4>Step 1: Scalp Penetration</h4>
+                  <span class="benefit-tag">Scalp Absorption</span>
+                </div>
+                <p>Micro-droplets of cold-pressed oil seep into the follicle pore within minutes.</p>
+              </div>
+            </div>
+
+            <div class="science-step-card">
+              <div class="step-num-box">02</div>
+              <div class="step-info">
+                <div class="step-header">
+                  <h4>Step 2: Follicle Activation</h4>
+                  <span class="benefit-tag">Blood Circulation</span>
+                </div>
+                <p>Scalp tissue absorbs vital bio-active nutrients, stimulating cellular circulation.</p>
+              </div>
+            </div>
+
+            <div class="science-step-card">
+              <div class="step-num-box">03</div>
+              <div class="step-info">
+                <div class="step-header">
+                  <h4>Step 3: Root Anchoring</h4>
+                  <span class="benefit-tag">Keratin Strengthening</span>
+                </div>
+                <p>Bhringraj, Amla, and Rosemary strengthen the keratin core of each hair strand.</p>
+              </div>
+            </div>
+
+            <div class="science-step-card">
+              <div class="step-num-box">04</div>
+              <div class="step-info">
+                <div class="step-header">
+                  <h4>Step 4: Density & Regrowth</h4>
+                  <span class="benefit-tag">Follicle Revival</span>
+                </div>
+                <p>Follicles anchor firmly into scalp tissue, producing dense, resilient natural hair.</p>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Why Choose Veelana (6 Pillars) -->
+    <section id="why-veelana" class="why-section">
+      <div class="container">
+        <div style="text-align: center; max-width: 620px; margin: 0 auto 2rem;">
+          <div class="section-badge">Clean Botanical Purity</div>
+          <h2 class="section-title">Why Choose Veelana Herbal Hair Oil?</h2>
+          <p class="section-subtitle">We strictly enforce a clean beauty promise. Handcrafted with 26 cold-pressed botanicals, zero artificial fillers, and zero harmful chemicals.</p>
+        </div>
+
+        <div class="value-grid">
+          <div class="value-card">
+            <div>
+              <div class="value-top">
+                <div class="value-icon-box">🌿</div>
+                <span class="value-badge">100% Pure</span>
+              </div>
+              <h4 class="value-title">26 Raw Botanical Herbs</h4>
+              <p class="value-desc">Formulated with 26 cold-pressed botanicals including Amla, Bhringraj, Brahmi, Neem, and Rosemary.</p>
+            </div>
+            <div class="value-detail"><span class="gold-dot"></span>72-Hour Slow Cold Extraction</div>
+          </div>
+
+          <div class="value-card">
+            <div>
+              <div class="value-top">
+                <div class="value-icon-box">💧</div>
+                <span class="value-badge">Clean Formula</span>
+              </div>
+              <h4 class="value-title">Zero Mineral Oil / Paraffin</h4>
+              <p class="value-desc">No heavy petroleum by-products or silicones that choke scalp pores and weigh down fine strands.</p>
+            </div>
+            <div class="value-detail"><span class="gold-dot"></span>100% Breathable Follicles</div>
+          </div>
+
+          <div class="value-card">
+            <div>
+              <div class="value-top">
+                <div class="value-icon-box">🛡️</div>
+                <span class="value-badge">Zero Toxins</span>
+              </div>
+              <h4 class="value-title">Paraben & Sulphate Free</h4>
+              <p class="value-desc">Zero harmful synthetic preservatives or detergents that disrupt scalp pH and cause irritation.</p>
+            </div>
+            <div class="value-detail"><span class="gold-dot"></span>Dermatologically Safe Standard</div>
+          </div>
+
+          <div class="value-card">
+            <div>
+              <div class="value-top">
+                <div class="value-icon-box">✨</div>
+                <span class="value-badge">Feather-Light</span>
+              </div>
+              <h4 class="value-title">Non-Greasy Fast Absorption</h4>
+              <p class="value-desc">Micro-penetrating cold-pressed formula that absorbs deeply into roots without sticky residue.</p>
+            </div>
+            <div class="value-detail"><span class="gold-dot"></span>Effortless Wash & Daily Feel</div>
+          </div>
+
+          <div class="value-card">
+            <div>
+              <div class="value-top">
+                <div class="value-icon-box">🤝</div>
+                <span class="value-badge">Ethical Standard</span>
+              </div>
+              <h4 class="value-title">100% Vegan & Cruelty-Free</h4>
+              <p class="value-desc">Purely plant-derived, never tested on animals, and ethically harvested across pristine Punjab farms.</p>
+            </div>
+            <div class="value-detail"><span class="gold-dot"></span>Ethically Sourced Botanicals</div>
+          </div>
+
+          <div class="value-card">
+            <div>
+              <div class="value-top">
+                <div class="value-icon-box">🌱</div>
+                <span class="value-badge">Proven Care</span>
+              </div>
+              <h4 class="value-title">Active Root Stimulation</h4>
+              <p class="value-desc">Stimulates blood circulation, reactivates weak follicles, and helps reduce daily shedding naturally.</p>
+            </div>
+            <div class="value-detail"><span class="gold-dot"></span>Visible Change in 21–30 Days</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6. Hair Quiz Section -->
+    <section id="hair-quiz" class="quiz-section">
+      <div class="container">
+        <div style="text-align: center; max-width: 600px; margin: 0 auto 1.5rem;">
+          <div class="section-badge">Personalized Hair Diagnosis</div>
+          <h2 class="section-title">Find Your Ideal Botanical Routine</h2>
+          <p class="section-subtitle">Answer 4 quick questions to discover the exact herbs, application ritual, and bottle size tailored for your scalp.</p>
+        </div>
+
+        <div class="quiz-card">
+          <div class="quiz-progress-row">
+            <span style="font-size: 0.72rem; font-weight: 700; color: #6A7B52; text-transform: uppercase;">Question 1 of 4</span>
+            <span style="font-size: 0.75rem; font-weight: 800; color: #2D6A4F;">25% Complete</span>
+          </div>
+
+          <div class="quiz-progress-bar">
+            <div class="quiz-progress-fill" style="width: 25%;"></div>
+          </div>
+
+          <h3 class="quiz-question-title">What is your primary hair & scalp concern?</h3>
+          <p style="font-size: 0.8rem; color: #6B7280; margin-bottom: 1rem;">Select the main challenge you want Veelana to resolve.</p>
+
+          <div class="quiz-options-grid">
+            <div class="quiz-opt-btn selected">
+              <span style="font-size: 0.65rem; font-weight: 700; color: #B38E2A; background: #FAF6EC; padding: 1px 6px; border-radius: 4px;">High Priority</span>
+              <h4 style="font-size: 0.88rem; font-weight: 700; color: var(--color-olive-dark); margin: 0.2rem 0;">Severe Hair Fall & Weak Roots</h4>
+              <p style="font-size: 0.74rem; color: #6B7280;">Hair on pillow, shower drain & comb</p>
+            </div>
+
+            <div class="quiz-opt-btn">
+              <span style="font-size: 0.65rem; font-weight: 700; color: #6A7B52; background: #FAF8F5; padding: 1px 6px; border-radius: 4px;">Follicle Care</span>
+              <h4 style="font-size: 0.88rem; font-weight: 700; color: var(--color-olive-dark); margin: 0.2rem 0;">Thinning Crown & Hairline</h4>
+              <p style="font-size: 0.74rem; color: #6B7280;">Need active follicle reactivation</p>
+            </div>
+
+            <div class="quiz-opt-btn">
+              <span style="font-size: 0.65rem; font-weight: 700; color: #6A7B52; background: #FAF8F5; padding: 1px 6px; border-radius: 4px;">Nourishment</span>
+              <h4 style="font-size: 0.88rem; font-weight: 700; color: var(--color-olive-dark); margin: 0.2rem 0;">Dryness, Frizz & Split Ends</h4>
+              <p style="font-size: 0.74rem; color: #6B7280;">Rough texture, lack of natural shine</p>
+            </div>
+
+            <div class="quiz-opt-btn">
+              <span style="font-size: 0.65rem; font-weight: 700; color: #6A7B52; background: #FAF8F5; padding: 1px 6px; border-radius: 4px;">Scalp Detox</span>
+              <h4 style="font-size: 0.88rem; font-weight: 700; color: var(--color-olive-dark); margin: 0.2rem 0;">Dandruff & Flaky Scalp</h4>
+              <p style="font-size: 0.74rem; color: #6B7280;">Scalp irritation and product buildup</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7. Special Deals & Product Showcase -->
+    <section id="products" class="products-section">
+      <div class="container">
+        <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+          <div class="section-badge">Exclusive Direct Offers</div>
+          <h2 class="section-title">Select Your Veelana Care Bottle</h2>
+          <p class="section-subtitle">Fresh artisan batch dispatch. All 200ml orders include special discounted pricing with free delivery.</p>
+        </div>
+
+        <div class="products-grid">
+          
+          <!-- Card 1: 100ml Starter -->
+          <div class="product-card">
+            <div>
+              <div style="text-align: center;">
+                <span style="font-size: 0.72rem; font-weight: 700; color: #6A7B52; text-transform: uppercase;">Trial Size</span>
+                <h3 style="font-family: var(--font-heading); font-size: 1.35rem; color: var(--color-olive-dark);">100ml Starter Bottle</h3>
+                <div class="product-price-row">
+                  <span class="current">Rs. 999</span>
+                </div>
+              </div>
+
+              <div class="product-img-box">
+                <img src="assets/real_100ml_double.webp" alt="100ml Bottle" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1608248597359-002715fe39a5?auto=format&fit=crop&w=400&q=80';" />
+              </div>
+
+              <ul class="product-features">
+                <li>✓ 30-Day trial and travel kit</li>
+                <li>✓ 26 Raw cold-pressed herbs</li>
+                <li>✓ Precision dropper cap included</li>
+                <li>✓ Cash on Delivery nationwide</li>
+              </ul>
+            </div>
+
+            <button class="btn-secondary" style="width: 100%; justify-content: center;">Order 100ml Pack</button>
+          </div>
+
+          <!-- Card 2: 200ml Master (Featured) -->
+          <div class="product-card featured">
+            <div class="top-badge">⭐ Most Popular Deal</div>
+            <div>
+              <div style="text-align: center;">
+                <span style="font-size: 0.72rem; font-weight: 800; color: var(--color-olive-primary); text-transform: uppercase;">Complete Treatment</span>
+                <h3 style="font-family: var(--font-heading); font-size: 1.45rem; color: var(--color-olive-dark);">200ml Master Bottle</h3>
+                <div class="product-price-row">
+                  <span class="current">Rs. 1,899</span>
+                  <span class="original">Rs. 2,450</span>
+                </div>
+              </div>
+
+              <div class="product-img-box">
+                <img src="assets/real_250ml_single.webp" alt="200ml Bottle" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1608248597359-002715fe39a5?auto=format&fit=crop&w=400&q=80';" />
+              </div>
+
+              <ul class="product-features">
+                <li>✓ Full 60-Day complete regrowth cycle</li>
+                <li>✓ Save Rs. 551 on single bottle offer</li>
+                <li>✓ Deep follicle reactivation dosage</li>
+                <li>✓ FREE Express Delivery across Pakistan</li>
+              </ul>
+            </div>
+
+            <button class="btn-primary" style="width: 100%; justify-content: center;">Get 200ml Deal (Save Rs. 551)</button>
+          </div>
+
+          <!-- Card 3: Twin Pack (2x 200ml) -->
+          <div class="product-card">
+            <div class="top-badge" style="background: #047857; color: #FFFFFF;">🔥 Best Value Deal</div>
+            <div>
+              <div style="text-align: center;">
+                <span style="font-size: 0.72rem; font-weight: 700; color: #6A7B52; text-transform: uppercase;">Family & Long-Term Pack</span>
+                <h3 style="font-family: var(--font-heading); font-size: 1.35rem; color: var(--color-olive-dark);">Twin Pack (2x 200ml)</h3>
+                <div class="product-price-row">
+                  <span class="current">Rs. 3,499</span>
+                  <span class="original">Rs. 4,900</span>
+                </div>
+              </div>
+
+              <div class="product-img-box">
+                <img src="assets/real_250ml_and_100ml.webp" alt="Twin Pack" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1608248597359-002715fe39a5?auto=format&fit=crop&w=400&q=80';" />
+              </div>
+
+              <ul class="product-features">
+                <li>✓ 2 Large 200ml bottles (120 days)</li>
+                <li>✓ Save Rs. 1,401 massive deal</li>
+                <li>✓ Free Neem Wood Comb + Dropper</li>
+                <li>✓ Free Express COD Delivery</li>
+              </ul>
+            </div>
+
+            <button class="btn-primary" style="width: 100%; justify-content: center;">Get Twin Deal (Save Rs. 1,401)</button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. Custom Routine Bundle Console -->
+    <section id="bundle-builder" class="builder-section">
+      <div class="container">
+        <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+          <div class="section-badge">Custom Regrowth Bundle</div>
+          <h2 class="section-title">Build Your Complete Hair Routine</h2>
+          <p class="section-subtitle">Select your preferred bottle size & add hair accessories with exclusive bundle discounts and free delivery.</p>
+        </div>
+
+        <div class="builder-layout">
+          
+          <div class="builder-console">
+            <!-- Step 1: Select Oil -->
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 0.88rem; font-weight: 700; color: var(--color-olive-dark);">1. Select Core Herbal Oil</span>
+                <span style="font-size: 0.72rem; color: var(--color-olive-primary);">26 Cold-Pressed Herbs</span>
+              </div>
+
+              <div class="builder-oil-grid">
+                <div class="builder-oil-card selected">
+                  <span style="position: absolute; top: -8px; font-size: 0.6rem; font-weight: 800; background: var(--color-olive-dark); color: #FFF; padding: 1px 6px; border-radius: 999px;">Popular</span>
+                  <strong style="font-size: 0.85rem; color: var(--color-olive-dark); display: block; margin-top: 0.3rem;">200ml Single</strong>
+                  <span style="font-size: 0.7rem; color: #6B7280;">60-Day Cycle</span>
+                  <div style="margin-top: 0.5rem; border-top: 1px solid #EEE; padding-top: 0.3rem;">
+                    <strong style="font-size: 0.95rem; color: var(--color-olive-dark);">Rs. 1,899</strong>
+                    <span style="font-size: 0.65rem; color: #047857; display: block;">Save Rs. 551</span>
+                  </div>
+                </div>
+
+                <div class="builder-oil-card">
+                  <span style="position: absolute; top: -8px; font-size: 0.6rem; font-weight: 800; background: #047857; color: #FFF; padding: 1px 6px; border-radius: 999px;">Best Value</span>
+                  <strong style="font-size: 0.85rem; color: var(--color-olive-dark); display: block; margin-top: 0.3rem;">2x 200ml Twin</strong>
+                  <span style="font-size: 0.7rem; color: #6B7280;">120-Day Cycle</span>
+                  <div style="margin-top: 0.5rem; border-top: 1px solid #EEE; padding-top: 0.3rem;">
+                    <strong style="font-size: 0.95rem; color: var(--color-olive-dark);">Rs. 3,499</strong>
+                    <span style="font-size: 0.65rem; color: #047857; display: block;">Save Rs. 1,401</span>
+                  </div>
+                </div>
+
+                <div class="builder-oil-card">
+                  <strong style="font-size: 0.85rem; color: var(--color-olive-dark); display: block; margin-top: 0.3rem;">100ml Starter</strong>
+                  <span style="font-size: 0.7rem; color: #6B7280;">30-Day Cycle</span>
+                  <div style="margin-top: 0.5rem; border-top: 1px solid #EEE; padding-top: 0.3rem;">
+                    <strong style="font-size: 0.95rem; color: var(--color-olive-dark);">Rs. 999</strong>
+                    <span style="font-size: 0.65rem; color: #6A7B52; display: block;">Standard</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Step 2: Accessories -->
+            <div>
+              <div style="display: flex; justify-content: space-between; align-items: center;">
+                <span style="font-size: 0.88rem; font-weight: 700; color: var(--color-olive-dark);">2. Add Routine Essentials</span>
+                <span style="font-size: 0.72rem; color: #047857; font-weight: 700;">Bundle Discounts</span>
+              </div>
+
+              <div class="builder-addon-grid">
+                <div class="builder-addon-card selected">
+                  <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="font-size: 1.1rem;">🪵</span>
+                    <div>
+                      <strong style="font-size: 0.82rem; color: var(--color-olive-dark); display: block;">Neem Wood Comb</strong>
+                      <span style="font-size: 0.68rem; color: #6B7280;">Anti-static detangler</span>
+                    </div>
+                  </div>
+                  <span style="font-size: 0.78rem; font-weight: 800; color: var(--color-olive-dark);">+Rs. 199</span>
+                </div>
+
+                <div class="builder-addon-card selected">
+                  <div style="display: flex; align-items: center; gap: 0.5rem;">
+                    <span style="font-size: 1.1rem;">🧪</span>
+                    <div>
+                      <strong style="font-size: 0.82rem; color: var(--color-olive-dark); display: block;">Scalp Dropper</strong>
+                      <span style="font-size: 0.68rem; color: #6B7280;">Direct root precision</span>
+                    </div>
+                  </div>
+                  <span style="font-size: 0.75rem; font-weight: 800; color: #047857;">FREE</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Live Receipt Summary -->
+          <div class="summary-card">
+            <div style="display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #ECE7DD; padding-bottom: 0.75rem; margin-bottom: 1rem;">
+              <div>
+                <span style="font-size: 0.68rem; color: #6A7B52; text-transform: uppercase; font-weight: 800;">YOUR CUSTOM KIT</span>
+                <h4 style="font-family: var(--font-heading); font-size: 1.2rem; color: var(--color-olive-dark);">Complete Routine</h4>
+              </div>
+              <span style="background: var(--color-olive-dark); color: var(--color-gold); font-size: 0.7rem; font-weight: 800; padding: 3px 8px; borderRadius: 999px;">
+                Save Rs. 950
+              </span>
+            </div>
+
+            <div style="display: flex; flex-direction: column; gap: 0.5rem; font-size: 0.82rem; margin-bottom: 1.25rem;">
+              <div style="display: flex; justify-content: space-between;">
+                <span>• Veelana 200ml Bottle</span>
+                <strong>Rs. 1,899</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between;">
+                <span>• Neem Wood Detangler</span>
+                <strong>Rs. 199</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; color: #047857;">
+                <span>• Scalp Precision Dropper</span>
+                <strong>FREE</strong>
+              </div>
+              <div style="display: flex; justify-content: space-between; color: #047857; font-weight: 700;">
+                <span>• Express COD Delivery</span>
+                <strong>FREE</strong>
+              </div>
+            </div>
+
+            <div style="background: #FAF8F3; padding: 0.85rem 1rem; border-radius: 12px; border: 1px solid #E2DDCF; margin-bottom: 1.25rem;">
+              <div style="display: flex; justify-content: space-between; font-size: 0.78rem; color: #888;">
+                <span>Retail Value:</span>
+                <span style="text-decoration: line-through;">Rs. 3,048</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                <span style="font-weight: 800; color: var(--color-olive-dark);">Bundle Total:</span>
+                <span style="font-size: 1.4rem; font-weight: 900; color: var(--color-olive-dark);">Rs. 2,098</span>
+              </div>
+            </div>
+
+            <button class="btn-primary" style="width: 100%; justify-content: center;">
+              Express Order Now (Cash on Delivery)
+            </button>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. How to Use Ritual (4-Step Flow) -->
+    <section id="how-to-use" class="routine-section">
+      <div class="container">
+        <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+          <div class="section-badge">The Veelana 4-Step Ritual</div>
+          <h2 class="section-title">How to Use for Maximum Growth</h2>
+          <p class="section-subtitle">Follow this simple 3-times-a-week ritual to stimulate dormant follicles and lock in healthy volume.</p>
+        </div>
+
+        <div class="routine-grid">
+          <div class="routine-card">
+            <div>
+              <div class="routine-top">
+                <span class="routine-num">01</span>
+                <span class="routine-action-tag">Apply</span>
+              </div>
+              <h4 style="font-family: var(--font-heading); font-size: 1.05rem; color: var(--color-olive-dark); margin-bottom: 0.35rem;">Targeted Scalp Drops</h4>
+              <p style="font-size: 0.8rem; color: #4B5563;">Section hair and dispense 3-5 drops of Veelana Oil directly to scalp using precision dropper.</p>
+            </div>
+            <div class="routine-tip-box">💡 Focus on hairline & thinning areas</div>
+          </div>
+
+          <div class="routine-card">
+            <div>
+              <div class="routine-top">
+                <span class="routine-num">02</span>
+                <span class="routine-action-tag">Massage</span>
+              </div>
+              <h4 style="font-family: var(--font-heading); font-size: 1.05rem; color: var(--color-olive-dark); margin-bottom: 0.35rem;">5–10 Mins Circulation</h4>
+              <p style="font-size: 0.8rem; color: #4B5563;">Gently massage roots in slow circular motions using fingertips to stimulate blood circulation.</p>
+            </div>
+            <div class="routine-tip-box">💡 Warm oil in hands for faster absorption</div>
+          </div>
+
+          <div class="routine-card">
+            <div>
+              <div class="routine-top">
+                <span class="routine-num">03</span>
+                <span class="routine-action-tag">Nourish</span>
+              </div>
+              <h4 style="font-family: var(--font-heading); font-size: 1.05rem; color: var(--color-olive-dark); margin-bottom: 0.35rem;">2 Hours or Overnight</h4>
+              <p style="font-size: 0.8rem; color: #4B5563;">Allow the 26 raw botanical herbs to deeply penetrate scalp pores. Leave overnight or minimum 2 hours.</p>
+            </div>
+            <div class="routine-tip-box">💡 Wrap in a silk cap or towel overnight</div>
+          </div>
+
+          <div class="routine-card">
+            <div>
+              <div class="routine-top">
+                <span class="routine-num">04</span>
+                <span class="routine-action-tag">Rinse</span>
+              </div>
+              <h4 style="font-family: var(--font-heading); font-size: 1.05rem; color: var(--color-olive-dark); margin-bottom: 0.35rem;">Gentle Herbal Wash</h4>
+              <p style="font-size: 0.8rem; color: #4B5563;">Wash off thoroughly with a mild sulphate-free shampoo to reveal silky, hydrated, natural volume.</p>
+            </div>
+            <div class="routine-tip-box">💡 Repeat 3x weekly for visible regrowth</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 10. Real Customer Reviews -->
+    <section id="reviews" class="reviews-section">
+      <div class="container">
+        <div style="text-align: center; max-width: 600px; margin: 0 auto;">
+          <div class="section-badge">Verified Customer Experiences</div>
+          <h2 class="section-title">Loved Across Pakistan</h2>
+          <p class="section-subtitle">Real feedback from verified purchasers in Karachi, Lahore, Islamabad, and beyond.</p>
+        </div>
+
+        <div class="reviews-grid">
+          <div class="review-card">
+            <div class="review-header">
+              <span class="review-stars">★★★★★</span>
+              <span class="verified-pill">✓ Verified Buyer</span>
+            </div>
+            <p style="font-size: 0.85rem; color: #374151; font-style: italic; margin-bottom: 0.75rem;">
+              "Baji hair fall 80% control ho gaya hai alhamdulillah! Bohat acha oil hai, bilkul chips chips nahi karta."
+            </p>
+            <span style="font-size: 0.78rem; font-weight: 700; color: var(--color-olive-dark);">Dr. Fatima (Karachi)</span>
+          </div>
+
+          <div class="review-card">
+            <div class="review-header">
+              <span class="review-stars">★★★★★</span>
+              <span class="verified-pill">✓ Verified Buyer</span>
+            </div>
+            <p style="font-size: 0.85rem; color: #374151; font-style: italic; margin-bottom: 0.75rem;">
+              "Maine 200ml ki 2 bottles mangwai theen. 3 weeks mai baby hair sprout hona shuru ho gaye hain hairline par!"
+            </p>
+            <span style="font-size: 0.78rem; font-weight: 700; color: var(--color-olive-dark);">Hamza Malik (Lahore)</span>
+          </div>
+
+          <div class="review-card">
+            <div class="review-header">
+              <span class="review-stars">★★★★★</span>
+              <span class="verified-pill">✓ Verified Buyer</span>
+            </div>
+            <p style="font-size: 0.85rem; color: #374151; font-style: italic; margin-bottom: 0.75rem;">
+              "Frizz control aur silky texture ke liye best oil. Khushbu boht natural aur soft hai, chemical free lagti hai."
+            </p>
+            <span style="font-size: 0.78rem; font-weight: 700; color: var(--color-olive-dark);">Ayesha Noor (Islamabad)</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11. Luxury Footer -->
+    <footer class="footer">
+      <div class="container">
+        <div class="footer-grid">
+          <div>
+            <div class="brand-logo" style="margin-bottom: 1rem;">
+              <h1 style="color: #FAF8F5;">VEELANA</h1>
+              <span style="color: var(--color-gold);">Botanical Hair Oil</span>
+            </div>
+            <p>
+              Handcrafted in Punjab with 26 raw cold-pressed herbs. Dedicated to chemical-free natural hair restoration across Pakistan.
+            </p>
+          </div>
+
+          <div>
+            <h4>Quick Links</h4>
+            <p><a href="#science">• Biological Science</a></p>
+            <p><a href="#why-veelana">• Clean Beauty Promise</a></p>
+            <p><a href="#hair-quiz">• Hair Diagnosis Quiz</a></p>
+            <p><a href="#products">• Special Deals & Pricing</a></p>
+          </div>
+
+          <div>
+            <h4>Connect & Social</h4>
+            <p>📱 WhatsApp: +92 328 6689622</p>
+            <p>📷 Instagram: <a href="https://www.instagram.com/veelaan.official" target="_blank">@veelaan.official</a></p>
+            <p>🎵 TikTok: <a href="https://www.tiktok.com/@www.veelana.online" target="_blank">@www.veelana.online</a></p>
+            <p>🛡️ 7-Day Replacement Guarantee • Nationwide COD</p>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 2rem; font-size: 0.75rem; color: rgba(250, 248, 245, 0.5);">
+          © 2026 Veelana Official Pakistan. All rights reserved. Self-contained UI design ideas template.
+        </div>
+      </div>
+    </footer>
+
+    <!-- 12. Mobile Sticky Bottom Bar -->
+    <div class="mobile-bottom-bar">
+      <div>
+        <span style="font-size: 0.62rem; color: var(--color-gold); font-weight: 800; text-transform: uppercase;">⭐ Special 200ml Offer</span>
+        <div style="display: flex; gap: 0.4rem; align-items: baseline;">
+          <strong style="font-size: 1.15rem;">Rs. 1,899</strong>
+          <span style="font-size: 0.75rem; text-decoration: line-through; color: #888;">Rs. 2,450</span>
+        </div>
+      </div>
+      <a href="#products" class="btn-primary" style="padding: 0.55rem 1rem; font-size: 0.8rem;">
+        Order Now (COD)
+      </a>
+    </div>
+
+  </div>
+
+  <!-- Interactive View Switcher Script -->
+  <script>
+    function setMode(mode) {
+      const wrapper = document.getElementById('page-viewport-wrapper');
+      const btnDesktop = document.getElementById('btn-desktop');
+      const btnMobile = document.getElementById('btn-mobile');
+
+      if (mode === 'mobile') {
+        wrapper.classList.add('mobile-mode');
+        btnMobile.classList.add('active');
+        btnDesktop.classList.remove('active');
+      } else {
+        wrapper.classList.remove('mobile-mode');
+        btnDesktop.classList.add('active');
+        btnMobile.classList.remove('active');
+      }
+    }
+  </script>
+</body>
+</html>
