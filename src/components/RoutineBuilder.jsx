@@ -186,16 +186,7 @@ export default function RoutineBuilder({ onOpenOrder }) {
         <div className="builder-layout">
           
           {/* Left Column: Interactive Configuration Console */}
-          <div style={{
-            background: '#FFFFFF',
-            borderRadius: '18px',
-            padding: '1.4rem 1.3rem',
-            border: '1px solid rgba(79, 93, 56, 0.14)',
-            boxShadow: '0 4px 18px rgba(27, 46, 30, 0.03)',
-            display: 'flex',
-            flexDirection: 'column',
-            gap: '1.4rem'
-          }}>
+          <div className="builder-console-card">
             
             {/* Step 1: Oil Selection (3 Compact Cards) */}
             <div>
@@ -334,7 +325,7 @@ export default function RoutineBuilder({ onOpenOrder }) {
                       onClick={() => toggleAddon(addon.id)}
                       className={`builder-addon-card ${isChecked ? 'selected' : ''}`}
                     >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', minWidth: 0, flex: '1 1 auto' }}>
                         {/* Checkbox indicator */}
                         <div style={{
                           width: '20px',
@@ -351,10 +342,10 @@ export default function RoutineBuilder({ onOpenOrder }) {
                           {isChecked && <Check style={{ width: '13px', height: '13px' }} />}
                         </div>
 
-                        <div>
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
-                            <span style={{ fontSize: '0.9rem' }}>{addon.icon}</span>
-                            <h4 style={{ fontSize: '0.82rem', fontWeight: '700', color: '#1B2E1E', margin: 0 }}>
+                        <div style={{ minWidth: 0, flex: '1 1 auto' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '0.35rem', minWidth: 0 }}>
+                            <span style={{ fontSize: '0.9rem', flexShrink: 0 }}>{addon.icon}</span>
+                            <h4 style={{ fontSize: '0.82rem', fontWeight: '700', color: '#1B2E1E', margin: 0, whiteSpace: 'normal', wordBreak: 'break-word' }}>
                               {addon.name}
                             </h4>
                           </div>
@@ -366,10 +357,10 @@ export default function RoutineBuilder({ onOpenOrder }) {
 
                       {/* Pricing Tag */}
                       <div style={{ textAlign: 'right', flexShrink: 0 }}>
-                        <strong style={{ fontSize: '0.84rem', color: addon.bundlePrice === 0 ? '#047857' : '#1B2E1E', display: 'block' }}>
+                        <strong style={{ fontSize: '0.84rem', color: addon.bundlePrice === 0 ? '#047857' : '#1B2E1E', display: 'block', whiteSpace: 'nowrap' }}>
                           {addon.bundlePrice === 0 ? 'FREE' : `+Rs. ${addon.bundlePrice}`}
                         </strong>
-                        <span style={{ fontSize: '0.66rem', color: '#047857', fontWeight: '700' }}>
+                        <span style={{ fontSize: '0.66rem', color: '#047857', fontWeight: '700', whiteSpace: 'nowrap' }}>
                           {addon.badge}
                         </span>
                       </div>
@@ -410,23 +401,23 @@ export default function RoutineBuilder({ onOpenOrder }) {
 
             {/* Line items breakdown */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.55rem', marginBottom: '1.1rem', fontSize: '0.82rem' }}>
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <span style={{ color: '#1B2E1E', fontWeight: '600' }}>• {selectedOil.name}</span>
-                <strong style={{ color: '#1B2E1E' }}>Rs. {selectedOil.price.toLocaleString()}</strong>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
+                <span style={{ color: '#1B2E1E', fontWeight: '600', minWidth: 0 }}>• {selectedOil.name}</span>
+                <strong style={{ color: '#1B2E1E', flexShrink: 0 }}>Rs. {selectedOil.price.toLocaleString()}</strong>
               </div>
 
               {ADDONS.map(a => selectedAddons[a.id] ? (
-                <div key={a.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#4B5563' }}>
-                  <span>• {a.name}</span>
-                  <strong style={{ color: a.bundlePrice === 0 ? '#047857' : '#1B2E1E' }}>
+                <div key={a.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem', color: '#4B5563' }}>
+                  <span style={{ minWidth: 0 }}>• {a.name}</span>
+                  <strong style={{ color: a.bundlePrice === 0 ? '#047857' : '#1B2E1E', flexShrink: 0 }}>
                     {a.bundlePrice === 0 ? 'FREE GIFT' : `Rs. ${a.bundlePrice}`}
                   </strong>
                 </div>
               ) : null)}
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', color: '#047857', fontWeight: '700' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem', color: '#047857', fontWeight: '700' }}>
                 <span>• Express COD Delivery</span>
-                <span>FREE</span>
+                <span style={{ flexShrink: 0 }}>FREE</span>
               </div>
             </div>
 
@@ -434,9 +425,10 @@ export default function RoutineBuilder({ onOpenOrder }) {
             <div style={{
               background: '#FAF8F3',
               borderRadius: '12px',
-              padding: '0.9rem 1.1rem',
+              padding: '0.85rem 1rem',
               border: '1px solid #E2DDCF',
-              marginBottom: '1.1rem'
+              marginBottom: '1.1rem',
+              boxSizing: 'border-box'
             }}>
               <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.25rem' }}>
                 <span style={{ fontSize: '0.78rem', color: '#6B7280' }}>Retail Value:</span>
@@ -445,7 +437,7 @@ export default function RoutineBuilder({ onOpenOrder }) {
                 </span>
               </div>
 
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem', flexWrap: 'wrap' }}>
                 <span style={{ fontSize: '0.92rem', fontWeight: '800', color: '#1B2E1E' }}>Bundle Total (COD):</span>
                 <span style={{ fontSize: '1.35rem', fontWeight: '900', color: '#1B2E1E' }}>
                   Rs. {totalBundlePrice.toLocaleString()}
@@ -454,13 +446,13 @@ export default function RoutineBuilder({ onOpenOrder }) {
             </div>
 
             {/* Action Buttons */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem', width: '100%' }}>
               <button
                 onClick={handleExpressOrder}
                 style={{
                   width: '100%',
                   minHeight: '48px',
-                  padding: '0.85rem 1.25rem',
+                  padding: '0.85rem 1rem',
                   background: '#1B2E1E',
                   color: '#FAF8F5',
                   border: '1px solid rgba(212, 175, 55, 0.3)',
@@ -474,7 +466,8 @@ export default function RoutineBuilder({ onOpenOrder }) {
                   gap: '0.5rem',
                   boxShadow: '0 4px 14px rgba(27, 46, 30, 0.15)',
                   transition: 'all 0.2s ease',
-                  whiteSpace: 'nowrap'
+                  boxSizing: 'border-box',
+                  textAlign: 'center'
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = '#2D4A27';
@@ -486,7 +479,7 @@ export default function RoutineBuilder({ onOpenOrder }) {
                 }}
               >
                 <span>Express Order Now (Cash on Delivery)</span>
-                <ArrowRight className="w-4 h-4 text-[#D4AF37]" />
+                <ArrowRight className="w-4 h-4 text-[#D4AF37] shrink-0" />
               </button>
 
               <button
@@ -494,7 +487,7 @@ export default function RoutineBuilder({ onOpenOrder }) {
                 style={{
                   width: '100%',
                   minHeight: '48px',
-                  padding: '0.75rem 1.25rem',
+                  padding: '0.75rem 1rem',
                   background: '#FFFFFF',
                   color: '#1B2E1E',
                   border: '1.5px solid rgba(79, 93, 56, 0.25)',
@@ -507,7 +500,8 @@ export default function RoutineBuilder({ onOpenOrder }) {
                   justifyContent: 'center',
                   gap: '0.5rem',
                   transition: 'all 0.2s ease',
-                  whiteSpace: 'nowrap'
+                  boxSizing: 'border-box',
+                  textAlign: 'center'
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.background = '#FAF8F3';
@@ -518,7 +512,7 @@ export default function RoutineBuilder({ onOpenOrder }) {
                   e.currentTarget.style.borderColor = 'rgba(79, 93, 56, 0.25)';
                 }}
               >
-                <ShoppingBag className="w-4 h-4 text-[#1B2E1E]" />
+                <ShoppingBag className="w-4 h-4 text-[#1B2E1E] shrink-0" />
                 <span>Add Custom Kit to Cart</span>
               </button>
             </div>

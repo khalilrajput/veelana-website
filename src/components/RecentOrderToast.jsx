@@ -13,10 +13,28 @@ const RECENT_PURCHASES = [
   { name: 'Sadia N.', city: 'Sialkot', product: '100ml Starter Bottle', time: '55 mins ago' },
 ];
 
+const TOAST_STORAGE_KEY = 'veelana_recent_order_dismissed';
+
 export default function RecentOrderToast() {
   const [currentIdx, setCurrentIdx] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
-  const [isDismissed, setIsDismissed] = useState(false);
+  const [isDismissed, setIsDismissed] = useState(() => {
+    try {
+      return sessionStorage.getItem(TOAST_STORAGE_KEY) === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const handleDismiss = () => {
+    setIsVisible(false);
+    setIsDismissed(true);
+    try {
+      sessionStorage.setItem(TOAST_STORAGE_KEY, 'true');
+    } catch (e) {
+      console.error('Failed to save order toast dismissal to sessionStorage', e);
+    }
+  };
 
   useEffect(() => {
     if (isDismissed) return;
@@ -105,7 +123,7 @@ export default function RecentOrderToast() {
 
           {/* Close */}
           <button
-            onClick={() => setIsDismissed(true)}
+            onClick={handleDismiss}
             aria-label="Dismiss Notification"
             style={{
               background: 'none',

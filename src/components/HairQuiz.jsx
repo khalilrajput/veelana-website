@@ -350,7 +350,7 @@ export default function HairQuiz({ onOpenOrder }) {
                     }
                   }}
                   className="btn-olive"
-                  style={{ flex: '1 1 240px', minHeight: '48px', padding: '0.85rem 1.25rem', fontSize: '0.9375rem', fontWeight: 'bold', justifyContent: 'center', cursor: 'pointer', borderRadius: 'var(--radius-sm)', whiteSpace: 'nowrap' }}
+                  style={{ flex: '1 1 240px', minHeight: '48px', padding: '0.85rem 1rem', fontSize: '0.9375rem', fontWeight: 'bold', justifyContent: 'center', cursor: 'pointer', borderRadius: 'var(--radius-sm)', textAlign: 'center' }}
                 >
                   <ShoppingBag style={{ width: '18px', height: '18px' }} />
                   <span>Order My Custom Routine (COD)</span>
@@ -363,7 +363,7 @@ export default function HairQuiz({ onOpenOrder }) {
                   style={{
                     flex: '1 1 200px',
                     minHeight: '48px',
-                    padding: '0.85rem 1.25rem',
+                    padding: '0.85rem 1rem',
                     fontSize: '0.9375rem',
                     fontWeight: 'bold',
                     borderRadius: 'var(--radius-sm)',
@@ -375,7 +375,7 @@ export default function HairQuiz({ onOpenOrder }) {
                     justifyContent: 'center',
                     gap: '6px',
                     textDecoration: 'none !important',
-                    whiteSpace: 'nowrap'
+                    textAlign: 'center'
                   }}
                 >
                   <MessageCircle style={{ width: '18px', height: '18px', color: '#25D366' }} />
