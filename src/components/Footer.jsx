@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { MapPin, Mail, Phone, Globe, MessageCircle, ArrowUp, ShieldCheck, Truck, Lock } from 'lucide-react';
+import { getCmsSettings } from '../services/cmsService';
 
 const InstagramIcon = ({ size = 16, style }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" style={style}>
@@ -23,6 +24,19 @@ const TikTokIcon = ({ size = 16, style }) => (
 );
 
 export default function Footer({ onOpenAdmin }) {
+  const [cms, setCms] = useState(() => getCmsSettings());
+
+  useEffect(() => {
+    const handleCmsUpdate = () => {
+      setCms(getCmsSettings());
+    };
+    window.addEventListener('veelana_cms_updated', handleCmsUpdate);
+    return () => window.removeEventListener('veelana_cms_updated', handleCmsUpdate);
+  }, []);
+
+  const site = cms?.siteSettings || {};
+  const cleanPhone = (site.whatsappPhone || '923061041609').replace(/[^0-9]/g, '');
+
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
@@ -36,13 +50,18 @@ export default function Footer({ onOpenAdmin }) {
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1rem' }}>
               <img
-                src="/assets/official_png_logo.webp"
-                alt="Veelana Logo"
+                src={site.brandLogo || '/assets/official_png_logo.webp'}
+                alt={site.brandName || 'Veelana'}
                 style={{ height: '38px', width: 'auto', filter: 'brightness(0) invert(1)', flexShrink: 0 }}
+                onError={(e) => { e.currentTarget.src = '/assets/official_png_logo.webp'; }}
               />
               <div>
-                <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: 'bold', color: '#FAF8F5', margin: 0 }}>VEELANA</h4>
-                <p style={{ fontSize: '0.6rem', color: '#A0B195', letterSpacing: '1.5px', textTransform: 'uppercase', fontWeight: 'bold', margin: 0 }}>HERBAL HAIR CARE</p>
+                <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: 'bold', color: '#FAF8F5', margin: 0 }}>
+                  {site.brandName || 'VEELANA'}
+                </h4>
+                <p style={{ fontSize: '0.6rem', color: '#A0B195', letterSpacing: '1.5px', textTransform: 'uppercase', fontWeight: 'bold', margin: 0 }}>
+                  {site.brandSubtitle || 'HERBAL HAIR CARE'}
+                </p>
               </div>
             </div>
             <p style={{ fontSize: '0.85rem', color: 'rgba(250, 248, 245, 0.8)', lineHeight: 1.6, maxWidth: '320px', marginBottom: '1.25rem' }}>
@@ -56,7 +75,7 @@ export default function Footer({ onOpenAdmin }) {
               </span>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                 <a
-                  href="https://www.instagram.com/veelaan.official?utm_source=qr&igsi=bWl1dTFta3l4cGI1"
+                  href={site.socialInstagram || "https://www.instagram.com/veelaan.official?utm_source=qr&igsi=bWl1dTFta3l4cGI1"}
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)', color: '#E1306C', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s' }}
@@ -66,7 +85,7 @@ export default function Footer({ onOpenAdmin }) {
                   <InstagramIcon size={16} />
                 </a>
                 <a
-                  href="https://www.facebook.com/profile.php?id=61592935558371"
+                  href={site.socialFacebook || "https://www.facebook.com/profile.php?id=61592935558371"}
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(255, 255, 255, 0.2)', color: '#1877F2', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s' }}
@@ -86,7 +105,7 @@ export default function Footer({ onOpenAdmin }) {
                   <TikTokIcon size={16} />
                 </a>
                 <a
-                  href="https://wa.me/923061041609"
+                  href={`https://wa.me/${cleanPhone}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   style={{ width: '36px', height: '36px', borderRadius: '50%', background: 'rgba(255, 255, 255, 0.1)', border: '1px solid rgba(37, 211, 102, 0.4)', color: '#25D366', display: 'flex', alignItems: 'center', justifyContent: 'center', transition: 'all 0.3s' }}
@@ -143,18 +162,18 @@ export default function Footer({ onOpenAdmin }) {
             <ul style={{ display: 'flex', flexDirection: 'column', gap: '0.8rem', fontSize: '0.85rem', color: 'rgba(250, 248, 245, 0.85)', listStyle: 'none', padding: 0, margin: 0 }}>
               <li style={{ display: 'flex', alignItems: 'flex-start', gap: '0.6rem' }}>
                 <MapPin style={{ width: '16px', height: '16px', color: '#A0B195', flexShrink: 0, marginTop: '2px' }} />
-                <span>Punjab, Pakistan (Nationwide COD Courier Delivery)</span>
+                <span>{site.contactAddress || 'Punjab, Pakistan (Nationwide COD Courier Delivery)'}</span>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                 <Phone style={{ width: '16px', height: '16px', color: '#A0B195', flexShrink: 0 }} />
-                <a href="https://wa.me/923061041609" style={{ color: '#FAF8F5', fontWeight: 'bold' }}>
-                  +92 306 1041609
+                <a href={`https://wa.me/${cleanPhone}`} style={{ color: '#FAF8F5', fontWeight: 'bold' }}>
+                  {site.whatsappDisplay || '+92 306 1041609'}
                 </a>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
                 <Mail style={{ width: '16px', height: '16px', color: '#A0B195', flexShrink: 0 }} />
-                <a href="mailto:veelanaofficial@gmail.com" style={{ color: '#FAF8F5', textDecoration: 'underline' }}>
-                  veelanaofficial@gmail.com
+                <a href={`mailto:${site.contactEmail || 'veelanaofficial@gmail.com'}`} style={{ color: '#FAF8F5', textDecoration: 'underline' }}>
+                  {site.contactEmail || 'veelanaofficial@gmail.com'}
                 </a>
               </li>
               <li style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>

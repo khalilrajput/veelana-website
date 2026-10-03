@@ -1,11 +1,21 @@
+import { getCmsSettings } from '../services/cmsService';
+
 /**
  * Universal WhatsApp Link Helper
- * Uses https://api.whatsapp.com/send?phone=... format which natively triggers
- * the WhatsApp Mobile App on Android & iOS without refreshing or blank page errors,
- * while seamlessly working on Desktop browsers & WhatsApp Web.
+ * Dynamically retrieves phone number from CMS settings so changes in Admin Dashboard
+ * instantly reflect across all WhatsApp buttons site-wide.
  */
 export function getWhatsAppUrl(customMessage = '') {
-  const phone = '923061041609';
+  let phone = '923061041609';
+  try {
+    const settings = getCmsSettings()?.siteSettings;
+    if (settings?.whatsappPhone) {
+      phone = settings.whatsappPhone.replace(/[^0-9]/g, '');
+    }
+  } catch (e) {
+    // fallback to default
+  }
+
   const defaultText = 'Hi Veelana Team, I want to order the Herbal Hair Care Oil';
   const rawText = customMessage || defaultText;
   

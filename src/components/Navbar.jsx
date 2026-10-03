@@ -2,25 +2,33 @@ import React, { useState, useEffect } from 'react';
 import { NavLink, Link } from 'react-router-dom';
 import { Menu, X, ShoppingBag, Package, ChevronRight, PhoneCall, Sparkles } from 'lucide-react';
 import { useCart } from '../context/CartContext';
+import { getCmsSettings } from '../services/cmsService';
 
 export default function Navbar({ onOpenOrder }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [announcementIdx, setAnnouncementIdx] = useState(0);
   const { totalItemsCount, setIsCartOpen } = useCart();
+  const [cms, setCms] = useState(() => getCmsSettings());
 
-  const announcements = [
-    { text: '🌿 100% Organic & Cold-Pressed Herbal Hair Care • Pure Botanical Extract' },
-    { text: '🚚 Cash on Delivery Across Pakistan • Free Shipping on Rs. 3,000+' },
-    { text: '🎁 Use Coupon SAVE10 for 10% Off Your Order Today!' },
-    { text: '💬 WhatsApp Direct Support & Dispatch: +92 306 1041609' }
+  useEffect(() => {
+    const handleCmsUpdate = () => {
+      setCms(getCmsSettings());
+    };
+    window.addEventListener('veelana_cms_updated', handleCmsUpdate);
+    return () => window.removeEventListener('veelana_cms_updated', handleCmsUpdate);
+  }, []);
+
+  const announcements = cms?.announcements || [
+    '🌿 100% Organic & Cold-Pressed Herbal Hair Care • Pure Botanical Extract'
   ];
 
   useEffect(() => {
+    if (announcements.length === 0) return;
     const timer = setInterval(() => {
       setAnnouncementIdx((prev) => (prev + 1) % announcements.length);
     }, 4000);
     return () => clearInterval(timer);
-  }, []);
+  }, [announcements.length]);
 
   const navLinks = [
     { name: 'Home', path: '/' },
@@ -39,7 +47,9 @@ export default function Navbar({ onOpenOrder }) {
       {/* Top Announcement Bar - Rotating */}
       <div className="top-bar">
         <span className="top-bar-text">
-          {announcements[announcementIdx].text}
+          {typeof announcements[announcementIdx] === 'object'
+            ? announcements[announcementIdx]?.text
+            : (announcements[announcementIdx] || '🌿 100% Organic & Cold-Pressed Herbal Hair Care')}
         </span>
       </div>
 
@@ -49,8 +59,8 @@ export default function Navbar({ onOpenOrder }) {
           {/* Brand Logo */}
           <Link to="/" className="nav-brand">
             <img
-              src="/assets/official_png_logo.webp"
-              alt="Veelana Official Olive Logo"
+              src={cms?.siteSettings?.brandLogo || '/assets/official_png_logo.webp'}
+              alt={cms?.siteSettings?.brandName || 'Veelana'}
               className="nav-brand-img"
               style={{
                 height: '38px',
@@ -60,10 +70,11 @@ export default function Navbar({ onOpenOrder }) {
                 mixBlendMode: 'multiply',
                 flexShrink: 0
               }}
+              onError={(e) => { e.currentTarget.src = '/assets/official_png_logo.webp'; }}
             />
             <div className="brand-text-box">
-              <span className="brand-title">VEELANA</span>
-              <span className="brand-subtitle">HERBAL HAIR CARE</span>
+              <span className="brand-title">{cms?.siteSettings?.brandName || 'VEELANA'}</span>
+              <span className="brand-subtitle">{cms?.siteSettings?.brandSubtitle || 'HERBAL HAIR CARE'}</span>
             </div>
           </Link>
 

@@ -8,7 +8,7 @@ export default function HowToUse({ onOpenOrder }) {
       num: '01',
       action: 'Apply',
       title: 'Targeted Scalp Drops',
-      desc: 'Section your hair into parts and apply 3–5 drops of Veelana Oil directly to scalp using the precision dropper.',
+      desc: 'Section your hair into parts and apply a few drops of Veelana Oil directly to scalp with your fingertips.',
       icon: Droplet,
       tip: 'Focus on hairline & thinning areas'
     },

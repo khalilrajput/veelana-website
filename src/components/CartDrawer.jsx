@@ -41,18 +41,7 @@ export default function CartDrawer({ onCheckout }) {
     }
   };
 
-  const handleAddUpsellComb = () => {
-    addToCart({
-      id: 'neem-comb',
-      name: 'Organic Neem Wood Detangler Comb',
-      subtitle: 'Static-Free Hair Growth Comb',
-      price: 399,
-      originalPrice: 'Rs. 650',
-      image: '/assets/real_100ml_double.webp',
-    });
-  };
 
-  const hasNeemComb = cartItems.some((item) => item.id === 'neem-comb');
 
   return (
     <div
@@ -371,67 +360,7 @@ export default function CartDrawer({ onCheckout }) {
                 ))}
               </div>
 
-              {/* Upsell Comb Offer */}
-              {!hasNeemComb && (
-                <div
-                  style={{
-                    background: '#F4EFEB',
-                    border: '1px dashed #A89F91',
-                    borderRadius: '12px',
-                    padding: '0.85rem',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: '0.75rem',
-                  }}
-                >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem' }}>
-                    <div
-                      style={{
-                        width: '36px',
-                        height: '36px',
-                        borderRadius: '6px',
-                        background: '#FFFFFF',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        color: '#705436',
-                        fontSize: '18px',
-                      }}
-                    >
-                      🌿
-                    </div>
-                    <div>
-                      <span style={{ fontSize: '0.82rem', fontWeight: 'bold', color: '#2A361E', display: 'block' }}>
-                        Add Organic Neem Comb
-                      </span>
-                      <span style={{ fontSize: '0.75rem', color: '#705436', fontWeight: '600' }}>
-                        Special Offer: Rs. 399 <span style={{ textDecoration: 'line-through', color: '#A09E96' }}>Rs. 650</span>
-                      </span>
-                    </div>
-                  </div>
 
-                  <button
-                    onClick={handleAddUpsellComb}
-                    style={{
-                      background: '#4F5D38',
-                      color: '#FAF8F5',
-                      border: 'none',
-                      padding: '5px 10px',
-                      borderRadius: '6px',
-                      fontSize: '0.75rem',
-                      fontWeight: '700',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '4px',
-                    }}
-                  >
-                    <Plus style={{ width: '12px', height: '12px' }} />
-                    Add
-                  </button>
-                </div>
-              )}
 
               {/* Coupon Code Section */}
               <div

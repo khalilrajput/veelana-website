@@ -2,6 +2,11 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Lock, Package, Trash2, CheckCircle, RefreshCw, Phone, Download, MapPin, Search, Edit, Plus, ShieldCheck, DollarSign, Truck, AlertCircle, MessageCircle, ExternalLink, Image as ImageIcon, Sparkles, RotateCcw, Upload, X, Check, KeyRound, Printer, FileText, TrendingUp, Calculator, AlertTriangle, Eye, ArrowUpRight, Copy } from 'lucide-react';
 import { getOrders, updateOrderStatus, clearOrders } from '../services/orderService';
 import { getProducts, addProduct, updateProduct, deleteProduct, resetToDefaults } from '../services/productService';
+import AdminMediaManager from '../components/admin/AdminMediaManager';
+import AdminContentCms from '../components/admin/AdminContentCms';
+import AdminReviewsManager from '../components/admin/AdminReviewsManager';
+import AdminFaqManager from '../components/admin/AdminFaqManager';
+import { exportEntireCmsBackup, importEntireCmsBackup, resetEntireCmsToDefaults } from '../services/cmsService';
 
 const PRESET_IMAGES = [
   { label: '200ml Bottle', path: '/assets/real_250ml_single.webp' },
@@ -881,72 +886,136 @@ If you have any questions, reply to this message!`;
             <button
               onClick={() => setActiveTab('orders')}
               style={{
-                padding: '0.6rem 1.1rem',
+                padding: '0.55rem 1rem',
                 borderRadius: '10px',
                 border: 'none',
                 background: activeTab === 'orders' ? '#D4AF37' : 'rgba(255,255,255,0.15)',
                 color: activeTab === 'orders' ? '#121E14' : '#FFFFFF',
                 fontWeight: 'bold',
-                fontSize: '0.85rem',
+                fontSize: '0.82rem',
                 cursor: 'pointer',
               }}
             >
-              Customer Orders ({orders.length})
+              Orders ({orders.length})
             </button>
 
             <button
               onClick={() => setActiveTab('products')}
               style={{
-                padding: '0.6rem 1.1rem',
+                padding: '0.55rem 1rem',
                 borderRadius: '10px',
                 border: 'none',
                 background: activeTab === 'products' ? '#D4AF37' : 'rgba(255,255,255,0.15)',
                 color: activeTab === 'products' ? '#121E14' : '#FFFFFF',
                 fontWeight: 'bold',
-                fontSize: '0.85rem',
+                fontSize: '0.82rem',
                 cursor: 'pointer',
               }}
             >
-              Product Catalog CMS ({products.length})
+              🧴 Oil Bottles ({products.length})
+            </button>
+
+            <button
+              onClick={() => setActiveTab('media')}
+              style={{
+                padding: '0.55rem 1rem',
+                borderRadius: '10px',
+                border: 'none',
+                background: activeTab === 'media' ? '#D4AF37' : 'rgba(255,255,255,0.15)',
+                color: activeTab === 'media' ? '#121E14' : '#FFFFFF',
+                fontWeight: 'bold',
+                fontSize: '0.82rem',
+                cursor: 'pointer',
+              }}
+            >
+              🖼️ Media Library
+            </button>
+
+            <button
+              onClick={() => setActiveTab('content')}
+              style={{
+                padding: '0.55rem 1rem',
+                borderRadius: '10px',
+                border: 'none',
+                background: activeTab === 'content' ? '#D4AF37' : 'rgba(255,255,255,0.15)',
+                color: activeTab === 'content' ? '#121E14' : '#FFFFFF',
+                fontWeight: 'bold',
+                fontSize: '0.82rem',
+                cursor: 'pointer',
+              }}
+            >
+              📝 Pages & Text
+            </button>
+
+            <button
+              onClick={() => setActiveTab('reviews')}
+              style={{
+                padding: '0.55rem 1rem',
+                borderRadius: '10px',
+                border: 'none',
+                background: activeTab === 'reviews' ? '#D4AF37' : 'rgba(255,255,255,0.15)',
+                color: activeTab === 'reviews' ? '#121E14' : '#FFFFFF',
+                fontWeight: 'bold',
+                fontSize: '0.82rem',
+                cursor: 'pointer',
+              }}
+            >
+              ⭐ Reviews CMS
+            </button>
+
+            <button
+              onClick={() => setActiveTab('faqs')}
+              style={{
+                padding: '0.55rem 1rem',
+                borderRadius: '10px',
+                border: 'none',
+                background: activeTab === 'faqs' ? '#D4AF37' : 'rgba(255,255,255,0.15)',
+                color: activeTab === 'faqs' ? '#121E14' : '#FFFFFF',
+                fontWeight: 'bold',
+                fontSize: '0.82rem',
+                cursor: 'pointer',
+              }}
+            >
+              ❓ FAQs CMS
             </button>
 
             <button
               onClick={() => setActiveTab('analytics')}
               style={{
-                padding: '0.6rem 1.1rem',
+                padding: '0.55rem 1rem',
                 borderRadius: '10px',
                 border: 'none',
                 background: activeTab === 'analytics' ? '#D4AF37' : 'rgba(255,255,255,0.15)',
                 color: activeTab === 'analytics' ? '#121E14' : '#FFFFFF',
                 fontWeight: 'bold',
-                fontSize: '0.85rem',
+                fontSize: '0.82rem',
                 cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '5px'
               }}
             >
-              <Calculator style={{ width: '14px', height: '14px' }} />
-              <span>Profit & Expenses</span>
+              <Calculator style={{ width: '13px', height: '13px' }} />
+              <span>Profits</span>
             </button>
 
             <button
               onClick={() => setActiveTab('security')}
               style={{
-                padding: '0.6rem 1.1rem',
+                padding: '0.55rem 1rem',
                 borderRadius: '10px',
                 border: 'none',
                 background: activeTab === 'security' ? '#D4AF37' : 'rgba(255,255,255,0.15)',
                 color: activeTab === 'security' ? '#121E14' : '#FFFFFF',
                 fontWeight: 'bold',
-                fontSize: '0.85rem',
+                fontSize: '0.82rem',
                 cursor: 'pointer',
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '5px'
               }}
             >
-              <KeyRound style={{ width: '14px', height: '14px' }} />
+              <KeyRound style={{ width: '13px', height: '13px' }} />
               <span>Security</span>
             </button>
 
@@ -1676,7 +1745,27 @@ If you have any questions, reply to this message!`;
           </div>
         )}
 
-        {/* TAB 3: PROFIT & FINANCIAL CALCULATOR */}
+        {/* TAB 3: MEDIA & IMAGE LIBRARY */}
+        {activeTab === 'media' && (
+          <AdminMediaManager showNotification={showNotification} />
+        )}
+
+        {/* TAB 4: WEBSITE CONTENT & PAGES CMS */}
+        {activeTab === 'content' && (
+          <AdminContentCms showNotification={showNotification} />
+        )}
+
+        {/* TAB 5: CUSTOMER REVIEWS CMS */}
+        {activeTab === 'reviews' && (
+          <AdminReviewsManager showNotification={showNotification} />
+        )}
+
+        {/* TAB 6: FAQ KNOWLEDGE BASE CMS */}
+        {activeTab === 'faqs' && (
+          <AdminFaqManager showNotification={showNotification} />
+        )}
+
+        {/* TAB 7: PROFIT & FINANCIAL CALCULATOR */}
         {activeTab === 'analytics' && (
           <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: '2rem' }}>
             
@@ -1893,6 +1982,117 @@ If you have any questions, reply to this message!`;
                 <span>Save New Password</span>
               </button>
             </form>
+
+            {/* Store Backup & Data Portability */}
+            <div style={{ marginTop: '2rem', paddingTop: '1.5rem', borderTop: '1px solid #ECE7DD' }}>
+              <h4 style={{ fontSize: '0.95rem', fontWeight: 'bold', color: '#1B2E1E', margin: '0 0 0.5rem' }}>
+                Store Backups & Recovery
+              </h4>
+              <p style={{ fontSize: '0.78rem', color: '#6B7280', margin: '0 0 1rem' }}>
+                Export a full JSON backup of your products, website customizer settings, customer reviews, and FAQs.
+              </p>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const dataStr = exportEntireCmsBackup();
+                    const blob = new Blob([dataStr], { type: 'application/json' });
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = `veelana_store_backup_${new Date().toISOString().slice(0, 10)}.json`;
+                    link.click();
+                    showNotification('📦 Full store backup downloaded!');
+                  }}
+                  style={{
+                    padding: '0.7rem 1rem',
+                    background: '#FAF8F5',
+                    color: '#2A361E',
+                    border: '1px solid #D6D0C2',
+                    borderRadius: '8px',
+                    fontSize: '0.85rem',
+                    fontWeight: '700',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  <Download style={{ width: '15px', height: '15px' }} />
+                  <span>Download Full Store Backup (JSON)</span>
+                </button>
+
+                <label
+                  style={{
+                    padding: '0.7rem 1rem',
+                    background: '#FAF8F5',
+                    color: '#2A361E',
+                    border: '1px solid #D6D0C2',
+                    borderRadius: '8px',
+                    fontSize: '0.85rem',
+                    fontWeight: '700',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px'
+                  }}
+                >
+                  <Upload style={{ width: '15px', height: '15px' }} />
+                  <span>Restore from Backup File</span>
+                  <input
+                    type="file"
+                    accept=".json"
+                    style={{ display: 'none' }}
+                    onChange={(e) => {
+                      const file = e.target.files?.[0];
+                      if (!file) return;
+                      const reader = new FileReader();
+                      reader.onload = (event) => {
+                        const success = importEntireCmsBackup(event.target.result);
+                        if (success) {
+                          showNotification('✨ Store settings restored successfully!');
+                        } else {
+                          alert('Invalid backup JSON file.');
+                        }
+                      };
+                      reader.readAsText(file);
+                      e.target.value = '';
+                    }}
+                  />
+                </label>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (window.confirm('Reset all website customizer text and settings back to factory defaults?')) {
+                      resetEntireCmsToDefaults();
+                      showNotification('🔄 Store settings reset to defaults.');
+                    }
+                  }}
+                  style={{
+                    padding: '0.65rem 1rem',
+                    background: '#FEF2F2',
+                    color: '#DC2626',
+                    border: '1px solid #FECACA',
+                    borderRadius: '8px',
+                    fontSize: '0.82rem',
+                    fontWeight: '700',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    gap: '6px',
+                    marginTop: '0.5rem'
+                  }}
+                >
+                  <RotateCcw style={{ width: '14px', height: '14px' }} />
+                  <span>Reset All Website Content to Defaults</span>
+                </button>
+              </div>
+            </div>
           </div>
         )}
 

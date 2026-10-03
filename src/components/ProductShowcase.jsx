@@ -3,18 +3,27 @@ import { ShoppingBag, Check, Sparkles, Star, Plus, Flame, ShieldCheck, Clock, Ar
 import { motion } from 'framer-motion';
 import { getProducts } from '../services/productService';
 import { useCart } from '../context/CartContext';
+import { getCmsSettings } from '../services/cmsService';
 
 export default function ProductShowcase({ onOpenOrder }) {
   const [selectedCategory, setSelectedCategory] = useState('all'); // 'all', 'bottles', 'bundles'
   const [products, setProducts] = useState(getProducts());
+  const [cms, setCms] = useState(() => getCmsSettings());
   const { addToCart } = useCart();
 
   useEffect(() => {
     const handleProductsUpdated = () => {
       setProducts(getProducts());
     };
+    const handleCmsUpdate = () => {
+      setCms(getCmsSettings());
+    };
     window.addEventListener('veelana_products_updated', handleProductsUpdated);
-    return () => window.removeEventListener('veelana_products_updated', handleProductsUpdated);
+    window.addEventListener('veelana_cms_updated', handleCmsUpdate);
+    return () => {
+      window.removeEventListener('veelana_products_updated', handleProductsUpdated);
+      window.removeEventListener('veelana_cms_updated', handleCmsUpdate);
+    };
   }, []);
 
   const filteredProducts = selectedCategory === 'all'
@@ -40,24 +49,26 @@ export default function ProductShowcase({ onOpenOrder }) {
           </p>
 
           {/* Flash Sale Urgency Bar */}
-          <div
-            style={{
-              background: '#FFF3CD',
-              border: '1px solid #FFE69C',
-              borderRadius: '12px',
-              padding: '0.65rem 1.25rem',
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '0.5rem',
-              marginTop: '1rem',
-              color: '#856404',
-              fontSize: '0.88rem',
-              fontWeight: '700',
-            }}
-          >
-            <Flame style={{ width: '18px', height: '18px', color: '#D97706' }} />
-            <span>Exclusive 200ml Discount Offer: 1 Bottle for <strong>Rs. 1,899</strong> | 2 Bottles for <strong>Rs. 3,499</strong> (Free Delivery)!</span>
-          </div>
+          {cms?.flashSaleBanner?.enabled !== false && (
+            <div
+              style={{
+                background: '#FFF3CD',
+                border: '1px solid #FFE69C',
+                borderRadius: '12px',
+                padding: '0.65rem 1.25rem',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.5rem',
+                marginTop: '1rem',
+                color: '#856404',
+                fontSize: '0.88rem',
+                fontWeight: '700',
+              }}
+            >
+              <Flame style={{ width: '18px', height: '18px', color: '#D97706', flexShrink: 0 }} />
+              <span>{cms?.flashSaleBanner?.text || 'Exclusive 200ml Discount Offer: 1 Bottle for Rs. 1,899 | 2 Bottles for Rs. 3,499 (Free Delivery)!'}</span>
+            </div>
+          )}
 
           {/* Category Toggle Switch */}
           <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem', marginTop: '1.5rem' }}>

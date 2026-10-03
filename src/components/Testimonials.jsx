@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Star, ChevronLeft, ChevronRight, CheckCircle2, MessageCircle, ShieldCheck, Maximize2, X, Sparkles } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { getCmsReviews } from '../services/cmsService';
 
 const REAL_REVIEWS = [
   {
@@ -61,18 +62,30 @@ const REAL_REVIEWS = [
 ];
 
 export default function Testimonials() {
+  const [reviews, setReviews] = useState(() => getCmsReviews());
   const [currentIndex, setCurrentIndex] = useState(0);
   const [lightboxImage, setLightboxImage] = useState(null);
 
+  useEffect(() => {
+    const handleCmsUpdate = () => {
+      setReviews(getCmsReviews());
+    };
+    window.addEventListener('veelana_cms_updated', handleCmsUpdate);
+    return () => window.removeEventListener('veelana_cms_updated', handleCmsUpdate);
+  }, []);
+
+  const reviewsList = reviews && reviews.length > 0 ? reviews : REAL_REVIEWS;
+  const safeIndex = currentIndex >= reviewsList.length ? 0 : currentIndex;
+
   const prevReview = () => {
-    setCurrentIndex((prev) => (prev === 0 ? REAL_REVIEWS.length - 1 : prev - 1));
+    setCurrentIndex((prev) => (prev === 0 ? reviewsList.length - 1 : prev - 1));
   };
 
   const nextReview = () => {
-    setCurrentIndex((prev) => (prev + 1) % REAL_REVIEWS.length);
+    setCurrentIndex((prev) => (prev + 1) % reviewsList.length);
   };
 
-  const activeReview = REAL_REVIEWS[currentIndex];
+  const activeReview = reviewsList[safeIndex] || reviewsList[0];
 
   return (
     <section id="reviews" className="reviews-section">
@@ -250,7 +263,7 @@ export default function Testimonials() {
 
                 {/* Dots indicator */}
                 <div style={{ display: 'flex', gap: '6px' }}>
-                  {REAL_REVIEWS.map((_, idx) => (
+                  {reviewsList.map((_, idx) => (
                     <button
                       key={idx}
                       onClick={() => setCurrentIndex(idx)}
@@ -289,7 +302,7 @@ export default function Testimonials() {
               gap: '1.25rem',
             }}
           >
-            {REAL_REVIEWS.map((rev, index) => {
+            {reviewsList.map((rev, index) => {
               const isCurrent = currentIndex === index;
               return (
                 <div

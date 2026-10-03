@@ -1,11 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { HelpCircle, ChevronDown, MessageCircle, ShieldCheck, Search, Sparkles, Truck, Check, Droplet, Clock } from 'lucide-react';
 import { getWhatsAppUrl } from '../utils/whatsapp';
+import { getCmsFaqs } from '../services/cmsService';
 
 export default function FaqPage({ onOpenOrder }) {
   const [openIndex, setOpenIndex] = useState(0);
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
+  const [faqsList, setFaqsList] = useState(() => getCmsFaqs());
+
+  useEffect(() => {
+    const handleCmsUpdate = () => {
+      setFaqsList(getCmsFaqs());
+    };
+    window.addEventListener('veelana_cms_updated', handleCmsUpdate);
+    return () => window.removeEventListener('veelana_cms_updated', handleCmsUpdate);
+  }, []);
 
   const faqCategories = [
     { id: 'all', name: 'All FAQs' },
@@ -73,11 +83,13 @@ export default function FaqPage({ onOpenOrder }) {
     }
   ];
 
-  const filteredFaqs = faqs.filter((faq) => {
+  const activeFaqs = faqsList && faqsList.length > 0 ? faqsList : faqs;
+
+  const filteredFaqs = activeFaqs.filter((faq) => {
     const matchesCategory = selectedCategory === 'all' || faq.category === selectedCategory;
     const matchesSearch = 
-      faq.q.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      faq.a.toLowerCase().includes(searchQuery.toLowerCase());
+      (faq.q || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+      (faq.a || '').toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
