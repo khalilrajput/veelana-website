@@ -29,6 +29,8 @@ import ShippingReturnsPage from './pages/ShippingReturnsPage';
 import OrderTrackingPage from './pages/OrderTrackingPage';
 import PrivacyPolicyPage from './pages/PrivacyPolicyPage';
 import TermsPage from './pages/TermsPage';
+import BlogPage from './pages/BlogPage';
+import BlogPostDetailPage from './pages/BlogPostDetailPage';
 import AdminPage from './pages/AdminPage';
 
 export default function App() {
@@ -84,6 +86,8 @@ export default function App() {
               <Route path="/terms" element={<TermsPage />} />
               <Route path="/reviews" element={<ReviewsPage />} />
               <Route path="/contact" element={<ContactPage />} />
+              <Route path="/blog" element={<BlogPage />} />
+              <Route path="/blog/:id" element={<BlogPostDetailPage />} />
               {/* Fallback route */}
               <Route path="*" element={<HomePage onOpenOrder={handleOpenOrder} />} />
             </Routes>

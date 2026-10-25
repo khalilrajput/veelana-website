@@ -8,12 +8,22 @@ export default function BlogPostDetailPage() {
   const post = BLOG_POSTS.find((p) => p.id === id) || BLOG_POSTS[0];
 
   const handleShareWhatsApp = () => {
-    const text = encodeURIComponent(`Read this article: "${post.title}" on Veelana Herbal Hair Care: https://veelana.online/blog/${post.id}`);
+    const text = encodeURIComponent(`Read this article: "${post.title}" on Veelana Herbal Hair Care: https://www.veelana.online/blog/${post.id}`);
     window.open(`https://wa.me/?text=${text}`, '_blank');
   };
 
   return (
     <article className="py-12 bg-[#FAF8F5] min-h-screen">
+      <title>{`${post.title} | Veelana Hair Care Article`}</title>
+      <meta name="description" content={post.snippet} />
+      <meta property="og:title" content={post.title} />
+      <meta property="og:description" content={post.snippet} />
+      <meta property="og:url" content={`https://www.veelana.online/blog/${post.id}`} />
+      <meta property="og:type" content="article" />
+      <meta property="og:image" content={`https://www.veelana.online${post.image || '/assets/real_full_set_boxes.webp'}`} />
+      <meta name="twitter:title" content={post.title} />
+      <meta name="twitter:description" content={post.snippet} />
+      <link rel="canonical" href={`https://www.veelana.online/blog/${post.id}`} />
       <div className="container mx-auto px-4 max-w-4xl">
         {/* Back button */}
         <Link to="/blog" className="inline-flex items-center gap-2 text-xs font-bold text-[#1B2E1E] hover:text-[#D4AF37] transition mb-8">
@@ -86,3 +96,4 @@ export default function BlogPostDetailPage() {
     </article>
   );
 }
+

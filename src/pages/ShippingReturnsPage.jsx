@@ -1,10 +1,20 @@
-import React from 'react';
+﻿import React from 'react';
 import { Truck, RotateCcw, ShieldCheck, MessageCircle } from 'lucide-react';
 import { getWhatsAppUrl } from '../utils/whatsapp';
 
 export default function ShippingReturnsPage({ onOpenOrder }) {
   return (
     <div className="py-12 bg-[#FAF8F5] min-h-screen">
+      <title>Shipping &amp; Returns Policy | Free Delivery Above Rs.3000 | Veelana Pakistan</title>
+      <meta name="description" content="Veelana shipping policy: 2-3 day nationwide delivery, COD available, free shipping on orders above Rs.3000. 7-day damage replacement guarantee." />
+      <meta property="og:title" content="Shipping & Returns Policy | Free Delivery Above Rs.3000 | Veelana Pakistan" />
+      <meta property="og:description" content="Veelana shipping policy: 2-3 day nationwide delivery, COD available, free shipping on orders above Rs.3000. 7-day damage replacement guarantee." />
+      <meta property="og:url" content="https://www.veelana.online/shipping-returns" />
+      <meta property="og:type" content="website" />
+      <meta property="og:image" content="https://www.veelana.online/assets/real_full_set_boxes.webp" />
+      <meta name="twitter:title" content="Shipping & Returns Policy | Free Delivery Above Rs.3000 | Veelana Pakistan" />
+      <meta name="twitter:description" content="Veelana shipping policy: 2-3 day nationwide delivery, COD available, free shipping on orders above Rs.3000. 7-day damage replacement guarantee." />
+      <link rel="canonical" href="https://www.veelana.online/shipping-returns" />
       <div className="container mx-auto px-4 max-w-4xl">
         
         {/* Header */}
@@ -102,3 +112,4 @@ export default function ShippingReturnsPage({ onOpenOrder }) {
     </div>
   );
 }
+

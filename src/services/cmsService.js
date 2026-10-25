@@ -316,6 +316,18 @@ export function deleteCmsReview(id) {
   return updated;
 }
 
+export function getUserReview(user) {
+  if (!user) return null;
+  const reviews = getCmsReviews();
+  const email = (user.email || '').toLowerCase().trim();
+  const userId = user.id || '';
+  return reviews.find(r => 
+    (email && r.userEmail && r.userEmail.toLowerCase().trim() === email) ||
+    (userId && r.userId === userId)
+  ) || null;
+}
+
+
 // 4. FAQS
 export function getCmsFaqs() {
   try {

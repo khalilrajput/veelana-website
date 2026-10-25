@@ -1,9 +1,19 @@
-import React from 'react';
+﻿import React from 'react';
 import { Scale } from 'lucide-react';
 
 export default function TermsPage() {
   return (
     <div style={{ minHeight: '80vh', padding: '3.5rem 1.5rem 5rem', background: '#FAF8F5' }}>
+      <title>Terms of Service | Veelana Herbal Hair Care</title>
+      <meta name="description" content="Terms and conditions for using veelana.online website and purchasing Veelana herbal hair care products. Read our service agreement." />
+      <meta property="og:title" content="Terms of Service | Veelana Herbal Hair Care" />
+      <meta property="og:description" content="Terms and conditions for using veelana.online website and purchasing Veelana herbal hair care products. Read our service agreement." />
+      <meta property="og:url" content="https://www.veelana.online/terms" />
+      <meta property="og:type" content="website" />
+      <meta property="og:image" content="https://www.veelana.online/assets/real_full_set_boxes.webp" />
+      <meta name="twitter:title" content="Terms of Service | Veelana Herbal Hair Care" />
+      <meta name="twitter:description" content="Terms and conditions for using veelana.online website and purchasing Veelana herbal hair care products. Read our service agreement." />
+      <link rel="canonical" href="https://www.veelana.online/terms" />
       <div className="container" style={{ maxWidth: '820px', margin: '0 auto', background: '#FFFFFF', padding: '2.5rem', borderRadius: '16px', border: '1px solid rgba(79, 93, 56, 0.15)', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', color: '#4F5D38', marginBottom: '0.5rem' }}>
@@ -62,3 +72,4 @@ export default function TermsPage() {
     </div>
   );
 }
+

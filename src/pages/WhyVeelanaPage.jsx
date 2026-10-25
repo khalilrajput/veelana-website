@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import ValueGrid from '../components/ValueGrid';
 import { ShieldCheck, CheckCircle2, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -6,6 +6,16 @@ import { Link } from 'react-router-dom';
 export default function WhyVeelanaPage() {
   return (
     <div className="py-12 bg-[#FAF8F5]">
+      <title>Why Choose Veelana | 0% Mineral Oil, 100% Organic Cold-Pressed Hair Care</title>
+      <meta name="description" content="5 clean purity commitments: zero mineral oils, zero parabens, 100% cold-pressed extraction, 100% vegan & cruelty-free. See why Pakistani families trust Veelana." />
+      <meta property="og:title" content="Why Choose Veelana | 0% Mineral Oil, 100% Organic Cold-Pressed Hair Care" />
+      <meta property="og:description" content="5 clean purity commitments: zero mineral oils, zero parabens, 100% cold-pressed extraction, 100% vegan & cruelty-free. See why Pakistani families trust Veelana." />
+      <meta property="og:url" content="https://www.veelana.online/why-veelana" />
+      <meta property="og:type" content="website" />
+      <meta property="og:image" content="https://www.veelana.online/assets/real_full_set_boxes.webp" />
+      <meta name="twitter:title" content="Why Choose Veelana | 0% Mineral Oil, 100% Organic Cold-Pressed Hair Care" />
+      <meta name="twitter:description" content="5 clean purity commitments: zero mineral oils, zero parabens, 100% cold-pressed extraction, 100% vegan & cruelty-free. See why Pakistani families trust Veelana." />
+      <link rel="canonical" href="https://www.veelana.online/why-veelana" />
       <div className="container mx-auto px-4 max-w-5xl text-center mb-10">
         <div className="section-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#EAEFE4] border border-[#1B2E1E]/20 text-[#1B2E1E] text-xs font-bold uppercase tracking-wider mb-3">
           <ShieldCheck className="w-4 h-4 text-[#D4AF37]" />
@@ -65,3 +75,4 @@ export default function WhyVeelanaPage() {
     </div>
   );
 }
+

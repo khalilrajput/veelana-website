@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { ShoppingBag, Check, Sparkles, Star, Plus, Flame, ShieldCheck, Clock, ArrowRight } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { ShoppingBag, Check, Sparkles, Star, Plus, Flame, ShieldCheck, Clock, ArrowRight, MessageCircle } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { getProducts } from '../services/productService';
 import { useCart } from '../context/CartContext';
@@ -187,6 +188,28 @@ export default function ProductShowcase({ onOpenOrder }) {
                   <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.65rem', fontWeight: 'bold', color: '#1B2E1E', margin: 0 }}>
                     {product.name}
                   </h3>
+
+                  {/* Customer Star Rating & Reviews Link */}
+                  <Link
+                    to="/reviews"
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      textDecoration: 'none',
+                      marginTop: '4px',
+                      fontSize: '0.75rem',
+                      fontWeight: '700',
+                      color: '#6A7B52',
+                    }}
+                  >
+                    <div style={{ display: 'flex', color: '#D4AF37' }}>
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} style={{ width: '13px', height: '13px', fill: '#D4AF37' }} />
+                      ))}
+                    </div>
+                    <span>4.9 ({product.id === '100ml' ? '1,280+' : '2,410+'} Reviews)</span>
+                  </Link>
                   
                   {/* Price Tag Display */}
                   <div style={{ marginTop: '0.5rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>

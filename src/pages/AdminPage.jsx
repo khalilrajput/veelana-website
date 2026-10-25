@@ -6,6 +6,9 @@ import AdminMediaManager from '../components/admin/AdminMediaManager';
 import AdminContentCms from '../components/admin/AdminContentCms';
 import AdminReviewsManager from '../components/admin/AdminReviewsManager';
 import AdminFaqManager from '../components/admin/AdminFaqManager';
+import AdminUsersManager from '../components/admin/AdminUsersManager';
+import AdminInquiriesManager from '../components/admin/AdminInquiriesManager';
+import AdminSeoManager from '../components/admin/AdminSeoManager';
 import { exportEntireCmsBackup, importEntireCmsBackup, resetEntireCmsToDefaults } from '../services/cmsService';
 
 const PRESET_IMAGES = [
@@ -915,38 +918,24 @@ If you have any questions, reply to this message!`;
               🧴 Oil Bottles ({products.length})
             </button>
 
+            {/* GOOGLE USERS TAB */}
             <button
-              onClick={() => setActiveTab('media')}
+              onClick={() => setActiveTab('users')}
               style={{
                 padding: '0.55rem 1rem',
                 borderRadius: '10px',
                 border: 'none',
-                background: activeTab === 'media' ? '#D4AF37' : 'rgba(255,255,255,0.15)',
-                color: activeTab === 'media' ? '#121E14' : '#FFFFFF',
+                background: activeTab === 'users' ? '#D4AF37' : 'rgba(255,255,255,0.15)',
+                color: activeTab === 'users' ? '#121E14' : '#FFFFFF',
                 fontWeight: 'bold',
                 fontSize: '0.82rem',
                 cursor: 'pointer',
               }}
             >
-              🖼️ Media Library
+              👥 Google Users
             </button>
 
-            <button
-              onClick={() => setActiveTab('content')}
-              style={{
-                padding: '0.55rem 1rem',
-                borderRadius: '10px',
-                border: 'none',
-                background: activeTab === 'content' ? '#D4AF37' : 'rgba(255,255,255,0.15)',
-                color: activeTab === 'content' ? '#121E14' : '#FFFFFF',
-                fontWeight: 'bold',
-                fontSize: '0.82rem',
-                cursor: 'pointer',
-              }}
-            >
-              📝 Pages & Text
-            </button>
-
+            {/* CUSTOMER REVIEWS CMS */}
             <button
               onClick={() => setActiveTab('reviews')}
               style={{
@@ -963,6 +952,72 @@ If you have any questions, reply to this message!`;
               ⭐ Reviews CMS
             </button>
 
+            {/* INQUIRIES DESK */}
+            <button
+              onClick={() => setActiveTab('inquiries')}
+              style={{
+                padding: '0.55rem 1rem',
+                borderRadius: '10px',
+                border: 'none',
+                background: activeTab === 'inquiries' ? '#D4AF37' : 'rgba(255,255,255,0.15)',
+                color: activeTab === 'inquiries' ? '#121E14' : '#FFFFFF',
+                fontWeight: 'bold',
+                fontSize: '0.82rem',
+                cursor: 'pointer',
+              }}
+            >
+              📬 Inquiries Desk
+            </button>
+
+            {/* SEO & SEARCH CONSOLE HUB */}
+            <button
+              onClick={() => setActiveTab('seo')}
+              style={{
+                padding: '0.55rem 1rem',
+                borderRadius: '10px',
+                border: 'none',
+                background: activeTab === 'seo' ? '#D4AF37' : 'rgba(255,255,255,0.15)',
+                color: activeTab === 'seo' ? '#121E14' : '#FFFFFF',
+                fontWeight: 'bold',
+                fontSize: '0.82rem',
+                cursor: 'pointer',
+              }}
+            >
+              🌐 Google SEO
+            </button>
+
+            <button
+              onClick={() => setActiveTab('media')}
+              style={{
+                padding: '0.55rem 1rem',
+                borderRadius: '10px',
+                border: 'none',
+                background: activeTab === 'media' ? '#D4AF37' : 'rgba(255,255,255,0.15)',
+                color: activeTab === 'media' ? '#121E14' : '#FFFFFF',
+                fontWeight: 'bold',
+                fontSize: '0.82rem',
+                cursor: 'pointer',
+              }}
+            >
+              🖼️ Media
+            </button>
+
+            <button
+              onClick={() => setActiveTab('content')}
+              style={{
+                padding: '0.55rem 1rem',
+                borderRadius: '10px',
+                border: 'none',
+                background: activeTab === 'content' ? '#D4AF37' : 'rgba(255,255,255,0.15)',
+                color: activeTab === 'content' ? '#121E14' : '#FFFFFF',
+                fontWeight: 'bold',
+                fontSize: '0.82rem',
+                cursor: 'pointer',
+              }}
+            >
+              📝 Content
+            </button>
+
             <button
               onClick={() => setActiveTab('faqs')}
               style={{
@@ -976,7 +1031,7 @@ If you have any questions, reply to this message!`;
                 cursor: 'pointer',
               }}
             >
-              ❓ FAQs CMS
+              ❓ FAQs
             </button>
 
             <button
@@ -1758,6 +1813,21 @@ If you have any questions, reply to this message!`;
         {/* TAB 5: CUSTOMER REVIEWS CMS */}
         {activeTab === 'reviews' && (
           <AdminReviewsManager showNotification={showNotification} />
+        )}
+
+        {/* GOOGLE REGISTERED USERS */}
+        {activeTab === 'users' && (
+          <AdminUsersManager showNotification={showNotification} />
+        )}
+
+        {/* CUSTOMER CONTACT INQUIRIES DESK */}
+        {activeTab === 'inquiries' && (
+          <AdminInquiriesManager showNotification={showNotification} />
+        )}
+
+        {/* GOOGLE SEARCH CONSOLE & SEO HEALTH HUB */}
+        {activeTab === 'seo' && (
+          <AdminSeoManager showNotification={showNotification} />
         )}
 
         {/* TAB 6: FAQ KNOWLEDGE BASE CMS */}

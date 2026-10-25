@@ -1,10 +1,20 @@
-import React from 'react';
+﻿import React from 'react';
 import { Leaf, ShieldCheck, Heart, Sparkles, ArrowRight } from 'lucide-react';
 import { getWhatsAppUrl } from '../utils/whatsapp';
 
 export default function AboutPage({ onOpenOrder }) {
   return (
     <div className="py-12 bg-[#FAF8F5] min-h-screen">
+      <title>About Veelana | Our Story &amp; Botanical Heritage | Handcrafted in Punjab Pakistan</title>
+      <meta name="description" content="Learn about Veelana's mission: preserving traditional 72-hour cold-pressed herbal extraction methods from Punjab, Pakistan. 100% organic, vegan, mineral-oil-free hair care." />
+      <meta property="og:title" content="About Veelana | Our Story & Botanical Heritage | Handcrafted in Punjab Pakistan" />
+      <meta property="og:description" content="Learn about Veelana's mission: preserving traditional 72-hour cold-pressed herbal extraction methods from Punjab, Pakistan. 100% organic, vegan, mineral-oil-free hair care." />
+      <meta property="og:url" content="https://www.veelana.online/about" />
+      <meta property="og:type" content="website" />
+      <meta property="og:image" content="https://www.veelana.online/assets/real_full_set_boxes.webp" />
+      <meta name="twitter:title" content="About Veelana | Our Story & Botanical Heritage | Handcrafted in Punjab Pakistan" />
+      <meta name="twitter:description" content="Learn about Veelana's mission: preserving traditional 72-hour cold-pressed herbal extraction methods from Punjab, Pakistan. 100% organic, vegan, mineral-oil-free hair care." />
+      <link rel="canonical" href="https://www.veelana.online/about" />
       <div className="container mx-auto px-4 max-w-4xl">
         
         {/* Header */}
@@ -94,3 +104,4 @@ export default function AboutPage({ onOpenOrder }) {
     </div>
   );
 }
+

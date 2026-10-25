@@ -1,9 +1,19 @@
-import React from 'react';
+﻿import React from 'react';
 import { ShieldCheck } from 'lucide-react';
 
 export default function PrivacyPolicyPage() {
   return (
     <div style={{ minHeight: '80vh', padding: '3.5rem 1.5rem 5rem', background: '#FAF8F5' }}>
+      <title>Privacy Policy | Veelana Herbal Hair Care</title>
+      <meta name="description" content="Veelana privacy policy: how we collect, use, and protect your personal information when you visit veelana.online or place orders." />
+      <meta property="og:title" content="Privacy Policy | Veelana Herbal Hair Care" />
+      <meta property="og:description" content="Veelana privacy policy: how we collect, use, and protect your personal information when you visit veelana.online or place orders." />
+      <meta property="og:url" content="https://www.veelana.online/privacy-policy" />
+      <meta property="og:type" content="website" />
+      <meta property="og:image" content="https://www.veelana.online/assets/real_full_set_boxes.webp" />
+      <meta name="twitter:title" content="Privacy Policy | Veelana Herbal Hair Care" />
+      <meta name="twitter:description" content="Veelana privacy policy: how we collect, use, and protect your personal information when you visit veelana.online or place orders." />
+      <link rel="canonical" href="https://www.veelana.online/privacy-policy" />
       <div className="container" style={{ maxWidth: '820px', margin: '0 auto', background: '#FFFFFF', padding: '2.5rem', borderRadius: '16px', border: '1px solid rgba(79, 93, 56, 0.15)', boxShadow: '0 4px 20px rgba(0,0,0,0.03)' }}>
         
         <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', color: '#4F5D38', marginBottom: '0.5rem' }}>
@@ -78,3 +88,4 @@ export default function PrivacyPolicyPage() {
     </div>
   );
 }
+

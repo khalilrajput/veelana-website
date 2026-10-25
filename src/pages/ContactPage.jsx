@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { MapPin, Phone, Mail, Globe, MessageCircle, Clock, ShieldCheck, Send, Sparkles, User, HelpCircle, CheckCircle2 } from 'lucide-react';
 import { getWhatsAppUrl } from '../utils/whatsapp';
+import { saveInquiry } from '../services/inquiryService';
 
 const InstagramIcon = ({ size = 16, className = "" }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}>
@@ -35,6 +36,14 @@ export default function ContactPage() {
     e.preventDefault();
     if (!formData.name || !formData.phone) return;
 
+    // Save into Admin Inquiries Inbox
+    saveInquiry({
+      name: formData.name.trim(),
+      phone: formData.phone.trim(),
+      topic: formData.topic,
+      message: formData.message.trim(),
+    });
+
     const messageText = `🌿 *NEW VEELANA WEBSITE INQUIRY*
 --------------------------------
 👤 *Name:* ${formData.name}
@@ -51,6 +60,16 @@ Please reply with guidance!`;
 
   return (
     <div style={{ minHeight: '85vh', padding: '3.5rem 1rem 6rem', background: '#FAF8F5' }}>
+      <title>Contact Veelana | WhatsApp +92 306 1041609 | Hair Care Support Pakistan</title>
+      <meta name="description" content="Get in touch with Veelana customer support via WhatsApp (+92 306 1041609) or email veelanaofficial@gmail.com. Hair consultation, order tracking & delivery inquiries." />
+      <meta property="og:title" content="Contact Veelana | WhatsApp +92 306 1041609 | Hair Care Support Pakistan" />
+      <meta property="og:description" content="Get in touch with Veelana customer support via WhatsApp (+92 306 1041609) or email veelanaofficial@gmail.com. Hair consultation, order tracking & delivery inquiries." />
+      <meta property="og:url" content="https://www.veelana.online/contact" />
+      <meta property="og:type" content="website" />
+      <meta property="og:image" content="https://www.veelana.online/assets/real_full_set_boxes.webp" />
+      <meta name="twitter:title" content="Contact Veelana | WhatsApp +92 306 1041609 | Hair Care Support Pakistan" />
+      <meta name="twitter:description" content="Get in touch with Veelana customer support via WhatsApp (+92 306 1041609) or email veelanaofficial@gmail.com. Hair consultation, order tracking & delivery inquiries." />
+      <link rel="canonical" href="https://www.veelana.online/contact" />
       <div className="container" style={{ maxWidth: '1080px', margin: '0 auto' }}>
         
         {/* Page Header */}
@@ -425,3 +444,4 @@ Please reply with guidance!`;
     </div>
   );
 }
+

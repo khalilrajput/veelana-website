@@ -34,10 +34,34 @@ export default function Hero({ onOpenOrder }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6 }}
           >
-            {/* Top Badge */}
-            <div className="section-badge">
-              <Sparkles style={{ width: '16px', height: '16px', color: '#D4AF37' }} />
-              <span>{hero.badgeText || 'Pure Botanical Root Elixir'}</span>
+            {/* Top Badge & Customer Review Proof */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap', marginBottom: 'var(--space-sm)' }}>
+              <div className="section-badge" style={{ marginBottom: 0 }}>
+                <Sparkles style={{ width: '16px', height: '16px', color: '#D4AF37' }} />
+                <span>{hero.badgeText || 'Pure Botanical Root Elixir'}</span>
+              </div>
+
+              <a
+                href="#reviews"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '5px',
+                  background: 'rgba(255,255,255,0.8)',
+                  border: '1px solid #E2DDCF',
+                  padding: '4px 10px',
+                  borderRadius: '999px',
+                  fontSize: '0.75rem',
+                  fontWeight: '700',
+                  color: '#1B2E1E',
+                  textDecoration: 'none',
+                }}
+              >
+                <div style={{ display: 'flex', color: '#D4AF37' }}>
+                  {'★'.repeat(5)}
+                </div>
+                <span>4.9/5 (1,280+ Customer Reviews)</span>
+              </a>
             </div>
 
             {/* Main Headline */}

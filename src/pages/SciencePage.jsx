@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import ScienceAnimation from '../components/ScienceAnimation';
 import ValueGrid from '../components/ValueGrid';
 import { Sparkles, CheckCircle2, ArrowRight } from 'lucide-react';
@@ -7,6 +7,16 @@ import { Link } from 'react-router-dom';
 export default function SciencePage() {
   return (
     <div className="py-12 bg-[#FAF8F5]">
+      <title>Hair Science | How Cold-Pressed Herbs Restore Follicles | Veelana</title>
+      <meta name="description" content="Understand the biological science behind Veelana's cold-pressed extraction: how botanical lipids penetrate hair cuticles, repair dormant follicles, and strengthen roots." />
+      <meta property="og:title" content="Hair Science | How Cold-Pressed Herbs Restore Follicles | Veelana" />
+      <meta property="og:description" content="Understand the biological science behind Veelana's cold-pressed extraction: how botanical lipids penetrate hair cuticles, repair dormant follicles, and strengthen roots." />
+      <meta property="og:url" content="https://www.veelana.online/science" />
+      <meta property="og:type" content="website" />
+      <meta property="og:image" content="https://www.veelana.online/assets/real_full_set_boxes.webp" />
+      <meta name="twitter:title" content="Hair Science | How Cold-Pressed Herbs Restore Follicles | Veelana" />
+      <meta name="twitter:description" content="Understand the biological science behind Veelana's cold-pressed extraction: how botanical lipids penetrate hair cuticles, repair dormant follicles, and strengthen roots." />
+      <link rel="canonical" href="https://www.veelana.online/science" />
       <div className="container mx-auto px-4 max-w-5xl text-center mb-12">
         <div className="section-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#EAEFE4] border border-[#1B2E1E]/20 text-[#1B2E1E] text-xs font-bold uppercase tracking-wider mb-3">
           <Sparkles className="w-4 h-4 text-[#D4AF37]" />
@@ -37,3 +47,4 @@ export default function SciencePage() {
     </div>
   );
 }
+

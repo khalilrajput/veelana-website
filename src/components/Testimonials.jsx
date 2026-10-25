@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { Star, ChevronLeft, ChevronRight, CheckCircle2, MessageCircle, ShieldCheck, Maximize2, X, Sparkles } from 'lucide-react';
+import { Link } from 'react-router-dom';
+import { Star, ChevronLeft, ChevronRight, CheckCircle2, MessageCircle, ShieldCheck, Maximize2, X, Sparkles, Plus, ArrowRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { getCmsReviews } from '../services/cmsService';
+import { getCmsReviews, getUserReview } from '../services/cmsService';
+import { getCurrentUser } from '../services/userService';
+import CustomerReviewModal from './CustomerReviewModal';
 
 const REAL_REVIEWS = [
   {
@@ -63,16 +66,28 @@ const REAL_REVIEWS = [
 
 export default function Testimonials() {
   const [reviews, setReviews] = useState(() => getCmsReviews());
+  const [currentUser, setCurrentUser] = useState(() => getCurrentUser());
   const [currentIndex, setCurrentIndex] = useState(0);
   const [lightboxImage, setLightboxImage] = useState(null);
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
   useEffect(() => {
     const handleCmsUpdate = () => {
       setReviews(getCmsReviews());
     };
+    const handleUserUpdate = (e) => {
+      setCurrentUser(e.detail || getCurrentUser());
+    };
     window.addEventListener('veelana_cms_updated', handleCmsUpdate);
-    return () => window.removeEventListener('veelana_cms_updated', handleCmsUpdate);
+    window.addEventListener('veelana_user_changed', handleUserUpdate);
+    return () => {
+      window.removeEventListener('veelana_cms_updated', handleCmsUpdate);
+      window.removeEventListener('veelana_user_changed', handleUserUpdate);
+    };
   }, []);
+
+  const myReview = currentUser ? getUserReview(currentUser) : null;
+
 
   const reviewsList = reviews && reviews.length > 0 ? reviews : REAL_REVIEWS;
   const safeIndex = currentIndex >= reviewsList.length ? 0 : currentIndex;
@@ -105,6 +120,50 @@ export default function Testimonials() {
           <p className="section-subtitle">
             No fake testimonials. Read unedited WhatsApp chat conversations directly from customers across Lahore, Karachi, Rawalpindi, and Sindh who experienced genuine hair transformation with Veelana.
           </p>
+
+          <div style={{ marginTop: '1.25rem', display: 'flex', justifyContent: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+            <button
+              onClick={() => setIsReviewModalOpen(true)}
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '0.65rem 1.4rem',
+                borderRadius: '999px',
+                background: '#1B2E1E',
+                color: '#FAF8F5',
+                border: 'none',
+                fontWeight: '700',
+                fontSize: '0.85rem',
+                cursor: 'pointer',
+                boxShadow: '0 4px 15px rgba(27, 46, 30, 0.15)',
+              }}
+            >
+              <Plus style={{ width: '16px', height: '16px', color: '#D4AF37' }} />
+              <span>Submit Your Customer Review</span>
+            </button>
+
+            <Link
+              to="/reviews"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '0.65rem 1.4rem',
+                borderRadius: '999px',
+                background: '#FFFFFF',
+                color: '#1B2E1E',
+                border: '1.5px solid #1B2E1E',
+                fontWeight: '700',
+                fontSize: '0.85rem',
+                textDecoration: 'none',
+                boxShadow: '0 2px 8px rgba(0,0,0,0.05)',
+              }}
+            >
+              <span>View All Customer Reviews</span>
+              <ArrowRight style={{ width: '15px', height: '15px' }} />
+            </Link>
+          </div>
         </div>
 
         {/* FEATURED REVIEW SPOTLIGHT CARD (2 COLUMNS: CHAT SCREENSHOT + VERIFIED DETAILS) */}
@@ -438,7 +497,22 @@ export default function Testimonials() {
           )}
         </AnimatePresence>
 
+        {/* Customer Review Modal */}
+        <CustomerReviewModal
+          isOpen={isReviewModalOpen}
+          onClose={() => setIsReviewModalOpen(false)}
+          existingUserReview={myReview}
+          initialReview={myReview}
+          onReviewSubmitted={() => {
+            setReviews(getCmsReviews());
+          }}
+          onReviewDeleted={() => {
+            setReviews(getCmsReviews());
+          }}
+        />
+
       </div>
     </section>
+
   );
 }

@@ -5,6 +5,7 @@ import confetti from 'canvas-confetti';
 import { createOrder, formatWhatsAppOrderMessage, formatEmailOrderMailto } from '../services/orderService';
 import { normalizePakistanPhone } from '../services/firebase';
 import { useCart } from '../context/CartContext';
+import { getCurrentUser, incrementUserOrderCount } from '../services/userService';
 
 const PAKISTAN_PROVINCES = [
   { id: 'Punjab', name: 'Punjab (Express 1-2 Days)', eta: '1-2 Working Days' },
@@ -86,6 +87,10 @@ export default function OrderModal({ isOpen, onClose, initialProduct = null }) {
     if (isOpen) {
       setSubmittedOrder(null);
       setFormError('');
+      const user = getCurrentUser();
+      if (user && user.name && !formData.fullName) {
+        setFormData(prev => ({ ...prev, fullName: user.name }));
+      }
     }
   }, [isOpen]);
 
@@ -142,12 +147,17 @@ export default function OrderModal({ isOpen, onClose, initialProduct = null }) {
         totalAmount: currentTotal,
         totalPrice: `Rs. ${currentTotal.toLocaleString()}`,
         eta: selectedProvinceMeta.eta,
+        userEmail: getCurrentUser()?.email || '',
       };
 
       const saved = createOrder(orderPayload);
       if (saved) {
         setSubmittedOrder(saved);
         clearCart();
+        const curUser = getCurrentUser();
+        if (curUser?.email) {
+          incrementUserOrderCount(curUser.email);
+        }
         
         // Trigger celebration confetti
         try {

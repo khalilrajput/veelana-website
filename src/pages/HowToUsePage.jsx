@@ -1,4 +1,4 @@
-import React from 'react';
+﻿import React from 'react';
 import HowToUse from '../components/HowToUse';
 import { Sparkles, CheckCircle2, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
@@ -6,6 +6,16 @@ import { Link } from 'react-router-dom';
 export default function HowToUsePage() {
   return (
     <div className="py-12 bg-[#FAF8F5]">
+      <title>How to Use Veelana Hair Oil | 4-Step Scalp Massage Routine for Hair Growth</title>
+      <meta name="description" content="Learn the optimal 4-step Veelana hair oiling routine: warm, massage, absorb, wash. Apply 3 times weekly to stop hair fall in 7-14 days. Step-by-step guide with tips." />
+      <meta property="og:title" content="How to Use Veelana Hair Oil | 4-Step Scalp Massage Routine for Hair Growth" />
+      <meta property="og:description" content="Learn the optimal 4-step Veelana hair oiling routine: warm, massage, absorb, wash. Apply 3 times weekly to stop hair fall in 7-14 days. Step-by-step guide with tips." />
+      <meta property="og:url" content="https://www.veelana.online/how-to-use" />
+      <meta property="og:type" content="website" />
+      <meta property="og:image" content="https://www.veelana.online/assets/real_full_set_boxes.webp" />
+      <meta name="twitter:title" content="How to Use Veelana Hair Oil | 4-Step Scalp Massage Routine for Hair Growth" />
+      <meta name="twitter:description" content="Learn the optimal 4-step Veelana hair oiling routine: warm, massage, absorb, wash. Apply 3 times weekly to stop hair fall in 7-14 days. Step-by-step guide with tips." />
+      <link rel="canonical" href="https://www.veelana.online/how-to-use" />
       <div className="container mx-auto px-4 max-w-5xl text-center mb-8">
         <div className="section-badge inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#EAEFE4] border border-[#1B2E1E]/20 text-[#1B2E1E] text-xs font-bold uppercase tracking-wider mb-3">
           <Sparkles className="w-4 h-4 text-[#D4AF37]" />
@@ -35,3 +45,4 @@ export default function HowToUsePage() {
     </div>
   );
 }
+

@@ -151,6 +151,7 @@ export default function Footer({ onOpenAdmin }) {
               <li><Link to="/how-to-use" style={{ color: 'rgba(250, 248, 245, 0.85)' }}>How to Use Routine</Link></li>
               <li><Link to="/about" style={{ color: 'rgba(250, 248, 245, 0.85)' }}>Brand Heritage & Story</Link></li>
               <li><Link to="/reviews" style={{ color: 'rgba(250, 248, 245, 0.85)' }}>Customer Reviews</Link></li>
+              <li><Link to="/blog" style={{ color: 'rgba(250, 248, 245, 0.85)' }}>Hair Care Blog</Link></li>
             </ul>
           </div>
 

@@ -1,13 +1,18 @@
-import React, { useState } from 'react';
+﻿import React, { useState } from 'react';
 import { Search, Package, Truck, CheckCircle2, Clock, MapPin, Phone, MessageCircle, AlertCircle, ArrowRight, ShieldCheck } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { findOrder, getOrders } from '../services/orderService';
 import { getWhatsAppUrl } from '../utils/whatsapp';
+import { getCurrentUser } from '../services/userService';
 
 export default function OrderTrackingPage() {
   const [searchQuery, setSearchQuery] = useState('');
   const [searched, setSearched] = useState(false);
   const [foundOrder, setFoundOrder] = useState(null);
+  const currentUser = getCurrentUser();
+  const userOrders = currentUser?.email
+    ? getOrders().filter(o => o.userEmail && o.userEmail.toLowerCase() === currentUser.email.toLowerCase())
+    : [];
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -69,6 +74,16 @@ export default function OrderTrackingPage() {
 
   return (
     <div style={{ minHeight: '80vh', padding: '3rem 1rem 5rem', background: '#FAF8F5' }}>
+      <title>Track Your Order | Live Delivery Status | Veelana Hair Oil Pakistan</title>
+      <meta name="description" content="Track your Veelana hair oil order in real-time. Enter your order ID or phone number to check delivery status across Pakistan." />
+      <meta property="og:title" content="Track Your Order | Live Delivery Status | Veelana Hair Oil Pakistan" />
+      <meta property="og:description" content="Track your Veelana hair oil order in real-time. Enter your order ID or phone number to check delivery status across Pakistan." />
+      <meta property="og:url" content="https://www.veelana.online/track-order" />
+      <meta property="og:type" content="website" />
+      <meta property="og:image" content="https://www.veelana.online/assets/real_full_set_boxes.webp" />
+      <meta name="twitter:title" content="Track Your Order | Live Delivery Status | Veelana Hair Oil Pakistan" />
+      <meta name="twitter:description" content="Track your Veelana hair oil order in real-time. Enter your order ID or phone number to check delivery status across Pakistan." />
+      <link rel="canonical" href="https://www.veelana.online/track-order" />
       <div className="container" style={{ maxWidth: '780px', margin: '0 auto' }}>
         
         {/* Header */}
@@ -133,16 +148,48 @@ export default function OrderTrackingPage() {
             </button>
           </form>
 
-          {/* Quick Demo Lookup Helper */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.85rem', fontSize: '0.78rem', color: '#788970' }}>
-            <span>Need instant demo?</span>
-            <button
-              onClick={loadSampleOrder}
-              style={{ background: 'none', border: 'none', color: '#4F5D38', textDecoration: 'underline', cursor: 'pointer', fontWeight: 'bold' }}
-            >
-              Load Most Recent / Sample Order
-            </button>
-          </div>
+          {/* Quick Demo Lookup Helper or User Orders */}
+          {userOrders.length > 0 ? (
+            <div style={{ marginTop: '1rem', paddingTop: '0.85rem', borderTop: '1px solid #ECE7DD' }}>
+              <span style={{ fontSize: '0.75rem', fontWeight: 'bold', color: '#1B2E1E', display: 'block', marginBottom: '6px' }}>
+                Your Orders as {currentUser.name}:
+              </span>
+              <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                {userOrders.map((ord) => (
+                  <button
+                    key={ord.id}
+                    onClick={() => {
+                      setFoundOrder(ord);
+                      setSearchQuery(ord.id);
+                      setSearched(true);
+                    }}
+                    style={{
+                      padding: '4px 10px',
+                      borderRadius: '8px',
+                      background: '#ECFDF5',
+                      border: '1px solid #A7F3D0',
+                      color: '#065F46',
+                      fontSize: '0.75rem',
+                      fontWeight: 'bold',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    📦 {ord.id} ({ord.totalPrice || ord.totalAmount})
+                  </button>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.85rem', fontSize: '0.78rem', color: '#788970' }}>
+              <span>Need instant demo?</span>
+              <button
+                onClick={loadSampleOrder}
+                style={{ background: 'none', border: 'none', color: '#4F5D38', textDecoration: 'underline', cursor: 'pointer', fontWeight: 'bold' }}
+              >
+                Load Most Recent / Sample Order
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Tracking Results Card */}
@@ -336,3 +383,4 @@ export default function OrderTrackingPage() {
     </div>
   );
 }
+

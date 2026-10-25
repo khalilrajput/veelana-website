@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { HelpCircle, ChevronDown, MessageCircle, ShieldCheck, Search, Sparkles, Truck, Check, Droplet, Clock } from 'lucide-react';
 import { getWhatsAppUrl } from '../utils/whatsapp';
 import { getCmsFaqs } from '../services/cmsService';
@@ -95,6 +95,16 @@ export default function FaqPage({ onOpenOrder }) {
 
   return (
     <div style={{ minHeight: '85vh', padding: '3.5rem 1rem 6rem', background: '#FAF8F5' }}>
+      <title>FAQ | Veelana Hair Oil Questions &amp; Answers | Usage, Shipping, Returns</title>
+      <meta name="description" content="Find answers to frequently asked questions about Veelana herbal hair oil: application routine, results timeline, safety for colored hair, shipping times, COD payments & returns." />
+      <meta property="og:title" content="FAQ | Veelana Hair Oil Questions & Answers | Usage, Shipping, Returns" />
+      <meta property="og:description" content="Find answers to frequently asked questions about Veelana herbal hair oil: application routine, results timeline, safety for colored hair, shipping times, COD payments & returns." />
+      <meta property="og:url" content="https://www.veelana.online/faq" />
+      <meta property="og:type" content="website" />
+      <meta property="og:image" content="https://www.veelana.online/assets/real_full_set_boxes.webp" />
+      <meta name="twitter:title" content="FAQ | Veelana Hair Oil Questions & Answers | Usage, Shipping, Returns" />
+      <meta name="twitter:description" content="Find answers to frequently asked questions about Veelana herbal hair oil: application routine, results timeline, safety for colored hair, shipping times, COD payments & returns." />
+      <link rel="canonical" href="https://www.veelana.online/faq" />
       <div className="container" style={{ maxWidth: '880px', margin: '0 auto' }}>
         
         {/* Page Header */}
@@ -328,3 +338,4 @@ export default function FaqPage({ onOpenOrder }) {
     </div>
   );
 }
+
