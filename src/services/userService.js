@@ -180,13 +180,21 @@ export function logoutCurrentUser() {
 }
 
 // 7. Google Auth Client ID Config (for Google Cloud Console Client ID)
+export const DEFAULT_GOOGLE_CLIENT_ID = '1029818275499-p72snm0luv3gdtsa3q8gue40rq16lvq6.apps.googleusercontent.com';
+
 export function getGoogleAuthConfig() {
   try {
     const raw = localStorage.getItem(GOOGLE_AUTH_CONFIG_KEY);
-    if (raw) return JSON.parse(raw);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      return {
+        clientId: parsed.clientId || DEFAULT_GOOGLE_CLIENT_ID,
+        enabled: parsed.enabled !== false
+      };
+    }
   } catch (e) {}
   return {
-    clientId: '',
+    clientId: DEFAULT_GOOGLE_CLIENT_ID,
     enabled: true
   };
 }
