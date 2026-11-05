@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import { X, Sparkles, ShieldCheck, CheckCircle2, User, Mail, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { X, Sparkles, ShieldCheck, CheckCircle2, AlertCircle, ArrowRight, Key } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { loginGoogleUser } from '../services/userService';
+import { loginGoogleUser, getGoogleAuthConfig, saveGoogleAuthConfig } from '../services/userService';
 
 const GoogleIcon = ({ size = 20 }) => (
   <svg width={size} height={size} viewBox="0 0 24 24">
@@ -24,52 +24,132 @@ const GoogleIcon = ({ size = 20 }) => (
   </svg>
 );
 
+// Decodes standard JWT ID token returned by official Google Sign-In
+function parseJwt(token) {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map((c) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+        .join('')
+    );
+    return JSON.parse(jsonPayload);
+  } catch (e) {
+    console.error('Failed to parse Google JWT', e);
+    return null;
+  }
+}
+
 export default function GoogleSignInModal({ isOpen, onClose, onLoginSuccess }) {
-  const [name, setName] = useState('');
-  const [email, setEmail] = useState('');
-  const [customAvatar, setCustomAvatar] = useState('');
+  const [googleConfig, setGoogleConfig] = useState(() => getGoogleAuthConfig());
+  const [clientIdInput, setClientIdInput] = useState(googleConfig?.clientId || '');
+  const [isEditingClientId, setIsEditingClientId] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const googleBtnContainerRef = useRef(null);
+
+  // Initialize or re-render official Google Button when modal opens
+  useEffect(() => {
+    if (!isOpen) return;
+
+    const currentConfig = getGoogleAuthConfig();
+    setGoogleConfig(currentConfig);
+    const clientId = currentConfig?.clientId?.trim();
+
+    if (!clientId) {
+      return;
+    }
+
+    let intervalId;
+    const initGoogleGsi = () => {
+      if (window.google?.accounts?.id && googleBtnContainerRef.current) {
+        try {
+          window.google.accounts.id.initialize({
+            client_id: clientId,
+            callback: handleGoogleCredentialResponse,
+            auto_select: false,
+            cancel_on_tap_outside: true,
+          });
+
+          googleBtnContainerRef.current.innerHTML = '';
+          window.google.accounts.id.renderButton(googleBtnContainerRef.current, {
+            theme: 'outline',
+            size: 'large',
+            type: 'standard',
+            shape: 'pill',
+            text: 'signin_with',
+            logo_alignment: 'left',
+            width: 280,
+          });
+        } catch (err) {
+          console.error('Error rendering Google button', err);
+        }
+      }
+    };
+
+    // If script isn't loaded yet, check every 150ms
+    if (!window.google?.accounts?.id) {
+      intervalId = setInterval(() => {
+        if (window.google?.accounts?.id) {
+          clearInterval(intervalId);
+          initGoogleGsi();
+        }
+      }, 150);
+    } else {
+      initGoogleGsi();
+    }
+
+    return () => {
+      if (intervalId) clearInterval(intervalId);
+    };
+  }, [isOpen, googleConfig?.clientId]);
 
   if (!isOpen) return null;
 
-  const handleCustomGoogleLogin = (e) => {
+  // Called when user successfully signs in through Google Official Popup
+  const handleGoogleCredentialResponse = (response) => {
+    if (!response || !response.credential) {
+      setError('Google sign-in could not be completed.');
+      return;
+    }
+
+    setIsLoading(true);
+    const profile = parseJwt(response.credential);
+
+    if (profile && profile.email) {
+      const authenticatedUser = loginGoogleUser({
+        name: profile.name || profile.given_name || 'Google User',
+        email: profile.email.toLowerCase(),
+        avatar: profile.picture || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(profile.name || 'G')}&backgroundColor=1B2E1E`,
+        provider: 'Google Official OAuth',
+        googleId: profile.sub,
+      });
+
+      setIsLoading(false);
+      if (onLoginSuccess) onLoginSuccess(authenticatedUser);
+      onClose();
+    } else {
+      setIsLoading(false);
+      setError('Unable to read profile from Google token.');
+    }
+  };
+
+  const handleSaveClientId = (e) => {
     e.preventDefault();
-    if (!name.trim()) {
-      setError('Please enter your full name.');
+    const cleanId = clientIdInput.trim();
+    if (!cleanId) {
+      setError('Please paste a valid Google Client ID.');
       return;
     }
-    if (!email.trim() || !email.includes('@')) {
-      setError('Please enter a valid Google email address (e.g. name@gmail.com).');
-      return;
-    }
-
-    setIsLoading(true);
-    setTimeout(() => {
-      const user = loginGoogleUser({
-        name: name.trim(),
-        email: email.trim().toLowerCase(),
-        avatar: customAvatar || `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(name.trim())}&backgroundColor=1B2E1E`,
-      });
-      setIsLoading(false);
-      if (onLoginSuccess) onLoginSuccess(user);
-      onClose();
-    }, 600);
+    saveGoogleAuthConfig({ ...googleConfig, clientId: cleanId });
+    setGoogleConfig({ ...googleConfig, clientId: cleanId });
+    setIsEditingClientId(false);
+    setError('');
   };
 
-  const handleQuickDemoGoogleLogin = (quickName, quickEmail, quickAvatar) => {
-    setIsLoading(true);
-    setTimeout(() => {
-      const user = loginGoogleUser({
-        name: quickName,
-        email: quickEmail,
-        avatar: quickAvatar,
-      });
-      setIsLoading(false);
-      if (onLoginSuccess) onLoginSuccess(user);
-      onClose();
-    }, 450);
-  };
+  const hasConfiguredClientId = Boolean(googleConfig?.clientId && googleConfig.clientId.trim().length > 10);
 
   return (
     <div
@@ -77,7 +157,7 @@ export default function GoogleSignInModal({ isOpen, onClose, onLoginSuccess }) {
         position: 'fixed',
         inset: 0,
         zIndex: 999999,
-        background: 'rgba(18, 30, 20, 0.7)',
+        background: 'rgba(18, 30, 20, 0.75)',
         backdropFilter: 'blur(8px)',
         display: 'flex',
         alignItems: 'center',
@@ -95,7 +175,7 @@ export default function GoogleSignInModal({ isOpen, onClose, onLoginSuccess }) {
         style={{
           background: '#FFFFFF',
           borderRadius: '24px',
-          maxWidth: '440px',
+          maxWidth: '460px',
           width: '100%',
           overflow: 'hidden',
           boxShadow: '0 25px 60px rgba(0,0,0,0.3)',
@@ -108,7 +188,7 @@ export default function GoogleSignInModal({ isOpen, onClose, onLoginSuccess }) {
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             <GoogleIcon size={22} />
             <span style={{ fontSize: '1rem', fontWeight: '800', color: '#1B2E1E' }}>
-              Sign in with Google
+              Official Google Sign-In
             </span>
           </div>
           <button
@@ -129,187 +209,135 @@ export default function GoogleSignInModal({ isOpen, onClose, onLoginSuccess }) {
             <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.4rem', fontWeight: 'bold', color: '#1B2E1E', margin: '0 0 0.35rem' }}>
               Welcome to Veelana
             </h3>
-            <p style={{ fontSize: '0.85rem', color: '#5F7057', margin: 0, lineHeight: 1.4 }}>
-              Sign in with your Google account to auto-fill orders, track packages, and leave verified customer reviews.
+            <p style={{ fontSize: '0.85rem', color: '#5F7057', margin: 0, lineHeight: 1.45 }}>
+              Sign in with your genuine Google account to auto-fill orders, track deliveries, and leave verified customer reviews.
             </p>
           </div>
 
-          {/* Quick 1-Click Demo Accounts */}
-          <div style={{ marginBottom: '1.5rem', background: '#FAF8F5', borderRadius: '16px', padding: '1rem', border: '1px solid #EAE5D9' }}>
-            <span style={{ fontSize: '0.72rem', fontWeight: '800', color: '#6A7B52', textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block', marginBottom: '0.65rem' }}>
-              ⚡ 1-Click Instant Google Sign-In
-            </span>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem' }}>
-              <button
-                type="button"
-                onClick={() =>
-                  handleQuickDemoGoogleLogin(
-                    'Ayesha Khan',
-                    'ayesha.khan789@gmail.com',
-                    'https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80'
-                  )
-                }
+          {/* Genuine Google Button Container */}
+          {hasConfiguredClientId && !isEditingClientId ? (
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1rem', margin: '1.5rem 0' }}>
+              <div
+                ref={googleBtnContainerRef}
                 style={{
+                  minHeight: '44px',
                   display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '0.6rem 0.85rem',
-                  borderRadius: '12px',
-                  background: '#FFFFFF',
-                  border: '1px solid #D6D0C2',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  transition: 'all 0.2s',
+                  justifyContent: 'center',
+                  width: '100%',
                 }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <img
-                    src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=150&auto=format&fit=crop&q=80"
-                    alt="Ayesha"
-                    style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }}
-                  />
-                  <div>
-                    <div style={{ fontSize: '0.82rem', fontWeight: '700', color: '#1B2E1E' }}>Ayesha Khan</div>
-                    <div style={{ fontSize: '0.7rem', color: '#6B7280' }}>ayesha.khan789@gmail.com</div>
-                  </div>
-                </div>
-                <ArrowRight style={{ width: '15px', height: '15px', color: '#2D6A4F' }} />
-              </button>
+              />
 
-              <button
-                type="button"
-                onClick={() =>
-                  handleQuickDemoGoogleLogin(
-                    'Muhammad Bilal',
-                    'm.bilal.lahore@gmail.com',
-                    'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80'
-                  )
-                }
-                style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '0.6rem 0.85rem',
-                  borderRadius: '12px',
-                  background: '#FFFFFF',
-                  border: '1px solid #D6D0C2',
-                  cursor: 'pointer',
-                  textAlign: 'left',
-                  transition: 'all 0.2s',
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <img
-                    src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80"
-                    alt="Bilal"
-                    style={{ width: '32px', height: '32px', borderRadius: '50%', objectFit: 'cover' }}
-                  />
-                  <div>
-                    <div style={{ fontSize: '0.82rem', fontWeight: '700', color: '#1B2E1E' }}>Muhammad Bilal</div>
-                    <div style={{ fontSize: '0.7rem', color: '#6B7280' }}>m.bilal.lahore@gmail.com</div>
-                  </div>
-                </div>
-                <ArrowRight style={{ width: '15px', height: '15px', color: '#2D6A4F' }} />
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', color: '#047857', background: '#ECFDF5', padding: '6px 12px', borderRadius: '8px', border: '1px solid #A7F3D0' }}>
+                <CheckCircle2 style={{ width: '15px', height: '15px' }} />
+                <span>Connected to Official Google OAuth 2.0</span>
+              </div>
             </div>
-          </div>
+          ) : (
+            /* Setup / Configuration Panel for Genuine Google Client ID */
+            <div style={{ background: '#FAF8F5', borderRadius: '16px', padding: '1.25rem', border: '1px solid #E2DDCF', marginBottom: '1rem' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '0.5rem' }}>
+                <Key style={{ width: '18px', height: '18px', color: '#2D6A4F' }} />
+                <span style={{ fontSize: '0.88rem', fontWeight: '800', color: '#1B2E1E' }}>
+                  Connect Your Google Cloud Client ID
+                </span>
+              </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', marginBottom: '1.25rem' }}>
-            <div style={{ flex: 1, height: '1px', background: '#ECE7DD' }} />
-            <span style={{ fontSize: '0.75rem', color: '#8A9A86', fontWeight: '600' }}>OR SIGN IN WITH YOUR GOOGLE ACCOUNT</span>
-            <div style={{ flex: 1, height: '1px', background: '#ECE7DD' }} />
-          </div>
+              <p style={{ fontSize: '0.78rem', color: '#5F7057', lineHeight: 1.5, margin: '0 0 0.85rem' }}>
+                Asli Google popup chalane ke liye Google Cloud Console se free <strong>OAuth 2.0 Client ID</strong> yahan paste karein:
+              </p>
 
-          {/* Custom Google Account Form */}
-          <form onSubmit={handleCustomGoogleLogin} style={{ display: 'flex', flexDirection: 'column', gap: '0.85rem' }}>
-            <div>
-              <label style={{ fontSize: '0.78rem', fontWeight: '700', color: '#1B2E1E', display: 'block', marginBottom: '4px' }}>
-                Your Full Name
-              </label>
-              <div style={{ position: 'relative' }}>
-                <User style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', width: '16px', height: '16px', color: '#7A8C74' }} />
+              <form onSubmit={handleSaveClientId} style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
                 <input
                   type="text"
-                  placeholder="e.g. Fatima Ali"
-                  value={name}
-                  onChange={(e) => { setName(e.target.value); setError(''); }}
-                  required
+                  placeholder="e.g. 1234567890-abcdef.apps.googleusercontent.com"
+                  value={clientIdInput}
+                  onChange={(e) => {
+                    setClientIdInput(e.target.value);
+                    setError('');
+                  }}
                   style={{
                     width: '100%',
-                    padding: '0.65rem 0.85rem 0.65rem 2.4rem',
+                    padding: '0.65rem 0.85rem',
                     borderRadius: '10px',
-                    border: '1px solid #D6D0C2',
-                    fontSize: '0.88rem',
+                    border: '1px solid #CBD5E1',
+                    fontSize: '0.82rem',
                     outline: 'none',
                     background: '#FFFFFF',
                   }}
                 />
+
+                {error && (
+                  <span style={{ fontSize: '0.75rem', color: '#B91C1C', fontWeight: '700' }}>
+                    {error}
+                  </span>
+                )}
+
+                <div style={{ display: 'flex', gap: '0.5rem', justifyContent: 'flex-end' }}>
+                  {hasConfiguredClientId && (
+                    <button
+                      type="button"
+                      onClick={() => setIsEditingClientId(false)}
+                      style={{
+                        padding: '0.5rem 0.85rem',
+                        background: '#E2DDCF',
+                        border: 'none',
+                        borderRadius: '8px',
+                        fontSize: '0.78rem',
+                        fontWeight: '700',
+                        cursor: 'pointer',
+                        color: '#1B2E1E',
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  )}
+                  <button
+                    type="submit"
+                    style={{
+                      padding: '0.55rem 1.1rem',
+                      background: '#1B2E1E',
+                      color: '#FAF8F5',
+                      border: 'none',
+                      borderRadius: '8px',
+                      fontSize: '0.82rem',
+                      fontWeight: '800',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Save & Enable Google Login
+                  </button>
+                </div>
+              </form>
+
+              <div style={{ marginTop: '0.85rem', fontSize: '0.72rem', color: '#6A7B52', lineHeight: 1.4 }}>
+                💡 <em>Steps:</em> Go to <strong>console.cloud.google.com</strong> &gt; APIs &amp; Services &gt; Credentials &gt; Create "OAuth client ID" (Web application) &gt; Add <code>https://www.veelana.online</code> in Authorized JavaScript origins.
               </div>
             </div>
+          )}
 
-            <div>
-              <label style={{ fontSize: '0.78rem', fontWeight: '700', color: '#1B2E1E', display: 'block', marginBottom: '4px' }}>
-                Google Email Address
-              </label>
-              <div style={{ position: 'relative' }}>
-                <Mail style={{ position: 'absolute', left: '12px', top: '50%', transform: 'translateY(-50%)', width: '16px', height: '16px', color: '#7A8C74' }} />
-                <input
-                  type="email"
-                  placeholder="yourname@gmail.com"
-                  value={email}
-                  onChange={(e) => { setEmail(e.target.value); setError(''); }}
-                  required
-                  style={{
-                    width: '100%',
-                    padding: '0.65rem 0.85rem 0.65rem 2.4rem',
-                    borderRadius: '10px',
-                    border: '1px solid #D6D0C2',
-                    fontSize: '0.88rem',
-                    outline: 'none',
-                    background: '#FFFFFF',
-                  }}
-                />
-              </div>
+          {hasConfiguredClientId && !isEditingClientId && (
+            <div style={{ textAlign: 'center', marginTop: '0.75rem' }}>
+              <button
+                type="button"
+                onClick={() => setIsEditingClientId(true)}
+                style={{
+                  background: 'none',
+                  border: 'none',
+                  color: '#6A7B52',
+                  fontSize: '0.75rem',
+                  textDecoration: 'underline',
+                  cursor: 'pointer',
+                }}
+              >
+                Change Google Client ID Settings
+              </button>
             </div>
+          )}
 
-            {error && (
-              <span style={{ fontSize: '0.78rem', color: '#B91C1C', fontWeight: '700' }}>
-                {error}
-              </span>
-            )}
-
-            <button
-              type="submit"
-              disabled={isLoading}
-              style={{
-                marginTop: '0.5rem',
-                width: '100%',
-                padding: '0.75rem',
-                borderRadius: '12px',
-                background: '#1B2E1E',
-                color: '#FAF8F5',
-                border: 'none',
-                fontWeight: '800',
-                fontSize: '0.9rem',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                boxShadow: '0 4px 15px rgba(27, 46, 30, 0.2)',
-                opacity: isLoading ? 0.7 : 1,
-              }}
-            >
-              <GoogleIcon size={18} />
-              <span>{isLoading ? 'Signing in...' : 'Sign in with Google'}</span>
-            </button>
-          </form>
-
-          {/* Privacy footer */}
+          {/* Privacy & Security Footer */}
           <div style={{ marginTop: '1.25rem', textAlign: 'center', fontSize: '0.72rem', color: '#7A8C74', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '5px' }}>
             <ShieldCheck style={{ width: '14px', height: '14px', color: '#25D366' }} />
-            <span>Secure Google OAuth 2.0 Identity Protocol</span>
+            <span>Official Google Identity Services (GIS) OAuth 2.0</span>
           </div>
         </div>
       </motion.div>
