@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { ShieldCheck, Cookie } from 'lucide-react';
+import { Cookie } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function CookieConsent() {
@@ -23,43 +23,46 @@ export default function CookieConsent() {
     <div
       style={{
         position: 'fixed',
-        bottom: 0,
-        left: 0,
-        right: 0,
+        bottom: '16px',
+        left: '16px',
+        maxWidth: '360px',
         zIndex: 9999,
-        background: '#1B2E1E',
+        background: 'rgba(27, 46, 30, 0.96)',
+        backdropFilter: 'blur(10px)',
         color: '#FAF8F5',
-        padding: '0.85rem 1.25rem',
-        borderTop: '1px solid rgba(255,255,255,0.1)',
-        boxShadow: '0 -4px 20px rgba(0,0,0,0.15)',
+        padding: '0.85rem 1rem',
+        borderRadius: '16px',
+        border: '1px solid rgba(255,255,255,0.15)',
+        boxShadow: '0 12px 35px rgba(0,0,0,0.3)',
       }}
     >
-      <div className="container" style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '0.75rem', maxWidth: '1100px', margin: '0 auto' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.65rem', flex: '1 1 300px' }}>
-          <Cookie style={{ width: '20px', height: '20px', color: '#D4AF37', flexShrink: 0 }} />
-          <p style={{ fontSize: '0.8rem', color: '#D9E2D5', margin: 0, lineHeight: 1.4 }}>
-            We use cookies to enhance your shopping experience and manage your cart. By browsing Veelana, you agree to our{' '}
-            <Link to="/privacy-policy" style={{ color: '#FAF8F5', textDecoration: 'underline' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.65rem' }}>
+        <div style={{ display: 'flex', alignItems: 'flex-start', gap: '0.65rem' }}>
+          <Cookie style={{ width: '18px', height: '18px', color: '#D4AF37', flexShrink: 0, marginTop: '2px' }} />
+          <p style={{ fontSize: '0.75rem', color: '#D9E2D5', margin: 0, lineHeight: 1.45 }}>
+            We use cookies to enhance your shopping experience and save your cart. By browsing Veelana, you agree to our{' '}
+            <Link to="/privacy-policy" style={{ color: '#D4AF37', textDecoration: 'underline' }}>
               Privacy Policy
             </Link>.
           </p>
         </div>
 
-        <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
+        <div style={{ display: 'flex', justifyContent: 'flex-end', gap: '0.5rem' }}>
           <button
             onClick={handleAccept}
             style={{
-              background: '#4F5D38',
-              color: '#FAF8F5',
+              padding: '0.45rem 1rem',
+              borderRadius: '8px',
+              background: '#D4AF37',
+              color: '#121E14',
               border: 'none',
-              borderRadius: '6px',
-              padding: '0.45rem 1.15rem',
-              fontSize: '0.8rem',
-              fontWeight: 'bold',
+              fontSize: '0.75rem',
+              fontWeight: '700',
               cursor: 'pointer',
+              transition: 'background 0.2s',
             }}
           >
-            Accept & Continue
+            Accept &amp; Continue
           </button>
         </div>
       </div>

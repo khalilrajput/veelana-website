@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { NavLink, Link, useNavigate } from 'react-router-dom';
-import { Menu, X, ShoppingBag, ChevronRight, User, LogOut, Star, PackageCheck, ShieldCheck } from 'lucide-react';
+import { Menu, X, ShoppingBag, ChevronRight, User, LogOut, Star, PackageCheck, ShieldCheck, ChevronDown } from 'lucide-react';
 import { useCart } from '../context/CartContext';
 import { getCmsSettings } from '../services/cmsService';
 import { getCurrentUser, logoutCurrentUser } from '../services/userService';
@@ -35,7 +35,9 @@ export default function Navbar({ onOpenOrder }) {
   const [currentUser, setCurrentUser] = useState(() => getCurrentUser());
   const [isGoogleModalOpen, setIsGoogleModalOpen] = useState(false);
   const [userDropdownOpen, setUserDropdownOpen] = useState(false);
+  const [moreDropdownOpen, setMoreDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const moreRef = useRef(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -55,11 +57,14 @@ export default function Navbar({ onOpenOrder }) {
     };
   }, []);
 
-  // Close user dropdown when clicking outside
+  // Close dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (dropdownRef.current && !dropdownRef.current.contains(e.target)) {
         setUserDropdownOpen(false);
+      }
+      if (moreRef.current && !moreRef.current.contains(e.target)) {
+        setMoreDropdownOpen(false);
       }
     };
     document.addEventListener('mousedown', handleClickOutside);
@@ -78,17 +83,35 @@ export default function Navbar({ onOpenOrder }) {
     return () => clearInterval(timer);
   }, [announcements.length]);
 
-  // Clean, sorted navigation links
-  const navLinks = [
+  // Primary desktop navigation links (curated to keep navbar clean and uncluttered)
+  const primaryNavLinks = [
     { name: 'Home', path: '/' },
     { name: 'Products', path: '/products' },
     { name: '25+ Herbs', path: '/ingredients' },
-    { name: 'How to Use', path: '/how-to-use' },
-    { name: 'Customer Reviews', path: '/reviews' },
-    { name: 'Why Veelana', path: '/why-veelana' },
-    { name: 'Track Order', path: '/track-order' },
-    { name: 'FAQ', path: '/faq' },
+    { name: 'Reviews', path: '/reviews' },
     { name: 'Blog', path: '/blog' },
+  ];
+
+  // Secondary links placed inside an elegant "More" dropdown
+  const secondaryNavLinks = [
+    { name: 'How to Use Routine', path: '/how-to-use' },
+    { name: 'Why Veelana Standard', path: '/why-veelana' },
+    { name: 'Track Order', path: '/track-order' },
+    { name: 'FAQs & Help', path: '/faq' },
+    { name: 'Contact Support', path: '/contact' },
+  ];
+
+  // All links for mobile drawer
+  const allNavLinks = [
+    { name: 'Home', path: '/' },
+    { name: 'Products Catalog', path: '/products' },
+    { name: '25+ Cold-Pressed Herbs', path: '/ingredients' },
+    { name: 'Customer Reviews & Proof', path: '/reviews' },
+    { name: 'Botanical Journal & Blog', path: '/blog' },
+    { name: 'How to Use Routine', path: '/how-to-use' },
+    { name: 'Why Veelana Standard', path: '/why-veelana' },
+    { name: 'Track Order', path: '/track-order' },
+    { name: 'FAQ & Help', path: '/faq' },
     { name: 'Contact', path: '/contact' },
   ];
 
@@ -110,18 +133,19 @@ export default function Navbar({ onOpenOrder }) {
         </div>
 
         {/* Main Glass Nav */}
-        <nav className="glass-nav">
-          <div className="container nav-container">
+        <nav className="glass-nav" style={{ padding: '0.65rem 0' }}>
+          <div className="container nav-container" style={{ maxWidth: '1280px', margin: '0 auto', padding: '0 1.25rem' }}>
+            
             {/* Brand Logo */}
-            <Link to="/" className="nav-brand">
+            <Link to="/" className="nav-brand" style={{ gap: '0.65rem' }}>
               <img
                 src={cms?.siteSettings?.brandLogo || '/assets/official_png_logo.webp'}
                 alt={cms?.siteSettings?.brandName || 'Veelana'}
                 className="nav-brand-img"
                 style={{
-                  height: '38px',
+                  height: '34px',
                   width: 'auto',
-                  maxWidth: '90px',
+                  maxWidth: '75px',
                   objectFit: 'contain',
                   mixBlendMode: 'multiply',
                   flexShrink: 0
@@ -129,35 +153,107 @@ export default function Navbar({ onOpenOrder }) {
                 onError={(e) => { e.currentTarget.src = '/assets/official_png_logo.webp'; }}
               />
               <div className="brand-text-box">
-                <span className="brand-title">{cms?.siteSettings?.brandName || 'VEELANA'}</span>
-                <span className="brand-subtitle">{cms?.siteSettings?.brandSubtitle || 'HERBAL HAIR CARE'}</span>
+                <span className="brand-title" style={{ fontSize: '1.45rem', letterSpacing: '1.5px' }}>
+                  {cms?.siteSettings?.brandName || 'VEELANA'}
+                </span>
+                <span className="brand-subtitle" style={{ fontSize: '0.52rem', letterSpacing: '2px' }}>
+                  {cms?.siteSettings?.brandSubtitle || 'HERBAL HAIR CARE'}
+                </span>
               </div>
             </Link>
 
             {/* Desktop Navigation Links */}
-            <ul className="nav-links">
-              {navLinks.map((link) => (
+            <ul className="nav-links" style={{ gap: '1.25rem' }}>
+              {primaryNavLinks.map((link) => (
                 <li key={link.name}>
                   <NavLink
                     to={link.path}
-                    className={({ isActive }) =>
-                      `nav-link ${isActive ? 'active' : ''}`
-                    }
+                    className={({ isActive }) => `nav-link ${isActive ? 'active' : ''}`}
                     style={({ isActive }) => ({
                       color: isActive ? '#1B2E1E' : '#4F5E52',
                       borderBottom: isActive ? '2px solid #1B2E1E' : 'none',
                       fontWeight: isActive ? '700' : '600',
-                      paddingBottom: '4px'
+                      paddingBottom: '3px',
+                      fontSize: '0.86rem',
                     })}
                   >
                     {link.name}
                   </NavLink>
                 </li>
               ))}
+
+              {/* More Dropdown */}
+              <li style={{ position: 'relative' }} ref={moreRef}>
+                <button
+                  type="button"
+                  onClick={() => setMoreDropdownOpen(!moreDropdownOpen)}
+                  style={{
+                    background: 'none',
+                    border: 'none',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '3px',
+                    fontSize: '0.86rem',
+                    fontWeight: '600',
+                    color: '#4F5E52',
+                    padding: '3px 0',
+                  }}
+                >
+                  <span>More</span>
+                  <ChevronDown style={{ width: '14px', height: '14px', opacity: 0.7 }} />
+                </button>
+
+                {moreDropdownOpen && (
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: 'calc(100% + 10px)',
+                      left: '50%',
+                      transform: 'translateX(-50%)',
+                      background: '#FFFFFF',
+                      borderRadius: '16px',
+                      boxShadow: '0 16px 40px rgba(0,0,0,0.12)',
+                      border: '1px solid #ECE7DD',
+                      padding: '0.5rem',
+                      minWidth: '200px',
+                      zIndex: 10002,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '2px',
+                    }}
+                  >
+                    {secondaryNavLinks.map((sub) => (
+                      <Link
+                        key={sub.name}
+                        to={sub.path}
+                        onClick={() => setMoreDropdownOpen(false)}
+                        style={{
+                          padding: '0.6rem 0.85rem',
+                          borderRadius: '10px',
+                          fontSize: '0.82rem',
+                          fontWeight: '600',
+                          color: '#1B2E1E',
+                          textDecoration: 'none',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'space-between',
+                          transition: 'background 0.2s',
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.background = '#FAF8F5'}
+                        onMouseLeave={(e) => e.currentTarget.style.background = 'transparent'}
+                      >
+                        <span>{sub.name}</span>
+                        <ChevronRight style={{ width: '13px', height: '13px', opacity: 0.4 }} />
+                      </Link>
+                    ))}
+                  </div>
+                )}
+              </li>
             </ul>
 
             {/* CTA, User Auth, Shopping Cart & Mobile Toggle */}
-            <div className="nav-actions" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', flexShrink: 0 }}>
+            <div className="nav-actions" style={{ display: 'flex', alignItems: 'center', gap: '0.55rem', flexShrink: 0 }}>
               
               {/* GOOGLE SIGN IN / USER PROFILE BUTTON */}
               {currentUser ? (
@@ -170,27 +266,28 @@ export default function Navbar({ onOpenOrder }) {
                       gap: '6px',
                       background: '#FAF8F5',
                       border: '1.5px solid #2D6A4F',
-                      padding: '4px 10px 4px 6px',
+                      padding: '3px 10px 3px 4px',
                       borderRadius: '999px',
                       cursor: 'pointer',
-                      fontSize: '0.8rem',
+                      fontSize: '0.78rem',
                       fontWeight: '700',
                       color: '#1B2E1E',
-                      height: '42px',
+                      height: '38px',
                     }}
                     title={`Signed in as ${currentUser.name}`}
                   >
                     <img
                       src={currentUser.avatar}
                       alt={currentUser.name}
-                      style={{ width: '28px', height: '28px', borderRadius: '50%', objectFit: 'cover' }}
+                      style={{ width: '26px', height: '26px', borderRadius: '50%', objectFit: 'cover' }}
                       onError={(e) => {
                         e.currentTarget.src = `https://api.dicebear.com/7.x/initials/svg?seed=${encodeURIComponent(currentUser.name)}&backgroundColor=1B2E1E`;
                       }}
                     />
-                    <span className="hidden sm:inline" style={{ maxWidth: '85px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                    <span className="hidden sm:inline" style={{ maxWidth: '80px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                       {currentUser.name.split(' ')[0]}
                     </span>
+                    <ChevronDown style={{ width: '12px', height: '12px', opacity: 0.6 }} />
                   </button>
 
                   {/* Profile Dropdown */}
@@ -298,25 +395,26 @@ export default function Navbar({ onOpenOrder }) {
                 <button
                   onClick={() => setIsGoogleModalOpen(true)}
                   style={{
-                    display: 'flex',
+                    display: 'inline-flex',
                     alignItems: 'center',
                     gap: '6px',
                     background: '#FFFFFF',
-                    border: '1.5px solid #D6D0C2',
+                    border: '1px solid #D6D0C2',
                     borderRadius: '999px',
-                    padding: '0.5rem 0.85rem',
-                    fontSize: '0.8rem',
+                    padding: '0.42rem 0.75rem',
+                    fontSize: '0.78rem',
                     fontWeight: '700',
                     color: '#1B2E1E',
                     cursor: 'pointer',
-                    boxShadow: '0 2px 6px rgba(0,0,0,0.04)',
-                    height: '42px',
+                    boxShadow: '0 2px 5px rgba(0,0,0,0.03)',
+                    height: '38px',
                     transition: 'all 0.2s',
+                    whiteSpace: 'nowrap',
                   }}
                   title="Sign in with Google"
                 >
-                  <GoogleIcon size={16} />
-                  <span className="hidden sm:inline">Sign In</span>
+                  <GoogleIcon size={15} />
+                  <span>Sign In</span>
                 </button>
               )}
 
@@ -330,17 +428,18 @@ export default function Navbar({ onOpenOrder }) {
                   background: '#FAF8F5',
                   border: '1px solid rgba(79, 93, 56, 0.25)',
                   borderRadius: '50%',
-                  width: '42px',
-                  height: '42px',
+                  width: '38px',
+                  height: '38px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
                   cursor: 'pointer',
                   color: '#1B2E1E',
                   transition: 'all 0.2s',
+                  flexShrink: 0,
                 }}
               >
-                <ShoppingBag style={{ width: '18px', height: '18px' }} />
+                <ShoppingBag style={{ width: '17px', height: '17px' }} />
                 {totalItemsCount > 0 && (
                   <span
                     style={{
@@ -349,16 +448,16 @@ export default function Navbar({ onOpenOrder }) {
                       right: '-3px',
                       background: '#2D6A4F',
                       color: '#FAF8F5',
-                      fontSize: '0.7rem',
+                      fontSize: '0.68rem',
                       fontWeight: '800',
                       borderRadius: '999px',
-                      minWidth: '18px',
-                      height: '18px',
+                      minWidth: '17px',
+                      height: '17px',
                       display: 'flex',
                       alignItems: 'center',
                       justifyContent: 'center',
-                      padding: '0 4px',
-                      boxShadow: '0 2px 5px rgba(0,0,0,0.2)',
+                      padding: '0 3px',
+                      boxShadow: '0 2px 4px rgba(0,0,0,0.2)',
                     }}
                   >
                     {totalItemsCount}
@@ -370,7 +469,16 @@ export default function Navbar({ onOpenOrder }) {
               <button
                 onClick={() => onOpenOrder ? onOpenOrder('200ml') : setIsCartOpen(true)}
                 className="btn-olive desktop-nav-cta"
-                style={{ alignItems: 'center', gap: '0.5rem', padding: '0.55rem 1.25rem', fontSize: '0.82rem', cursor: 'pointer', minHeight: '42px' }}
+                style={{
+                  alignItems: 'center',
+                  gap: '0.4rem',
+                  padding: '0.45rem 1.15rem',
+                  fontSize: '0.78rem',
+                  cursor: 'pointer',
+                  minHeight: '38px',
+                  height: '38px',
+                  whiteSpace: 'nowrap',
+                }}
               >
                 <span>Order Now</span>
               </button>
@@ -380,9 +488,9 @@ export default function Navbar({ onOpenOrder }) {
                 onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
                 className="mobile-menu-btn"
                 aria-label="Toggle Mobile Menu"
-                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.5rem', minHeight: '44px', minWidth: '44px' }}
+                style={{ background: 'none', border: 'none', cursor: 'pointer', padding: '0.4rem', minHeight: '38px', minWidth: '38px' }}
               >
-                {mobileMenuOpen ? <X style={{ width: '24px', height: '24px' }} /> : <Menu style={{ width: '24px', height: '24px' }} />}
+                {mobileMenuOpen ? <X style={{ width: '22px', height: '22px' }} /> : <Menu style={{ width: '22px', height: '22px' }} />}
               </button>
             </div>
           </div>
@@ -440,14 +548,14 @@ export default function Navbar({ onOpenOrder }) {
               </button>
             )}
 
-            {navLinks.map((link) => (
+            {allNavLinks.map((link) => (
               <NavLink
                 key={link.name}
                 to={link.path}
                 onClick={() => setMobileMenuOpen(false)}
                 className="nav-link"
                 style={({ isActive }) => ({
-                  fontSize: '0.95rem',
+                  fontSize: '0.92rem',
                   fontWeight: '700',
                   padding: '0.75rem 1rem',
                   borderRadius: '12px',
@@ -457,7 +565,7 @@ export default function Navbar({ onOpenOrder }) {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'space-between',
-                  minHeight: '48px'
+                  minHeight: '44px'
                 })}
               >
                 <span>{link.name}</span>
@@ -471,7 +579,7 @@ export default function Navbar({ onOpenOrder }) {
                 setIsCartOpen(true);
               }}
               className="btn-olive"
-              style={{ marginTop: '0.75rem', width: '100%', padding: '0.85rem', justifyContent: 'center', background: '#4F5D38', color: '#FAF8F5', borderColor: '#4F5D38', minHeight: '48px', cursor: 'pointer' }}
+              style={{ marginTop: '0.75rem', width: '100%', padding: '0.85rem', justifyContent: 'center', background: '#4F5D38', color: '#FAF8F5', borderColor: '#4F5D38', minHeight: '46px', cursor: 'pointer' }}
             >
               <ShoppingBag style={{ width: '18px', height: '18px' }} />
               <span>View Shopping Cart ({totalItemsCount})</span>

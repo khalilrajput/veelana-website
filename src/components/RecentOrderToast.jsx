@@ -72,18 +72,19 @@ export default function RecentOrderToast() {
           transition={{ duration: 0.35 }}
           style={{
             position: 'fixed',
-            bottom: '80px',
-            left: '20px',
-            zIndex: 999,
-            background: '#FFFFFF',
-            borderRadius: '14px',
-            boxShadow: '0 10px 30px rgba(0,0,0,0.12)',
+            bottom: '24px',
+            right: '24px',
+            zIndex: 950,
+            background: 'rgba(255, 255, 255, 0.98)',
+            backdropFilter: 'blur(10px)',
+            borderRadius: '16px',
+            boxShadow: '0 12px 35px rgba(0,0,0,0.14)',
             border: '1px solid rgba(79, 93, 56, 0.18)',
-            padding: '0.75rem 1rem',
-            maxWidth: '320px',
+            padding: '0.65rem 0.9rem',
+            maxWidth: '300px',
             display: 'flex',
             alignItems: 'center',
-            gap: '0.75rem',
+            gap: '0.65rem',
           }}
         >
           {/* Green Indicator Avatar */}
