@@ -1,14 +1,12 @@
 import React from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { BLOG_POSTS } from '../data/blogPosts';
-import { Calendar, Clock, UserCheck, ArrowLeft, Share2, MessageCircle, Sparkles, ChevronRight, ShieldCheck, ArrowRight, CheckCircle2 } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { Calendar, Clock, UserCheck, ArrowLeft, MessageCircle, Sparkles, ChevronRight, ArrowRight } from 'lucide-react';
 
 export default function BlogPostDetailPage() {
   const { id } = useParams();
   const post = BLOG_POSTS.find((p) => p.id === id) || BLOG_POSTS[0];
 
-  // Related posts (excluding current one)
   const relatedPosts = BLOG_POSTS.filter((p) => p.id !== post.id).slice(0, 3);
 
   const handleShareWhatsApp = () => {
@@ -17,7 +15,7 @@ export default function BlogPostDetailPage() {
   };
 
   return (
-    <article className="min-h-screen bg-[#FAF8F5] pb-24">
+    <article style={{ minHeight: '100vh', backgroundColor: '#FAF8F5', paddingBottom: '6rem' }}>
       {/* Dynamic SEO Meta */}
       <title>{`${post.title} | Veelana Botanical Library`}</title>
       <meta name="description" content={post.snippet} />
@@ -30,88 +28,174 @@ export default function BlogPostDetailPage() {
       <meta name="twitter:description" content={post.snippet} />
       <link rel="canonical" href={`https://www.veelana.online/blog/${post.id}`} />
 
-      {/* Hero Header */}
-      <header className="relative bg-gradient-to-b from-[#18281B] via-[#1B2E1E] to-[#253D2A] text-white pt-14 pb-24 px-4 overflow-hidden">
-        <div className="absolute top-0 right-1/4 w-96 h-96 bg-[#4F5D38]/20 blur-3xl rounded-full pointer-events-none" />
-
-        <div className="max-w-4xl mx-auto relative z-10">
+      {/* Header Banner */}
+      <header style={{
+        background: 'linear-gradient(180deg, #18281B 0%, #1B2E1E 50%, #253D2A 100%)',
+        color: '#FFFFFF',
+        padding: '3rem 1.25rem 5rem',
+        position: 'relative',
+        overflow: 'hidden'
+      }}>
+        <div style={{ maxWidth: '820px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
           {/* Breadcrumbs */}
-          <nav className="flex items-center gap-2 text-xs text-[#A0B195] mb-6 flex-wrap">
-            <Link to="/" className="hover:text-white transition">Home</Link>
-            <ChevronRight className="w-3.5 h-3.5 opacity-60" />
-            <Link to="/blog" className="hover:text-white transition">Blog</Link>
-            <ChevronRight className="w-3.5 h-3.5 opacity-60" />
-            <span className="text-[#D4AF37] truncate max-w-[200px] sm:max-w-xs">{post.category}</span>
+          <nav style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '6px',
+            fontSize: '0.75rem',
+            color: '#A0B195',
+            marginBottom: '1.25rem',
+            flexWrap: 'wrap'
+          }}>
+            <Link to="/" style={{ color: '#D4DDD2' }}>Home</Link>
+            <ChevronRight style={{ width: '12px', height: '12px', opacity: 0.6 }} />
+            <Link to="/blog" style={{ color: '#D4DDD2' }}>Blog</Link>
+            <ChevronRight style={{ width: '12px', height: '12px', opacity: 0.6 }} />
+            <span style={{ color: '#D4AF37', fontWeight: '700' }}>{post.category}</span>
           </nav>
 
           {/* Category Pill */}
-          <div className="inline-flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[#D4AF37] text-xs font-bold uppercase tracking-wider mb-4">
-            <Sparkles className="w-3.5 h-3.5" />
+          <div style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            padding: '4px 12px',
+            borderRadius: '999px',
+            background: 'rgba(255, 255, 255, 0.1)',
+            border: '1px solid rgba(255, 255, 255, 0.18)',
+            color: '#D4AF37',
+            fontSize: '0.72rem',
+            fontWeight: '800',
+            textTransform: 'uppercase',
+            letterSpacing: '1px',
+            marginBottom: '1rem'
+          }}>
+            <Sparkles style={{ width: '13px', height: '13px' }} />
             <span>{post.category}</span>
           </div>
 
-          {/* Main Title */}
-          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-5xl font-bold tracking-tight text-[#FAF8F5] leading-tight mb-6">
+          {/* Headline */}
+          <h1 style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: 'clamp(2rem, 4vw, 3rem)',
+            fontWeight: '700',
+            color: '#FAF8F5',
+            lineHeight: 1.2,
+            margin: '0 0 1.25rem'
+          }}>
             {post.title}
           </h1>
 
           {/* Metadata Row */}
-          <div className="flex flex-wrap items-center gap-4 sm:gap-6 text-xs text-[#D2DDD0] pt-4 border-t border-white/15">
-            <span className="flex items-center gap-1.5 font-semibold text-white">
-              <UserCheck className="w-4 h-4 text-[#D4AF37]" />
+          <div style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '1.25rem',
+            fontSize: '0.78rem',
+            color: '#D2DDD0',
+            paddingTop: '1rem',
+            borderTop: '1px solid rgba(255, 255, 255, 0.15)',
+            flexWrap: 'wrap'
+          }}>
+            <span style={{ display: 'flex', alignItems: 'center', gap: '5px', fontWeight: '700', color: '#FFFFFF' }}>
+              <UserCheck style={{ width: '15px', height: '15px', color: '#D4AF37' }} />
               {post.author}
             </span>
-            <span className="flex items-center gap-1.5">
-              <Calendar className="w-4 h-4 text-[#D4AF37]" />
+            <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <Calendar style={{ width: '14px', height: '14px', color: '#D4AF37' }} />
               {post.date}
             </span>
-            <span className="flex items-center gap-1.5">
-              <Clock className="w-4 h-4 text-[#D4AF37]" />
+            <span style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <Clock style={{ width: '14px', height: '14px', color: '#D4AF37' }} />
               {post.readTime}
             </span>
           </div>
         </div>
       </header>
 
-      {/* Main Article Body Container */}
-      <div className="max-w-4xl mx-auto px-4 -mt-14 relative z-20">
+      {/* Main Article Container */}
+      <div style={{ maxWidth: '820px', margin: '-2.5rem auto 0', padding: '0 1.25rem', position: 'relative', zIndex: 10 }}>
         
-        {/* Featured Hero Banner Image */}
-        <div className="rounded-3xl overflow-hidden border border-[#ECE7DD] shadow-xl bg-white mb-10 max-h-[460px] relative">
+        {/* Featured Image */}
+        <div style={{
+          borderRadius: '24px',
+          overflow: 'hidden',
+          border: '1px solid #ECE7DD',
+          boxShadow: '0 12px 35px rgba(0,0,0,0.08)',
+          background: '#FFFFFF',
+          marginBottom: '2rem',
+          maxHeight: '440px'
+        }}>
           <img
             src={post.image}
             alt={post.title}
-            className="w-full h-full object-cover max-h-[460px]"
+            style={{ width: '100%', height: '100%', maxHeight: '440px', objectFit: 'cover', display: 'block' }}
           />
         </div>
 
-        {/* Lead Excerpt Blockquote */}
-        <div className="bg-white rounded-2xl p-6 sm:p-8 border-l-4 border-[#2D6A4F] border-[#ECE7DD] shadow-sm mb-10 text-base sm:text-lg text-[#2A361E] italic leading-relaxed font-serif">
+        {/* Lead Excerpt */}
+        <div style={{
+          background: '#FFFFFF',
+          borderRadius: '18px',
+          padding: '1.5rem 1.75rem',
+          borderLeft: '4px solid #2D6A4F',
+          border: '1px solid #ECE7DD',
+          borderLeftWidth: '4px',
+          boxShadow: '0 4px 15px rgba(0,0,0,0.02)',
+          marginBottom: '2rem',
+          fontSize: '1.05rem',
+          color: '#2A361E',
+          fontStyle: 'italic',
+          lineHeight: 1.65,
+          fontFamily: 'var(--font-heading)'
+        }}>
           "{post.snippet}"
         </div>
 
-        {/* Formatted Article Content */}
-        <div className="bg-white rounded-3xl p-6 sm:p-10 md:p-12 border border-[#ECE7DD] shadow-sm text-[#1B2E1E]">
+        {/* Article Body */}
+        <div style={{
+          background: '#FFFFFF',
+          borderRadius: '24px',
+          padding: '2.5rem 2rem',
+          border: '1px solid #ECE7DD',
+          boxShadow: '0 4px 20px rgba(0,0,0,0.03)',
+          color: '#1B2E1E'
+        }}>
           <div
-            className="prose prose-stone max-w-none text-[#2A361E] leading-relaxed text-sm sm:text-base space-y-5
-              [&>h2]:font-serif [&>h2]:text-2xl [&>h2]:sm:text-3xl [&>h2]:font-bold [&>h2]:text-[#1B2E1E] [&>h2]:mt-8 [&>h2]:mb-4 [&>h2]:border-b [&>h2]:border-[#ECE7DD] [&>h2]:pb-2
-              [&>h3]:font-serif [&>h3]:text-xl [&>h3]:sm:text-2xl [&>h3]:font-bold [&>h3]:text-[#2D6A4F] [&>h3]:mt-6 [&>h3]:mb-3
-              [&>p]:text-[#4A5543] [&>p]:leading-relaxed [&>p]:mb-4
-              [&>ul]:list-disc [&>ul]:pl-5 [&>ul]:space-y-2 [&>ul]:text-[#4A5543] [&>ul]:my-4
-              [&>ol]:list-decimal [&>ol]:pl-5 [&>ol]:space-y-2.5 [&>ol]:text-[#4A5543] [&>ol]:my-4
-              [&>li>strong]:text-[#1B2E1E]
-              [&>div]:rounded-2xl"
+            style={{
+              fontSize: '0.95rem',
+              lineHeight: 1.75,
+              color: '#3A4833'
+            }}
             dangerouslySetInnerHTML={{ __html: post.content }}
           />
 
-          {/* Keywords Tag Strip */}
+          {/* Keywords Strip */}
           {post.keywords && post.keywords.length > 0 && (
-            <div className="mt-10 pt-6 border-t border-[#ECE7DD] flex items-center gap-2 flex-wrap">
-              <span className="text-xs font-bold text-[#6A7B52] uppercase tracking-wider mr-2">Keywords:</span>
+            <div style={{
+              marginTop: '2.5rem',
+              paddingTop: '1.5rem',
+              borderTop: '1px solid #ECE7DD',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '0.5rem',
+              flexWrap: 'wrap'
+            }}>
+              <span style={{ fontSize: '0.72rem', fontWeight: '800', color: '#6A7B52', textTransform: 'uppercase', letterSpacing: '1px', marginRight: '4px' }}>
+                Keywords:
+              </span>
               {post.keywords.map((kw, i) => (
                 <span
                   key={i}
-                  className="px-3 py-1 rounded-full bg-[#FAF8F5] border border-[#E2DDCF] text-xs font-medium text-[#4F5E52]"
+                  style={{
+                    padding: '3px 10px',
+                    borderRadius: '999px',
+                    background: '#FAF8F5',
+                    border: '1px solid #E2DDCF',
+                    fontSize: '0.75rem',
+                    color: '#4F5E52',
+                    fontWeight: '600'
+                  }}
                 >
                   #{kw}
                 </span>
@@ -119,83 +203,172 @@ export default function BlogPostDetailPage() {
             </div>
           )}
 
-          {/* Social Share & Action Bar */}
-          <div className="mt-10 p-6 rounded-2xl bg-[#FAF8F5] border border-[#ECE7DD] flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="text-center sm:text-left">
-              <h4 className="font-serif font-bold text-base text-[#1B2E1E]">Share this knowledge with family or friends</h4>
-              <p className="text-xs text-[#6A7B52] mt-0.5">Help others learn about clean, cold-pressed organic hair care.</p>
+          {/* Social Share & Action Callout */}
+          <div style={{
+            marginTop: '2rem',
+            padding: '1.5rem',
+            borderRadius: '16px',
+            background: '#FAF8F5',
+            border: '1px solid #ECE7DD',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            flexWrap: 'wrap',
+            gap: '1rem'
+          }}>
+            <div>
+              <h4 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.15rem', fontWeight: '700', color: '#1B2E1E', margin: '0 0 0.25rem' }}>
+                Share this knowledge with family or friends
+              </h4>
+              <p style={{ fontSize: '0.78rem', color: '#6A7B52', margin: 0 }}>
+                Help others discover clean, cold-pressed botanical hair care.
+              </p>
             </div>
 
-            <div className="flex items-center gap-3 w-full sm:w-auto">
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
               <button
+                type="button"
                 onClick={handleShareWhatsApp}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#25D366] text-white text-xs font-bold hover:bg-[#20BA5A] transition shadow-md"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '0.65rem 1.25rem',
+                  borderRadius: '10px',
+                  background: '#25D366',
+                  color: '#FFFFFF',
+                  fontWeight: '700',
+                  fontSize: '0.8rem',
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 12px rgba(37, 211, 102, 0.25)'
+                }}
               >
-                <MessageCircle className="w-4 h-4" />
+                <MessageCircle style={{ width: '16px', height: '16px' }} />
                 <span>Share via WhatsApp</span>
               </button>
 
               <Link
                 to="/products"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#1B2E1E] text-white text-xs font-bold hover:bg-[#2D6A4F] transition shadow-md shrink-0"
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '0.65rem 1.25rem',
+                  borderRadius: '10px',
+                  background: '#1B2E1E',
+                  color: '#FAF8F5',
+                  fontWeight: '700',
+                  fontSize: '0.8rem',
+                  textDecoration: 'none'
+                }}
               >
                 <span>Shop Veelana Oil</span>
-                <ArrowRight className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <ArrowRight style={{ width: '15px', height: '15px', color: '#D4AF37' }} />
               </Link>
             </div>
           </div>
         </div>
 
         {/* Back Link */}
-        <div className="mt-8 text-center sm:text-left">
+        <div style={{ marginTop: '2rem' }}>
           <Link
             to="/blog"
-            className="inline-flex items-center gap-2 text-xs font-bold text-[#1B2E1E] hover:text-[#2D6A4F] transition"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              fontSize: '0.82rem',
+              fontWeight: '700',
+              color: '#1B2E1E',
+              textDecoration: 'none'
+            }}
           >
-            <ArrowLeft className="w-4 h-4" /> Back to All Articles
+            <ArrowLeft style={{ width: '16px', height: '16px' }} />
+            <span>Back to All Articles</span>
           </Link>
         </div>
 
-        {/* Related Articles Section */}
+        {/* Related Articles */}
         {relatedPosts.length > 0 && (
-          <div className="mt-16">
-            <div className="flex items-center justify-between mb-6 pb-2 border-b border-[#ECE7DD]">
-              <h3 className="font-serif text-2xl font-bold text-[#1B2E1E]">Related Botanical Guides</h3>
-              <Link to="/blog" className="text-xs font-bold text-[#2D6A4F] hover:underline flex items-center gap-1">
-                View All <ArrowRight className="w-3 h-3" />
+          <div style={{ marginTop: '3.5rem' }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              borderBottom: '1px solid #ECE7DD',
+              paddingBottom: '0.75rem',
+              marginBottom: '1.5rem'
+            }}>
+              <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.5rem', fontWeight: '700', color: '#1B2E1E', margin: 0 }}>
+                Related Botanical Guides
+              </h3>
+              <Link to="/blog" style={{ fontSize: '0.78rem', fontWeight: '700', color: '#2D6A4F', textDecoration: 'none' }}>
+                View All &rarr;
               </Link>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))',
+              gap: '1.25rem'
+            }}>
               {relatedPosts.map((rel) => (
                 <Link
                   key={rel.id}
                   to={`/blog/${rel.id}`}
-                  className="group bg-white rounded-2xl overflow-hidden border border-[#ECE7DD] hover:border-[#1B2E1E]/30 shadow-sm hover:shadow-md transition flex flex-col justify-between"
+                  style={{
+                    background: '#FFFFFF',
+                    borderRadius: '16px',
+                    border: '1px solid #ECE7DD',
+                    overflow: 'hidden',
+                    textDecoration: 'none',
+                    color: 'inherit',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    boxShadow: '0 2px 10px rgba(0,0,0,0.03)'
+                  }}
                 >
                   <div>
-                    <div className="h-40 overflow-hidden bg-[#FAF8F5]">
-                      <img
-                        src={rel.image}
-                        alt={rel.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                        loading="lazy"
-                      />
+                    <div style={{ height: '150px', overflow: 'hidden', background: '#F5F2EB' }}>
+                      <img src={rel.image} alt={rel.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
                     </div>
-                    <div className="p-4">
-                      <span className="text-[10px] font-bold text-[#D4AF37] bg-[#1B2E1E] px-2.5 py-0.5 rounded-full uppercase tracking-wider inline-block mb-2">
+                    <div style={{ padding: '1rem' }}>
+                      <span style={{
+                        display: 'inline-block',
+                        fontSize: '0.65rem',
+                        fontWeight: '800',
+                        color: '#D4AF37',
+                        background: '#1B2E1E',
+                        padding: '2px 8px',
+                        borderRadius: '999px',
+                        textTransform: 'uppercase',
+                        marginBottom: '0.5rem'
+                      }}>
                         {rel.category}
                       </span>
-                      <h4 className="font-serif text-base font-bold text-[#1B2E1E] group-hover:text-[#2D6A4F] transition-colors leading-snug line-clamp-2">
+                      <h4 style={{
+                        fontFamily: 'var(--font-heading)',
+                        fontSize: '1.05rem',
+                        fontWeight: '700',
+                        color: '#1B2E1E',
+                        lineHeight: 1.3,
+                        margin: 0
+                      }}>
                         {rel.title}
                       </h4>
                     </div>
                   </div>
-                  <div className="p-4 pt-0 text-[11px] text-[#6A7B52] flex items-center justify-between">
+                  <div style={{
+                    padding: '0.75rem 1rem',
+                    borderTop: '1px solid #F0ECE4',
+                    fontSize: '0.72rem',
+                    color: '#6A7B52',
+                    display: 'flex',
+                    justifyContent: 'space-between'
+                  }}>
                     <span>{rel.readTime}</span>
-                    <span className="text-xs font-bold text-[#1B2E1E] group-hover:translate-x-1 transition-transform flex items-center gap-1">
-                      Read <ArrowRight className="w-3 h-3" />
-                    </span>
+                    <span style={{ fontWeight: '700', color: '#1B2E1E' }}>Read &rarr;</span>
                   </div>
                 </Link>
               ))}

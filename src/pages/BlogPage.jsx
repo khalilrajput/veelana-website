@@ -1,6 +1,6 @@
 import React, { useState, useMemo } from 'react';
 import { Link } from 'react-router-dom';
-import { BookOpen, Clock, Calendar, ArrowRight, Search, Sparkles, Filter, Leaf, ChevronRight, UserCheck } from 'lucide-react';
+import { BookOpen, Clock, Calendar, ArrowRight, Search, Sparkles, UserCheck, ChevronRight, Leaf } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { BLOG_POSTS } from '../data/blogPosts';
 
@@ -9,8 +9,7 @@ export default function BlogPage() {
   const [searchQuery, setSearchQuery] = useState('');
 
   const categories = useMemo(() => {
-    const cats = ['All', ...new Set(BLOG_POSTS.map(p => p.category))];
-    return cats;
+    return ['All', ...new Set(BLOG_POSTS.map(p => p.category))];
   }, []);
 
   const filteredPosts = useMemo(() => {
@@ -30,9 +29,9 @@ export default function BlogPage() {
     : filteredPosts;
 
   return (
-    <div className="min-h-screen bg-[#FAF8F5] pb-24">
+    <div style={{ minHeight: '100vh', backgroundColor: '#FAF8F5', paddingBottom: '5rem' }}>
       {/* Dynamic SEO Meta */}
-      <title>Hair Care & Scalp Health Journal | Veelana Botanical Library</title>
+      <title>Hair Care &amp; Scalp Health Journal | Veelana Botanical Library</title>
       <meta name="description" content="Explore clinical botanical research, Ayurvedic hair oiling rituals, and natural scalp care guides curated by Veelana Herbal Hair Care experts." />
       <meta property="og:title" content="Hair Care & Scalp Health Journal | Veelana Botanical Library" />
       <meta property="og:description" content="Explore clinical botanical research, Ayurvedic hair oiling rituals, and natural scalp care guides curated by Veelana Herbal Hair Care experts." />
@@ -43,46 +42,133 @@ export default function BlogPage() {
       <meta name="twitter:description" content="Explore clinical botanical research, Ayurvedic hair oiling rituals, and natural scalp care guides." />
       <link rel="canonical" href="https://www.veelana.online/blog" />
 
-      {/* Hero Header Section */}
-      <section className="relative overflow-hidden bg-gradient-to-b from-[#18281B] via-[#1B2E1E] to-[#253D2A] text-white pt-16 pb-20 px-4">
-        {/* Subtle Decorative Ambient Glow */}
-        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-5xl h-80 bg-[#4F5D38]/20 blur-3xl rounded-full pointer-events-none" />
+      {/* Luxury Editorial Header Banner */}
+      <section style={{
+        background: 'linear-gradient(180deg, #18281B 0%, #1B2E1E 50%, #253D2A 100%)',
+        color: '#FFFFFF',
+        padding: '3.5rem 1.25rem 4rem',
+        position: 'relative',
+        overflow: 'hidden',
+        textAlign: 'center'
+      }}>
+        {/* Soft Ambient Gold Glow */}
+        <div style={{
+          position: 'absolute',
+          top: '-60px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '500px',
+          height: '250px',
+          background: 'radial-gradient(circle, rgba(212, 175, 55, 0.2) 0%, transparent 70%)',
+          pointerEvents: 'none'
+        }} />
 
-        <div className="max-w-5xl mx-auto relative z-10 text-center">
-          {/* Breadcrumb */}
-          <nav className="inline-flex items-center gap-2 text-xs text-[#A0B195] mb-6">
-            <Link to="/" className="hover:text-white transition">Home</Link>
-            <ChevronRight className="w-3.5 h-3.5 opacity-60" />
-            <span className="text-[#D4AF37] font-semibold">Botanical Journal & Guides</span>
+        <div style={{ maxWidth: '820px', margin: '0 auto', position: 'relative', zIndex: 2 }}>
+          {/* Breadcrumbs */}
+          <nav style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '6px',
+            fontSize: '0.75rem',
+            color: '#A0B195',
+            marginBottom: '1.25rem'
+          }}>
+            <Link to="/" style={{ color: '#D4DDD2' }}>Home</Link>
+            <ChevronRight style={{ width: '12px', height: '12px', opacity: 0.6 }} />
+            <span style={{ color: '#D4AF37', fontWeight: '700' }}>Botanical Journal &amp; Guides</span>
           </nav>
 
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/15 text-[#D4AF37] text-xs font-bold uppercase tracking-widest mb-4">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>The Veelana Botanical Journal</span>
+          {/* Top Pill Badge */}
+          <div>
+            <div style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '5px 14px',
+              borderRadius: '999px',
+              background: 'rgba(255, 255, 255, 0.1)',
+              border: '1px solid rgba(255, 255, 255, 0.18)',
+              color: '#D4AF37',
+              fontSize: '0.72rem',
+              fontWeight: '800',
+              letterSpacing: '1.5px',
+              textTransform: 'uppercase',
+              marginBottom: '1rem',
+              backdropFilter: 'blur(8px)'
+            }}>
+              <Sparkles style={{ width: '14px', height: '14px' }} />
+              <span>The Veelana Botanical Journal</span>
+            </div>
           </div>
 
-          <h1 className="font-serif text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold tracking-tight text-[#FAF8F5] leading-tight mb-5">
+          {/* Headline */}
+          <h1 style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: 'clamp(2rem, 4.5vw, 3.25rem)',
+            fontWeight: '700',
+            color: '#FAF8F5',
+            lineHeight: 1.15,
+            margin: '0 0 1rem'
+          }}>
             Scalp Science, Herbal Wisdom &amp; Rituals
           </h1>
 
-          <p className="text-sm sm:text-base md:text-lg text-[#D2DDD0] max-w-2xl mx-auto leading-relaxed font-normal">
+          {/* Subtitle */}
+          <p style={{
+            fontSize: '0.95rem',
+            color: '#D2DDD0',
+            lineHeight: 1.6,
+            maxWidth: '640px',
+            margin: '0 auto 1.75rem'
+          }}>
             Deep-dive articles on 25+ cold-pressed herbs, the biology of follicle restoration, and daily rituals for healthier, thicker hair.
           </p>
 
-          {/* Interactive Search Bar */}
-          <div className="mt-8 max-w-xl mx-auto relative">
-            <Search className="w-5 h-5 text-[#8A9A86] absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none" />
+          {/* Search Bar Container */}
+          <div style={{
+            maxWidth: '520px',
+            margin: '0 auto',
+            position: 'relative',
+            display: 'flex',
+            alignItems: 'center'
+          }}>
+            <Search style={{
+              position: 'absolute',
+              left: '16px',
+              width: '18px',
+              height: '18px',
+              color: '#6A7B52',
+              pointerEvents: 'none'
+            }} />
             <input
               type="text"
               placeholder="Search articles by ingredient, symptom, or topic..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-white/95 backdrop-blur-md text-[#1B2E1E] placeholder:text-[#7A8C74] pl-12 pr-4 py-3.5 rounded-full border border-[#D6D0C2] focus:border-[#D4AF37] focus:ring-2 focus:ring-[#D4AF37]/30 outline-none text-sm transition shadow-lg"
+              style={{
+                width: '100%',
+                padding: '0.85rem 3rem 0.85rem 2.85rem',
+                borderRadius: '999px',
+                border: '1px solid #D6D0C2',
+                background: '#FFFFFF',
+                color: '#1B2E1E',
+                fontSize: '0.88rem',
+                outline: 'none',
+                boxShadow: '0 8px 24px rgba(0,0,0,0.15)'
+              }}
             />
             {searchQuery && (
               <button
+                type="button"
                 onClick={() => setSearchQuery('')}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-xs font-bold text-[#6A7B52] hover:text-[#1B2E1E]"
+                style={{
+                  position: 'absolute',
+                  right: '16px',
+                  fontSize: '0.75rem',
+                  fontWeight: '700',
+                  color: '#6A7B52',
+                  cursor: 'pointer'
+                }}
               >
                 Clear
               </button>
@@ -91,221 +177,411 @@ export default function BlogPage() {
         </div>
       </section>
 
-      {/* Main Content Area */}
-      <div className="max-w-6xl mx-auto px-4 -mt-8 relative z-20">
-        {/* Category Pills Navigation */}
-        <div className="bg-white/90 backdrop-blur-md p-2 rounded-2xl border border-[#ECE7DD] shadow-md flex items-center justify-start sm:justify-center gap-2 overflow-x-auto no-scrollbar mb-10">
+      {/* Main Body Content */}
+      <div style={{ maxWidth: '1180px', margin: '-1.75rem auto 0', padding: '0 1.25rem', position: 'relative', zIndex: 10 }}>
+        
+        {/* Category Filter Pills Bar */}
+        <div style={{
+          background: '#FFFFFF',
+          borderRadius: '16px',
+          padding: '0.55rem',
+          border: '1px solid #ECE7DD',
+          boxShadow: '0 6px 20px rgba(0,0,0,0.06)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          gap: '0.5rem',
+          flexWrap: 'wrap',
+          marginBottom: '2.5rem'
+        }}>
           {categories.map((cat) => (
             <button
               key={cat}
               onClick={() => setSelectedCategory(cat)}
-              className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-semibold whitespace-nowrap transition cursor-pointer ${
-                selectedCategory === cat
-                  ? 'bg-[#1B2E1E] text-[#FAF8F5] shadow-sm'
-                  : 'text-[#4F5E52] hover:bg-[#FAF8F5] hover:text-[#1B2E1E]'
-              }`}
+              style={{
+                padding: '0.55rem 1.15rem',
+                borderRadius: '12px',
+                fontSize: '0.82rem',
+                fontWeight: '700',
+                cursor: 'pointer',
+                transition: 'all 0.2s',
+                background: selectedCategory === cat ? '#1B2E1E' : 'transparent',
+                color: selectedCategory === cat ? '#FAF8F5' : '#4F5E52',
+                border: selectedCategory === cat ? '1px solid #1B2E1E' : '1px solid transparent',
+              }}
             >
               {cat}
             </button>
           ))}
         </div>
 
-        {/* Featured Post Hero Banner (Shows on initial load) */}
+        {/* Featured Cover Story (Visible on "All" when no search) */}
         {selectedCategory === 'All' && searchQuery === '' && featuredPost && (
-          <motion.div
-            initial={{ opacity: 0, y: 15 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.4 }}
-            className="mb-14"
-          >
-            <div className="text-xs font-bold uppercase tracking-wider text-[#6A7B52] mb-3 flex items-center gap-2">
-              <span className="w-2 h-2 rounded-full bg-[#D4AF37]" />
+          <div style={{ marginBottom: '3.5rem' }}>
+            <div style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              fontSize: '0.72rem',
+              fontWeight: '800',
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+              color: '#6A7B52',
+              marginBottom: '0.75rem'
+            }}>
+              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#D4AF37' }}></span>
               <span>Featured Cover Story</span>
             </div>
 
             <Link
               to={`/blog/${featuredPost.id}`}
-              className="group block bg-white rounded-3xl overflow-hidden border border-[#E5E0D5] hover:border-[#1B2E1E]/40 shadow-sm hover:shadow-xl transition-all duration-300"
+              style={{
+                display: 'block',
+                background: '#FFFFFF',
+                borderRadius: '24px',
+                border: '1px solid #ECE7DD',
+                overflow: 'hidden',
+                boxShadow: '0 10px 30px rgba(0,0,0,0.05)',
+                textDecoration: 'none',
+                color: 'inherit',
+                transition: 'transform 0.3s ease, box-shadow 0.3s ease'
+              }}
             >
-              <div className="grid grid-cols-1 lg:grid-cols-12 gap-0 items-center">
+              <div style={{
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
+                alignItems: 'center'
+              }}>
                 {/* Visual */}
-                <div className="lg:col-span-7 h-64 sm:h-80 lg:h-96 relative overflow-hidden bg-[#FAF8F5]">
+                <div style={{ height: '360px', overflow: 'hidden', position: 'relative', background: '#F5F2EB' }}>
                   <img
                     src={featuredPost.image}
                     alt={featuredPost.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700 ease-out"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent lg:hidden" />
-                  <span className="absolute top-4 left-4 px-3.5 py-1.5 rounded-full bg-[#1B2E1E]/90 backdrop-blur-md text-[#D4AF37] text-xs font-bold uppercase tracking-wider">
+                  <span style={{
+                    position: 'absolute',
+                    top: '1rem',
+                    left: '1rem',
+                    background: 'rgba(27, 46, 30, 0.92)',
+                    color: '#D4AF37',
+                    fontSize: '0.72rem',
+                    fontWeight: '800',
+                    padding: '4px 12px',
+                    borderRadius: '999px',
+                    textTransform: 'uppercase',
+                    letterSpacing: '1px'
+                  }}>
                     {featuredPost.category}
                   </span>
                 </div>
 
                 {/* Content */}
-                <div className="lg:col-span-5 p-6 sm:p-8 lg:p-10 flex flex-col justify-between">
+                <div style={{ padding: '2.25rem 2rem', display: 'flex', flexDirection: 'column', justifyContent: 'space-between' }}>
                   <div>
-                    <div className="flex items-center gap-4 text-xs text-[#6A7B52] mb-3">
-                      <span className="flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5 text-[#D4AF37]" />
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '1rem', fontSize: '0.78rem', color: '#6A7B52', marginBottom: '0.75rem' }}>
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <Calendar style={{ width: '14px', height: '14px', color: '#D4AF37' }} />
                         {featuredPost.date}
                       </span>
-                      <span className="flex items-center gap-1.5">
-                        <Clock className="w-3.5 h-3.5 text-[#D4AF37]" />
+                      <span style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                        <Clock style={{ width: '14px', height: '14px', color: '#D4AF37' }} />
                         {featuredPost.readTime}
                       </span>
                     </div>
 
-                    <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#1B2E1E] group-hover:text-[#3E4E2C] transition-colors leading-snug mb-3">
+                    <h2 style={{
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: '1.85rem',
+                      fontWeight: '700',
+                      color: '#1B2E1E',
+                      lineHeight: 1.25,
+                      margin: '0 0 0.85rem'
+                    }}>
                       {featuredPost.title}
                     </h2>
 
-                    <p className="text-xs sm:text-sm text-[#4F5E52] leading-relaxed line-clamp-3 mb-6">
+                    <p style={{
+                      fontSize: '0.9rem',
+                      color: '#4F5E52',
+                      lineHeight: 1.6,
+                      margin: '0 0 1.5rem'
+                    }}>
                       {featuredPost.snippet}
                     </p>
                   </div>
 
-                  <div className="pt-4 border-t border-[#ECE7DD] flex items-center justify-between">
-                    <span className="text-xs font-semibold text-[#1B2E1E] flex items-center gap-1.5">
-                      <UserCheck className="w-4 h-4 text-[#2D6A4F]" />
+                  <div style={{
+                    paddingTop: '1rem',
+                    borderTop: '1px solid #F0ECE4',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'space-between'
+                  }}>
+                    <span style={{ fontSize: '0.78rem', fontWeight: '700', color: '#1B2E1E', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <UserCheck style={{ width: '15px', height: '15px', color: '#2D6A4F' }} />
                       {featuredPost.author}
                     </span>
-                    <span className="inline-flex items-center gap-1.5 text-xs font-bold text-[#1B2E1E] group-hover:text-[#2D6A4F] group-hover:translate-x-1 transition-all">
-                      Read Full Article <ArrowRight className="w-4 h-4" />
+
+                    <span style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                      fontSize: '0.82rem',
+                      fontWeight: '800',
+                      color: '#1B2E1E'
+                    }}>
+                      <span>Read Full Article</span>
+                      <ArrowRight style={{ width: '15px', height: '15px', color: '#D4AF37' }} />
                     </span>
                   </div>
                 </div>
               </div>
             </Link>
-          </motion.div>
+          </div>
         )}
 
-        {/* Section Title */}
-        <div className="flex items-center justify-between mb-8 pb-3 border-b border-[#ECE7DD]">
-          <h2 className="font-serif text-2xl sm:text-3xl font-bold text-[#1B2E1E]">
+        {/* Section Headline */}
+        <div style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          borderBottom: '1px solid #ECE7DD',
+          paddingBottom: '0.75rem',
+          marginBottom: '2rem'
+        }}>
+          <h2 style={{
+            fontFamily: 'var(--font-heading)',
+            fontSize: '1.85rem',
+            fontWeight: '700',
+            color: '#1B2E1E',
+            margin: 0
+          }}>
             {searchQuery ? `Search Results (${filteredPosts.length})` : selectedCategory === 'All' ? 'Latest Clinical & Ritual Guides' : `${selectedCategory} (${filteredPosts.length})`}
           </h2>
-          <span className="text-xs font-medium text-[#6A7B52]">
+
+          <span style={{ fontSize: '0.78rem', color: '#6A7B52', fontWeight: '600' }}>
             {filteredPosts.length} {filteredPosts.length === 1 ? 'Article' : 'Articles'}
           </span>
         </div>
 
         {/* Empty State */}
         {filteredPosts.length === 0 && (
-          <div className="text-center py-20 bg-white rounded-3xl border border-[#ECE7DD] p-8">
-            <Leaf className="w-12 h-12 text-[#8A9A86] mx-auto mb-4 stroke-1" />
-            <h3 className="font-serif text-2xl font-bold text-[#1B2E1E] mb-2">No matching guides found</h3>
-            <p className="text-sm text-[#5F7057] max-w-md mx-auto mb-6">
-              We couldn't find any articles matching your search query. Try searching for "oil", "Amla", "massage", or reset filters.
+          <div style={{
+            background: '#FFFFFF',
+            borderRadius: '24px',
+            border: '1px solid #ECE7DD',
+            padding: '4rem 1.5rem',
+            textAlign: 'center'
+          }}>
+            <Leaf style={{ width: '48px', height: '48px', color: '#8A9A86', margin: '0 auto 1rem', strokeWidth: 1.5 }} />
+            <h3 style={{ fontFamily: 'var(--font-heading)', fontSize: '1.6rem', color: '#1B2E1E', margin: '0 0 0.5rem' }}>
+              No matching guides found
+            </h3>
+            <p style={{ fontSize: '0.88rem', color: '#5F7057', maxWidth: '420px', margin: '0 auto 1.5rem' }}>
+              We couldn't find any articles matching your search query. Try searching for "oil", "Amla", "routine", or reset filters.
             </p>
             <button
               onClick={() => { setSelectedCategory('All'); setSearchQuery(''); }}
-              className="px-6 py-2.5 rounded-full bg-[#1B2E1E] text-white text-xs font-bold hover:bg-[#2D6A4F] transition shadow-md"
+              style={{
+                padding: '0.65rem 1.5rem',
+                borderRadius: '999px',
+                background: '#1B2E1E',
+                color: '#FAF8F5',
+                fontSize: '0.82rem',
+                fontWeight: '700',
+                cursor: 'pointer'
+              }}
             >
               Reset Filters
             </button>
           </div>
         )}
 
-        {/* Grid Articles */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-7">
-          {gridPosts.map((post, index) => (
-            <motion.article
+        {/* 3-Column Luxury Cards Grid */}
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))',
+          gap: '1.75rem'
+        }}>
+          {gridPosts.map((post) => (
+            <article
               key={post.id}
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.4, delay: index * 0.08 }}
-              className="group bg-white rounded-2xl overflow-hidden border border-[#ECE7DD] hover:border-[#1B2E1E]/30 shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col justify-between"
+              style={{
+                background: '#FFFFFF',
+                borderRadius: '20px',
+                border: '1px solid #ECE7DD',
+                overflow: 'hidden',
+                boxShadow: '0 4px 15px rgba(0,0,0,0.03)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                transition: 'transform 0.25s ease, box-shadow 0.25s ease'
+              }}
             >
               <div>
-                {/* Card Thumbnail */}
-                <Link to={`/blog/${post.id}`} className="block relative h-52 overflow-hidden bg-[#FAF8F5]">
+                {/* Thumbnail */}
+                <Link to={`/blog/${post.id}`} style={{ display: 'block', height: '210px', overflow: 'hidden', position: 'relative', background: '#F5F2EB' }}>
                   <img
                     src={post.image}
                     alt={post.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
                     loading="lazy"
                   />
-                  <span className="absolute top-3 left-3 bg-[#1B2E1E]/90 backdrop-blur-md text-[#FAF8F5] text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                  <span style={{
+                    position: 'absolute',
+                    top: '0.75rem',
+                    left: '0.75rem',
+                    background: 'rgba(27, 46, 30, 0.9)',
+                    color: '#FAF8F5',
+                    fontSize: '0.68rem',
+                    fontWeight: '800',
+                    padding: '3px 10px',
+                    borderRadius: '999px',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.8px'
+                  }}>
                     {post.category}
                   </span>
                 </Link>
 
-                {/* Card Body */}
-                <div className="p-5 sm:p-6">
-                  {/* Meta Strip */}
-                  <div className="flex items-center gap-3 text-[11px] text-[#6A7B52] mb-2.5">
-                    <span className="flex items-center gap-1">
-                      <Calendar className="w-3 h-3 text-[#D4AF37]" />
+                {/* Details */}
+                <div style={{ padding: '1.4rem' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', fontSize: '0.74rem', color: '#6A7B52', marginBottom: '0.65rem' }}>
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+                      <Calendar style={{ width: '12px', height: '12px', color: '#D4AF37' }} />
                       {post.date}
                     </span>
                     <span>•</span>
-                    <span className="flex items-center gap-1">
-                      <Clock className="w-3 h-3 text-[#D4AF37]" />
+                    <span style={{ display: 'flex', alignItems: 'center', gap: '3px' }}>
+                      <Clock style={{ width: '12px', height: '12px', color: '#D4AF37' }} />
                       {post.readTime}
                     </span>
                   </div>
 
-                  {/* Title */}
-                  <Link to={`/blog/${post.id}`} className="block">
-                    <h3 className="font-serif text-lg sm:text-xl font-bold text-[#1B2E1E] group-hover:text-[#2D6A4F] transition-colors leading-snug line-clamp-2 mb-2">
+                  <Link to={`/blog/${post.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+                    <h3 style={{
+                      fontFamily: 'var(--font-heading)',
+                      fontSize: '1.35rem',
+                      fontWeight: '700',
+                      color: '#1B2E1E',
+                      lineHeight: 1.3,
+                      margin: '0 0 0.65rem'
+                    }}>
                       {post.title}
                     </h3>
                   </Link>
 
-                  {/* Snippet */}
-                  <p className="text-xs sm:text-sm text-[#4F5E52] line-clamp-3 leading-relaxed mb-4">
+                  <p style={{
+                    fontSize: '0.82rem',
+                    color: '#4F5E52',
+                    lineHeight: 1.55,
+                    margin: 0
+                  }}>
                     {post.snippet}
                   </p>
                 </div>
               </div>
 
-              {/* Card Footer */}
-              <div className="p-5 sm:p-6 pt-0">
-                <div className="pt-3.5 border-t border-[#F2EFE8] flex items-center justify-between">
-                  <span className="text-[11px] font-medium text-[#7A8C74] truncate max-w-[150px]">
-                    {post.author}
-                  </span>
-                  <Link
-                    to={`/blog/${post.id}`}
-                    className="inline-flex items-center gap-1 text-xs font-bold text-[#1B2E1E] group-hover:text-[#2D6A4F] group-hover:translate-x-1 transition-all"
-                  >
-                    <span>Read</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </Link>
-                </div>
+              {/* Footer */}
+              <div style={{
+                padding: '1rem 1.4rem',
+                borderTop: '1px solid #F0ECE4',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between'
+              }}>
+                <span style={{ fontSize: '0.74rem', color: '#7A8C74', fontWeight: '600' }}>
+                  {post.author}
+                </span>
+
+                <Link
+                  to={`/blog/${post.id}`}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    fontSize: '0.78rem',
+                    fontWeight: '800',
+                    color: '#1B2E1E',
+                    textDecoration: 'none'
+                  }}
+                >
+                  <span>Read Article</span>
+                  <ArrowRight style={{ width: '13px', height: '13px', color: '#2D6A4F' }} />
+                </Link>
               </div>
-            </motion.article>
+            </article>
           ))}
         </div>
 
-        {/* Newsletter / Botanical Guide CTA Banner */}
-        <div className="mt-20 bg-gradient-to-br from-[#1B2E1E] via-[#243B28] to-[#121E14] text-white rounded-3xl p-8 sm:p-12 shadow-xl border border-white/10 relative overflow-hidden text-center sm:text-left">
-          <div className="absolute -right-20 -bottom-20 w-80 h-80 bg-[#D4AF37]/15 rounded-full blur-3xl pointer-events-none" />
+        {/* Botanical Callout Banner */}
+        <div style={{
+          marginTop: '4.5rem',
+          background: 'linear-gradient(135deg, #1B2E1E 0%, #243B28 50%, #121E14 100%)',
+          color: '#FFFFFF',
+          borderRadius: '24px',
+          padding: '2.75rem 2rem',
+          boxShadow: '0 15px 40px rgba(0,0,0,0.15)',
+          border: '1px solid rgba(255,255,255,0.1)',
+          display: 'flex',
+          flexDirection: 'row',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: '2rem'
+        }}>
+          <div style={{ maxWidth: '620px' }}>
+            <span style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              fontSize: '0.72rem',
+              fontWeight: '800',
+              textTransform: 'uppercase',
+              letterSpacing: '1px',
+              color: '#D4AF37',
+              marginBottom: '0.65rem'
+            }}>
+              <Sparkles style={{ width: '14px', height: '14px' }} />
+              Pure Artisan Batch Hair Care
+            </span>
+            <h3 style={{
+              fontFamily: 'var(--font-heading)',
+              fontSize: '1.85rem',
+              fontWeight: '700',
+              margin: '0 0 0.5rem',
+              color: '#FAF8F5'
+            }}>
+              Experience 25+ Cold-Pressed Herbs on Your Scalp
+            </h3>
+            <p style={{ fontSize: '0.88rem', color: '#D2DDD0', lineHeight: 1.55, margin: 0 }}>
+              Formulated without mineral oils, artificial parabens, or sulphates. Crafted in small fresh batches in Punjab and delivered across Pakistan with Cash on Delivery.
+            </p>
+          </div>
 
-          <div className="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-            <div className="lg:col-span-8">
-              <span className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-[#D4AF37] mb-2">
-                <Sparkles className="w-3.5 h-3.5" />
-                Pure Artisan Batch Hair Care
-              </span>
-              <h3 className="font-serif text-2xl sm:text-4xl font-bold leading-tight mb-3">
-                Experience 25+ Cold-Pressed Herbs on Your Scalp
-              </h3>
-              <p className="text-xs sm:text-sm text-[#D2DDD0] max-w-xl leading-relaxed">
-                Formulated without mineral oils, artificial parabens, or sulphates. Crafted in small fresh batches in Punjab and delivered across Pakistan with Cash on Delivery.
-              </p>
-            </div>
-
-            <div className="lg:col-span-4 flex justify-center lg:justify-end">
-              <Link
-                to="/products"
-                className="inline-flex items-center justify-center gap-2 px-7 py-3.5 rounded-full bg-[#D4AF37] hover:bg-[#C29D26] text-[#121E14] font-bold text-xs uppercase tracking-wider shadow-lg hover:shadow-xl transition-all"
-              >
-                <span>Shop Veelana Oil</span>
-                <ArrowRight className="w-4 h-4" />
-              </Link>
-            </div>
+          <div>
+            <Link
+              to="/products"
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '0.85rem 1.85rem',
+                borderRadius: '999px',
+                background: '#D4AF37',
+                color: '#121E14',
+                fontWeight: '800',
+                fontSize: '0.82rem',
+                textTransform: 'uppercase',
+                letterSpacing: '1px',
+                textDecoration: 'none',
+                boxShadow: '0 6px 20px rgba(212, 175, 55, 0.35)'
+              }}
+            >
+              <span>Shop Veelana Oil</span>
+              <ArrowRight style={{ width: '16px', height: '16px' }} />
+            </Link>
           </div>
         </div>
 
